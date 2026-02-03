@@ -4,11 +4,12 @@ import BgLogin from '@/components/BackgroundThema/BgLogin';
 import { PrimaryButton } from '@/components/Buttons/PrimaryButton';
 import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
 
+import { Link } from 'expo-router';
 import React from 'react';
-import Colors from '../../theme/Colors';
+import Colors from '../../../theme/Colors';
 const { NEUTRAL } = Colors;
 
-export default function Cadastro() {
+export default function CadastroCNPJ() {
   return (
     <BgLogin logo={false}>
       <Text style={styles.cardTitle}>Cadastre-se</Text>
@@ -49,11 +50,12 @@ export default function Cadastro() {
           onPress={() => { }}
 
         />
-        <TertiaryButton
-          title='Voltar'
-          onPress={() => { }}
-          href="/"
-        />
+        <Link href="/(login)/(cadastro)/perfil" asChild>
+          <TertiaryButton
+            title='Voltar'
+            onPress={() => { }}
+          />
+        </Link>
       </View>
     </BgLogin>
 

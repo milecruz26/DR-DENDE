@@ -1,5 +1,6 @@
 import BgLogin from "@/components/BackgroundThema/BgLogin";
 import { ProfileOption } from "@/components/ProfileOption";
+import { Link } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -11,25 +12,22 @@ export default function Perfil() {
 
       <View style={{ gap: 24 }}>
 
-        <ProfileOption
-          title="Pessoa Física"
-          description="Para uso pessoal"
-          iconSource={require('../../../assets/images/icons/pessoa-fisica.png')}
-          href={"/"}
+        <Link href="/cadastroCPF" asChild>
+          <ProfileOption
+            title="Pessoa Física"
+            description="Para uso pessoal"
+            iconSource={require('../../../../assets/images/icons/pessoa-fisica.png')}
 
-          onPress={() => {
+          />
+        </Link>
+        <Link href="/cadastroCNPJ" asChild>
+          <ProfileOption
+            title="Estabelecimento"
+            description="Para empresas e negócios"
+            iconSource={require('../../../../assets/images/icons/estabelecimento.png')}
 
-          }}
-        />
-        <ProfileOption
-          title="Estabelecimento"
-          description="Para empresas e negócios"
-          iconSource={require('../../../assets/images/icons/estabelecimento.png')}
-          onPress={() => {
-          }}
-          href={"/(login)/cadastro"}
-        />
-
+          />
+        </Link>
       </View>
     </BgLogin>
   )
