@@ -1,4 +1,3 @@
-import { Href, Link } from 'expo-router';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -14,27 +13,22 @@ type ButtonSize = 'small' | 'medium' | 'large';
 
 interface CustomButtonProps {
   title: string;
-  // rota: string;
   onPress: () => void;
   size?: ButtonSize;
   disabled?: boolean;
   isLoading?: boolean;
   onFocus?: () => void;
-  href: Href;
-
 }
 
 const { SECONDARY, NEUTRAL } = Colors;
 
 export const SecondaryButton = ({
   title,
-  // rota,
   onPress,
   onFocus,
   size = 'medium',
   disabled = false,
   isLoading = false,
-  href = "/"
 }: CustomButtonProps) => {
 
   const isButtonDisabled = disabled || isLoading;
@@ -58,14 +52,12 @@ export const SecondaryButton = ({
       {isLoading ? (
         <ActivityIndicator color={NEUTRAL.lighter} />
       ) : (
-        <Link href={href}>
-          <Text style={[
-            styles.textBase,
-            styles[`text${size.charAt(0).toUpperCase() + size.slice(1)}` as keyof typeof styles] as TextStyle
-          ]}>
-            {title}
-          </Text>
-        </Link>
+        <Text style={[
+          styles.textBase,
+          styles[`text${size.charAt(0).toUpperCase() + size.slice(1)}` as keyof typeof styles] as TextStyle
+        ]}>
+          {title}
+        </Text>
       )}
     </Pressable>
 

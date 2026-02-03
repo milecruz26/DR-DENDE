@@ -1,4 +1,3 @@
-import { Href, Link } from 'expo-router';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -19,7 +18,7 @@ interface CustomButtonProps {
   disabled?: boolean;
   isLoading?: boolean;
   onFocus?: () => void;
-  href: Href;
+
 }
 const { SECONDARY, NEUTRAL } = Colors;
 export const TertiaryButton = ({
@@ -29,7 +28,7 @@ export const TertiaryButton = ({
   size = 'medium',
   disabled = false,
   isLoading = false,
-  href = "/"
+
 
 }: CustomButtonProps) => {
 
@@ -52,14 +51,14 @@ export const TertiaryButton = ({
       {isLoading ? (
         <ActivityIndicator color={NEUTRAL.lighter} />
       ) : (
-        <Link href={href}>
-          <Text style={[
-            styles.textBase,
-            styles[`text${size.charAt(0).toUpperCase() + size.slice(1)}` as keyof typeof styles] as TextStyle
-          ]}>
-            {title}
-          </Text>
-        </Link>
+
+        <Text style={[
+          styles.textBase,
+          styles[`text${size.charAt(0).toUpperCase() + size.slice(1)}` as keyof typeof styles] as TextStyle
+        ]}>
+          {title}
+        </Text>
+
       )}
     </Pressable>
   );

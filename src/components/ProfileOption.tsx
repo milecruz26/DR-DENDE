@@ -1,4 +1,4 @@
-import { Href, Link } from 'expo-router';
+
 import React from 'react';
 import {
   Image,
@@ -16,10 +16,10 @@ interface ProfileOptionProps {
   description: string;
   iconSource: ImageSourcePropType; // Tipo correto para imagens vindas do require()
   onPress?: () => void;
-  href: Href;
+
 }
 
-export const ProfileOption = ({ title, description, iconSource, onPress, href }: ProfileOptionProps) => {
+export const ProfileOption = ({ title, description, iconSource, onPress }: ProfileOptionProps) => {
   return (
     <Pressable
       onPress={onPress}
@@ -28,29 +28,28 @@ export const ProfileOption = ({ title, description, iconSource, onPress, href }:
         pressed && styles.pressed
       ]}
     >
-      <Link href={href} >
-        {/* Círculo do Ícone com Imagem Local */}
+      {/* Círculo do Ícone com Imagem Local */}
 
-        <Image
-          source={iconSource}
-          style={styles.iconImage}
-          resizeMode="contain"
-        />
+      <Image
+        source={iconSource}
+        style={styles.iconImage}
+        resizeMode="contain"
+      />
 
 
-        {/* Textos Centrais */}
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.description}>{description}</Text>
-        </View>
+      {/* Textos Centrais */}
+      <View style={styles.textContainer}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.description}>{description}</Text>
+      </View>
 
-        {/* Seta da Direita (Se você tiver o PNG da seta, use Image aqui também) */}
-        <Image
-          source={require('../../assets/images/icons/arrow-curve.png')}
-          style={styles.arrowIcon}
-        />
-      </Link>
+      {/* Seta da Direita (Se você tiver o PNG da seta, use Image aqui também) */}
+      <Image
+        source={require('../../assets/images/icons/arrow-curve.png')}
+        style={styles.arrowIcon}
+      />
     </Pressable>
+
   );
 };
 

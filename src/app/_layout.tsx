@@ -49,11 +49,14 @@ function RootLayoutNav() {
 
   return (
 
+    // <Stack />
     <Stack>
       <Stack.Screen name="(login)" options={{ headerShown: false }} />
+      <Stack.Screen name="(protegida)" options={{ headerShown: false }} />
 
-      {/* <Stack.Screen name="modal" options={{ presentation: 'modal' }} /> */}
     </Stack>
+
+    // <Stack.Screen name="modal" options={{ presentation: 'modal' }} /> 
 
     // <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
     //   <Stack>
