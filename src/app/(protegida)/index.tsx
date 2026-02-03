@@ -1,43 +1,19 @@
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { BannerStrip } from '../BannerStrip/BannerStrip';
-import LogoCulinaria from '../Logo/Logo-culinaria';
+import { StyleSheet, Text } from 'react-native'
 
+import BgLogin from '@/components/BackgroundThema/BgLogin'
+import React from 'react'
 
-interface BgLoginProps {
-  children?: React.ReactNode;
-  logo?: boolean;
-}
-
-export default function BgLogin({ children, logo }: BgLoginProps) {
+export default function Home() {
 
   return (
+    <>
+      <BgLogin >
+        <Text style={styles.cardTitle}>Área LOGADA</Text>
 
-    <SafeAreaView style={styles.container}>
-      {/* <RadialBackground> */}
-      <BannerStrip />
-      <ScrollView >
-        <View style={styles.content}>
-          {/* <StatusBar style="auto" /> */}
-          <View style={styles.logoContainer}>
-            <Image source={require('../../../assets/images/logos/pnab-logo.png')} />
-            <LogoCulinaria />
-          </View>
+      </BgLogin>
+    </>
 
-          {/* <V style={styles.card}> */}
-          <View style={styles.card}>
-            {children}
-
-          </View>
-          {logo ?? <Image source={require('../../../assets/images/logos/apoio-financeiro-logo.png')} style={styles.logoApoioFinanceiro} />
-          }
-        </View>
-      </ScrollView>
-      <BannerStrip />
-      {/* </RadialBackground> */}
-    </SafeAreaView>
-
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -174,4 +150,4 @@ const styles = StyleSheet.create({
     marginBottom: 26
 
   }
-});
+})
