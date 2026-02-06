@@ -9,7 +9,7 @@ const { NEUTRAL } = Colors;
 
 export default function EmailEsqueceuSenha() {
   return (
-    <BgLogin logo={false}>
+    <BgLogin logo={false} card>
       <Text style={styles.cardTitle}>Esqueceu sua senha?</Text>
       <Text style={styles.cardSubTitle}>Digite seu email para receber as instruções de recuperação</Text>
 

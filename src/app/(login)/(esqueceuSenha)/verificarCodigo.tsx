@@ -8,19 +8,19 @@ import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 const { NEUTRAL } = Colors;
 
-export default function EmailEsqueceuSenha() {
+export default function VerificarCodigo() {
   return (
-    <BgLogin logo={false}>
-      <Text style={styles.cardTitle}>Esqueceu sua senha?</Text>
-      <Text style={styles.cardSubTitle}>Digite seu email para receber as instruções de recuperação</Text>
+    <BgLogin logo={false} card>
+      <Text style={styles.cardTitle}>Verificar código</Text>
+      <Text style={styles.cardSubTitle}>Digite o código de 6 dígitos enviado para seu email</Text>
 
       {/* <View style={{ gap: 24 }}> */}
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Email</Text>
+        <Text style={styles.label}>Código de verificação</Text>
         <TextInput
           style={styles.input}
-          placeholder="Ex: seunome@gmail.com"
-          keyboardType="email-address"
+          placeholder="000000"
+          keyboardType="decimal-pad"
         />
       </View>
       <View style={{ gap: 8 }}>

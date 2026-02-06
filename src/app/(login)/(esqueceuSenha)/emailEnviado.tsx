@@ -10,7 +10,7 @@ const { NEUTRAL } = Colors;
 
 export default function EmailEnviado() {
   return (
-    <BgLogin logo={false}>
+    <BgLogin logo={false} card>
       <Text style={styles.cardTitle}>Email enviado!</Text>
       <Text style={styles.cardSubTitle}>Enviamos um código de verificação para seu@email.com</Text>
 

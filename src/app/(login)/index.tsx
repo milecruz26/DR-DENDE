@@ -30,7 +30,7 @@ export default function Login() {
     <>
       <LoginLoading visible={loading} />
 
-      <BgLogin >
+      <BgLogin card >
         <Text style={styles.cardTitle}>Fazer login</Text>
 
 

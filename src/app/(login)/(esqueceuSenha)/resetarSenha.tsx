@@ -28,9 +28,9 @@ export default function ResetarSenha() {
   return (
     <>
       <LoginLoading visible={loading} />
-      <BgLogin logo={false}>
-        <Text style={styles.cardTitle}>Qual é o seu perfil?</Text>
-        <Text style={styles.cardSubTitle}>Escolha a opção que melhor descreve você para personalizar sua experiência</Text>
+      <BgLogin logo={false} card>
+        <Text style={styles.cardTitle}>Altere a sua senha</Text>
+        <Text style={styles.cardSubTitle}>Insira e confirme a sua nova senha para realizar a alteração.</Text>
 
         {/* <View style={{ gap: 24 }}> */}
         <View style={styles.inputGroup}>
