@@ -6,7 +6,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 export default function Perfil() {
   return (
-    <BgLogin>
+    <BgLogin card>
       <Text style={styles.cardTitle}>Qual é o seu perfil?</Text>
       <Text style={styles.cardSubTitle}>Escolha a opção que melhor descreve você para personalizar sua experiência</Text>
 

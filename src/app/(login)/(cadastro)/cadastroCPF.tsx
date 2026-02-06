@@ -11,7 +11,7 @@ const { NEUTRAL } = Colors;
 
 export default function CadastroCPF() {
   return (
-    <BgLogin logo={false}>
+    <BgLogin logo={false} card>
       <Text style={styles.cardTitle}>Cadastre-se</Text>
 
 

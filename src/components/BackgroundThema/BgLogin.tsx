@@ -7,9 +7,11 @@ import LogoCulinaria from '../Logo/Logo-culinaria';
 interface BgLoginProps {
   children?: React.ReactNode;
   logo?: boolean;
+  card?: boolean,
+  hearder?: boolean
 }
 
-export default function BgLogin({ children, logo }: BgLoginProps) {
+export default function BgLogin({ children, logo, card, hearder }: BgLoginProps) {
 
   return (
 
@@ -19,16 +21,20 @@ export default function BgLogin({ children, logo }: BgLoginProps) {
       <ScrollView >
         <View style={styles.content}>
           {/* <StatusBar style="auto" /> */}
-          <View style={styles.logoContainer}>
-            <Image source={require('../../../assets/images/logos/pnab-logo.png')} />
-            <LogoCulinaria />
-          </View>
+          {hearder ??
+            <View style={styles.logoContainer}>
+              <Image source={require('../../../assets/images/logos/pnab-logo.png')} />
+              <LogoCulinaria />
+            </View>
+
+          }
+
 
           {/* <V style={styles.card}> */}
-          <View style={styles.card}>
-            {children}
 
-          </View>
+          {
+            card ? <View style={styles.card}>{children}</View> : children
+          }
           {logo ?? <Image source={require('../../../assets/images/logos/apoio-financeiro-logo.png')} style={styles.logoApoioFinanceiro} />
           }
         </View>
