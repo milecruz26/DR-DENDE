@@ -1,38 +1,52 @@
+import { useRouter } from 'expo-router';
 import {
   Image,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View
 } from 'react-native';
 
 import Colors from '@/theme/Colors';
 const { primary } = Colors;
-export const HighlightCard = () => (
-  <View style={styles.highlightCard}>
-    {/* Imagem Placeholder - Substitua pela sua URL ou require */}
-    <View style={styles.highlightImageContainer}>
-      <Image
-        source={require('../../assets/images/pratos/passarinha.png')} // Imagem transparente do prato
-        style={styles.highlightImage}
-        resizeMode="cover"
-      />
-      {/* Badge "Novo" simulado */}
-      <View style={styles.badge}>
-        <Image
-          source={require('../../assets/images/icones/badge-new.png')} // Imagem transparente do badge "Novo"
-          style={styles.badgeImg}
-        />
-      </View>
-    </View>
+export const HighlightCard = () => {
+  const router = useRouter();
+  return (
 
-    <View style={styles.highlightContent}>
-      <Text style={styles.dishTitle}>PASSARINHA</Text>
-      <Text style={styles.dishDesc}>
-        Lorem ipsum dollorLorem ipsum dollor Lorem ipsum dollor
-      </Text>
-    </View>
-  </View>
-);
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => router.push('/verbete')}
+    >
+      {/* <Link href="/verbete" asChild> */}
+
+      <View style={styles.highlightCard}>
+        {/* Imagem Placeholder - Substitua pela sua URL ou require */}
+        <View style={styles.highlightImageContainer}>
+          <Image
+            source={require('../../assets/images/pratos/passarinha.png')} // Imagem transparente do prato
+            style={styles.highlightImage}
+            resizeMode="cover"
+          />
+          {/* Badge "Novo" simulado */}
+          <View style={styles.badge}>
+            <Image
+              source={require('../../assets/images/icones/badge-new.png')} // Imagem transparente do badge "Novo"
+              style={styles.badgeImg}
+            />
+          </View>
+        </View>
+
+        <View style={styles.highlightContent}>
+          <Text style={styles.dishTitle}>PASSARINHA</Text>
+          <Text style={styles.dishDesc}>
+            Lorem ipsum dollorLorem ipsum dollor Lorem ipsum dollor
+          </Text>
+        </View>
+      </View>
+      {/* </Link> */}
+    </TouchableOpacity>
+  )
+};
 
 const styles = StyleSheet.create({
   highlightCard: {

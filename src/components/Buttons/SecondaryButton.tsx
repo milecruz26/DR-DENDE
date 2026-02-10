@@ -66,7 +66,7 @@ export const SecondaryButton = ({
 
 const styles = StyleSheet.create({
   base: {
-    backgroundColor: '#FFF',
+    // backgroundColor: '#FFF',
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',

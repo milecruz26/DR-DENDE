@@ -6,7 +6,6 @@ import { HighlightCard } from '@/components/HighlightCard';
 import { MockTabBar } from '@/components/MockTabBar';
 import { SectionTitle } from '@/components/SectionTitle';
 import { VerbeteCard } from '@/components/VerbeteCard';
-import { Link } from 'expo-router';
 import React from 'react';
 import {
   ScrollView,
@@ -31,9 +30,7 @@ export default function HomeScreen() {
 
           {/* Seção Destaques */}
           <SectionTitle title="Destaques" />
-          <Link href="/verbete" asChild>
-            <HighlightCard />
-          </Link>
+          <HighlightCard />
 
           {/* Categorias (Scroll Horizontal) */}
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
