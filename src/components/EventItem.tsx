@@ -1,18 +1,19 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {
+  Pressable,
   StyleSheet,
-  Text,
-  View
+  Text
 } from 'react-native';
 interface EventItemProps {
   title: string;
+  onPress?: () => void;
 }
 
-export const EventItem = ({ title }: EventItemProps) => (
-  <View style={styles.eventItem}>
+export const EventItem = ({ ...props }: EventItemProps) => (
+  <Pressable style={styles.eventItem} onPress={props.onPress}>
     <MaterialCommunityIcons name="bullhorn-outline" size={20} color={'#2F4F2F'} />
-    <Text style={styles.eventTitle}>{title}</Text>
-  </View>
+    <Text style={styles.eventTitle}>{props.title}</Text>
+  </Pressable>
 );
 
 

@@ -3,11 +3,13 @@ import { DateSelector } from '@/components/DataSelector';
 import { EventItem } from '@/components/EventItem';
 import { Header } from '@/components/Header';
 import { HighlightCard } from '@/components/HighlightCard';
-import { MockTabBar } from '@/components/MockTabBar';
+import EventsInfo from '@/components/Modal/Info/EventsInfo';
+import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { SectionTitle } from '@/components/SectionTitle';
 import { VerbeteCard } from '@/components/VerbeteCard';
+import { MOCK_DATA } from '@/data/mock';
 import { Link } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StatusBar,
@@ -19,6 +21,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function HomeScreen() {
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={'#FFFBE6'} />
@@ -62,7 +65,9 @@ export default function HomeScreen() {
           <View style={styles.eventContainer} >
             <DateSelector />
             <View style={styles.eventList}>
-              <EventItem title="FEIJOADA DE SEU ZÉ" />
+              <EventItem title="FEIJOADA DE SEU ZÉ"
+                onPress={() => setModalVisible(true)}
+              />
               <EventItem title="CEIA BENEFICENTE" />
               <EventItem title="CEIA BENEFICENTE" />
               <EventItem title="REUNIÃO GERAL" />
@@ -76,8 +81,21 @@ export default function HomeScreen() {
         </ScrollView>
 
         {/* Bottom Tab Bar (Posicionada Absolutamente) */}
-        <MockTabBar />
+        {/* <MockTabBar /> */}
       </View>
+      <ReadMoreModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        title={MOCK_DATA.titulo}
+      >
+
+        <EventsInfo
+          location={MOCK_DATA.location}
+          date={MOCK_DATA.date}
+          description={MOCK_DATA.aboutEvent}
+        />
+
+      </ReadMoreModal>
     </SafeAreaView>
   );
 }

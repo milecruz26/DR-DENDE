@@ -3,7 +3,6 @@ import { Header } from '@/components/Header';
 import { InfoPill } from '@/components/InfoPill';
 import { IngredientItem } from '@/components/IngredientItem';
 import { InstructionStep } from '@/components/InstructionStep';
-import { MockTabBar } from '@/components/MockTabBar';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -19,8 +18,10 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import VerbetesInfo from '@/components/Modal/Info/VerbetesInfo';
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
-const textoGrande = "texto grande"
+import { MOCK_DATA } from '@/data/mock';
+
 
 const COLORS = {
   background: '#FFFBE6',
@@ -32,18 +33,12 @@ const COLORS = {
   white: '#FFFFFF',
 };
 
-
-// ==========================================
-// 2. Tela Principal
-// ==========================================
-
 export default function VerbeteScreen() {
   const router = useRouter();
   const [modalVisible, setModalVisible] = useState(false);
 
   const navegarParaHome = () => {
     router.back();
-    console.log('teste')
   }
 
   return (
@@ -67,7 +62,7 @@ export default function VerbeteScreen() {
               style={{ zIndex: 99 }}
             >
               <Image
-                source={require('../../../assets/images/icones/arrow-left-line-white.png')}
+                source={require('../../../../assets/images/icones/arrow-left-line-white.png')}
                 style={styles.navButton}
               />
 
@@ -79,7 +74,7 @@ export default function VerbeteScreen() {
               onPress={navegarParaHome}
             >
               <Image
-                source={require('../../../assets/images/icones/share-line-white.png')}
+                source={require('../../../../assets/images/icones/share-line-white.png')}
                 style={styles.navButton}
               />
 
@@ -91,7 +86,7 @@ export default function VerbeteScreen() {
         {/* Imagem do Prato */}
         <View style={styles.imageContainer}>
           <Image
-            source={require('../../../assets/images/pratos/passarinha.png')}
+            source={require('../../../../assets/images/pratos/passarinha.png')}
             style={styles.mainImage}
             resizeMode="contain" // Garante que a imagem caiba inteira
           />
@@ -155,9 +150,17 @@ export default function VerbeteScreen() {
       <ReadMoreModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        content={textoGrande}
-      />
-      <MockTabBar />
+      >
+
+        <VerbetesInfo content={MOCK_DATA.content} />
+
+      </ReadMoreModal>
+      {/* <ReadMoreModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        data={MOCK_DATA}
+      /> */}
+      {/* <MockTabBar /> */}
     </SafeAreaView>
     // </View>
   );
