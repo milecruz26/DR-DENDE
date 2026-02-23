@@ -11,6 +11,7 @@ import {
 export const MockTabBar = () => {
   const pathname = usePathname();
   const isSearch = pathname.startsWith('/busca');
+  const isDinner = pathname.startsWith('/estabelecimentos');
   const isHome = pathname === '/' || pathname === '/index';
   return (
 
@@ -42,12 +43,14 @@ export const MockTabBar = () => {
         </Link>
       </View>
 
-      <TouchableOpacity>
+      <Pressable>
         <Image source={require('../../assets/images/icones/calendar-line-white.png')} style={{ height: 24, width: 24 }} />
-      </TouchableOpacity>
-      <TouchableOpacity>
-        <Image source={require('../../assets/images/icones/dinner-line-white.png')} style={{ height: 24, width: 24 }} />
-      </TouchableOpacity>
+      </Pressable>
+      <Link href="/(protegida)/estabelecimentos" asChild>
+        <Pressable>
+          <Image source={isDinner ? require('../../assets/images/icones/dinner-line-orage.png') : require('../../assets/images/icones/dinner-line-white.png')} style={{ height: 24, width: 24 }} />
+        </Pressable>
+      </Link>
     </View>
   )
 };

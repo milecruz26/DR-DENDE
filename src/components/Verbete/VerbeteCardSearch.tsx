@@ -1,5 +1,6 @@
 import Colors from "@/theme/Colors";
-import { Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import { Image, ImageSourcePropType, Pressable, StyleSheet, Text, View } from "react-native";
 
 export interface VerbeteCardProps {
   item: {
@@ -18,6 +19,10 @@ SECONDARY.lighter
 export const VerbeteCardSearch = ({ item, index }: VerbeteCardProps) => {
   const backgroundColor = index % 2 === 0 ? TERTIARY.light : SECONDARY.light;
   const borderColor = index % 2 === 0 ? TERTIARY.dark : 'transparent';
+  const [isSaved, setIsSaved] = useState(false);
+  const toggleSave = () => {
+    setIsSaved(!isSaved);
+  };
   return (
     // <View style={styles.verbeteCard}>
     <View style={[styles.verbeteCard, { backgroundColor, borderColor }]}>
@@ -26,10 +31,15 @@ export const VerbeteCardSearch = ({ item, index }: VerbeteCardProps) => {
         <Text style={styles.verbeteTitle}>{item.title}</Text>
         <Text style={styles.verbeteDesc} numberOfLines={2}>{item.desc}</Text>
       </View>
-      <TouchableOpacity style={styles.bookmarkIcon}>
-        <Image source={require('../../../assets/images/icones/saved-line-neutral.png')} style={{ width: 32, height: 32 }} />
+      <Pressable style={styles.bookmarkIcon} onPress={toggleSave}>
+        <Image
+          source={
+            isSaved
+              ? require('../../../assets/images/icones/saved-filled-line-neutral.png')
+              : require('../../../assets/images/icones/saved-line-neutral.png')
+          } style={{ width: 32, height: 32 }} />
         {/* <Feather name="bookmark" size={20} color={'#2C2C2C'} /> */}
-      </TouchableOpacity>
+      </Pressable>
     </View>
   )
 };
