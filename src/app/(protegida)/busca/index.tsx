@@ -1,4 +1,6 @@
 import { Header } from '@/components/Header';
+import { EstabelecimentoDetalhes } from '@/components/Modal/EstabelecimentoDetalhes';
+import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { RestaurantCardSearch } from '@/components/Restaurante/RestauranteCardSearch';
 import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';
 import Colors from '@/theme/Colors';
@@ -63,6 +65,13 @@ export default function BuscaScreen() {
   const [activeTab, setActiveTab] = useState<CategoryType>('verbetes');
   const [subTab, setSubTab] = useState<'todos' | 'cupom'>('todos');
   const [searchText, setSearchText] = useState('');
+  const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState(null);
+  const [modalVisivel, setModalVisivel] = useState(false);
+
+  const abrirDetalhes = (item: any) => {
+    setEstabelecimentoSelecionado(item);
+    setModalVisivel(true);
+  };
 
   return (
     <View style={styles.container}>
@@ -154,13 +163,23 @@ export default function BuscaScreen() {
           renderItem={({ item, index }) => ( // <-- Pegamos o index aqui
             activeTab === 'verbetes'
               ? <VerbeteCardSearch item={item} index={index} /> // <-- Passamos o index para o card
-              : <RestaurantCardSearch item={item as any} />
+              : <RestaurantCardSearch
+                item={item as any} moreDetailsPress={() => abrirDetalhes(item)} />
           )}
           // Espaço extra embaixo para o menu não cobrir o último item
           ListFooterComponent={<View style={{ height: 100 }} />}
         />
 
       </View>
+      <ReadMoreModal
+        visible={modalVisivel}
+        onClose={() => setModalVisivel(false)}
+        title="Estabelecimento ipsum"
+        type="full"
+      >
+        {/* O novo componente entra como 'children' mágico aqui dentro! */}
+        <EstabelecimentoDetalhes />
+      </ReadMoreModal>
     </View>
   );
 }

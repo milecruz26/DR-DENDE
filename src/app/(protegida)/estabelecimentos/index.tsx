@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { EstabelecimentoDetalhes } from "@/components/Modal/EstabelecimentoDetalhes";
 import VerbetesExcludConfirm from "@/components/Modal/ExcludConfirm/VerbetesExcludConfirm";
 import { ReadMoreModal } from "@/components/Modal/ModalVerbete";
 import { RestaurantCardSearch } from "@/components/Restaurante/RestauranteCardSearch";
@@ -61,12 +62,20 @@ const MOCK_RESTAURANTES = [
 export default function Estabelecimentos() {
   const [isSaved, setIsSaved] = useState(false);
   const [showMenu, setShowMenu] = useState(false)
+  const [modalVisivel, setModalVisivel] = useState(false);
+  const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState(null);
   const [subTab, setSubTab] = useState<'todos' | 'cupom'>('todos');
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>(null);
+
   const openDeleteModal = (item: any) => {
     setSelectedItem(item);
     setDeleteModalVisible(true);
+  };
+
+  const abrirDetalhes = (item: any) => {
+    setEstabelecimentoSelecionado(item);
+    setModalVisivel(true);
   };
 
   return (
@@ -96,7 +105,7 @@ export default function Estabelecimentos() {
           contentContainerStyle={{ paddingBottom: 120 }}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => (
-            <RestaurantCardSearch item={item as any} onDeletePress={() => openDeleteModal(item)} />
+            <RestaurantCardSearch item={item as any} onDeletePress={() => openDeleteModal(item)} moreDetailsPress={() => abrirDetalhes(item)} />
           )}
           // Espaço extra embaixo para o menu não cobrir o último item
           ListFooterComponent={<View style={{ height: 100 }} />}
@@ -117,6 +126,17 @@ export default function Estabelecimentos() {
             setDeleteModalVisible(false);
           }}
         />
+      </ReadMoreModal>
+
+      {/* O SEU MODAL SENDO USADO AQUI */}
+      <ReadMoreModal
+        visible={modalVisivel}
+        onClose={() => setModalVisivel(false)}
+        title="Estabelecimento ipsum"
+        type="full"
+      >
+        {/* O novo componente entra como 'children' mágico aqui dentro! */}
+        <EstabelecimentoDetalhes />
       </ReadMoreModal>
 
     </View>

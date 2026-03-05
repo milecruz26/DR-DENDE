@@ -1,6 +1,6 @@
 import Colors from "@/theme/Colors";
 import { useState } from "react";
-import { Image, ImageSourcePropType, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, ImageSourcePropType, Pressable, StyleSheet, Text, View, GestureResponderEvent } from "react-native";
 
 export interface RestaurantCardProps {
   item: {
@@ -10,13 +10,14 @@ export interface RestaurantCardProps {
     logo: ImageSourcePropType;
 
   },
-  onDeletePress?: () => void
+  onDeletePress?: () => void,
+  moreDetailsPress?: () => void,
 }
 
 const { NEUTRAL, primary } = Colors
 
 
-export const RestaurantCardSearch = ({ item, onDeletePress }: RestaurantCardProps) => {
+export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: RestaurantCardProps) => {
   const [isSaved, setIsSaved] = useState(false);
   const [showMenu, setShowMenu] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -42,7 +43,7 @@ export const RestaurantCardSearch = ({ item, onDeletePress }: RestaurantCardProp
   return (
     <>
 
-      <View style={[styles.restCard, { zIndex: showMenu ? 10 : 1 }]}>
+      <Pressable style={[styles.restCard, { zIndex: showMenu ? 10 : 1 }]} onPress={moreDetailsPress}>
         {/* Imagem de Fundo (Capa) */}
         <Image source={item.image} style={styles.restCover} />
 
@@ -119,7 +120,7 @@ export const RestaurantCardSearch = ({ item, onDeletePress }: RestaurantCardProp
           </View>
           <Text style={styles.restName}>{item.name}</Text>
         </View>
-      </View>
+      </Pressable>
 
     </>
 
