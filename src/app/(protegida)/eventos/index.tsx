@@ -18,7 +18,7 @@ export default function Eventos() {
 
 
         <View>
-          <Text style={styles.textPage}>Estabelecimentos </Text>
+          <Text style={styles.textPage}>Eventos </Text>
         </View>
 
         <View style={styles.eventContainer} >

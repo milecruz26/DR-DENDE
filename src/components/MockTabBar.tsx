@@ -3,7 +3,6 @@ import {
   Image,
   Pressable,
   StyleSheet,
-  TouchableOpacity,
   View
 } from 'react-native';
 
@@ -26,10 +25,11 @@ export const MockTabBar = () => {
             style={{ height: 24, width: 24 }} />
         </Pressable>
       </Link>
-
-      <TouchableOpacity>
-        <Image source={require('../../assets/images/icones/book-line-white.png')} style={{ height: 24, width: 24 }} />
-      </TouchableOpacity>
+      <Link href="/(protegida)/listaVerbetes" asChild>
+        <Pressable>
+          <Image source={require('../../assets/images/icones/book-line-white.png')} style={{ height: 24, width: 24 }} />
+        </Pressable>
+      </Link>
 
       <View style={styles.searchButtonContainer}>
         <Link href="/(protegida)/busca" asChild>
