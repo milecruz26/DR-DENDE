@@ -1,6 +1,6 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
@@ -148,9 +148,11 @@ export default function MeuPerfil() {
           <Text style={styles.sectionTitle}>Senha</Text>
         </View>
 
-        <TouchableOpacity style={styles.outlineButton}>
-          <Text style={styles.outlineButtonText}>Alterar senha</Text>
-        </TouchableOpacity>
+        <Link href="/(protegida)/configuracoes/alterarSenha" asChild>
+          <TouchableOpacity style={styles.outlineButton}>
+            <Text style={styles.outlineButtonText}>Alterar senha</Text>
+          </TouchableOpacity>
+        </Link>
 
         {/* Localização */}
         <View style={styles.sectionHeader}>

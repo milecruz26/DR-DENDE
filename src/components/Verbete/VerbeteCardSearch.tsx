@@ -11,12 +11,13 @@ export interface VerbeteCardProps {
     img: ImageSourcePropType; // <-- Este é o tipo correto para imagens locais no Expo/React Native
   },
   index: number;
+  favoritos?: boolean;
 }
 const { SECONDARY, TERTIARY } = Colors
 
 
 SECONDARY.lighter
-export const VerbeteCardSearch = ({ item, index }: VerbeteCardProps) => {
+export const VerbeteCardSearch = ({ item, index, favoritos }: VerbeteCardProps) => {
   const backgroundColor = index % 2 === 0 ? TERTIARY.light : SECONDARY.light;
   const borderColor = index % 2 === 0 ? TERTIARY.dark : 'transparent';
   const [isSaved, setIsSaved] = useState(false);
@@ -31,15 +32,26 @@ export const VerbeteCardSearch = ({ item, index }: VerbeteCardProps) => {
         <Text style={styles.verbeteTitle}>{item.title}</Text>
         <Text style={styles.verbeteDesc} numberOfLines={2}>{item.desc}</Text>
       </View>
-      <Pressable style={styles.bookmarkIcon} onPress={toggleSave}>
-        <Image
-          source={
-            isSaved
-              ? require('../../../assets/images/icones/saved-filled-line-neutral.png')
-              : require('../../../assets/images/icones/saved-line-neutral.png')
-          } style={{ width: 32, height: 32 }} />
-        {/* <Feather name="bookmark" size={20} color={'#2C2C2C'} /> */}
-      </Pressable>
+
+      <View style={{ alignItems: 'center' }}>
+        <Pressable style={styles.bookmarkIcon} onPress={toggleSave}>
+          <Image
+            source={
+              isSaved
+                ? require('../../../assets/images/icones/saved-filled-line-neutral.png')
+                : require('../../../assets/images/icones/saved-line-neutral.png')
+            } style={{ width: 32, height: 32 }} />
+        </Pressable>
+        {favoritos &&
+
+          <Pressable>
+            <Image
+              source={require('../../../assets/images/icones/tres-pontos-line-black.png')}
+              style={{ width: 32, height: 32 }}
+            />
+          </Pressable>
+        }
+      </View>
     </View>
   )
 };

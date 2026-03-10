@@ -147,7 +147,7 @@ export default function Favoritos() {
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => ( // <-- Pegamos o index aqui
             activeTab === 'verbetes'
-              ? <VerbeteCardSearch item={item} index={index} /> // <-- Passamos o index para o card
+              ? <VerbeteCardSearch item={item} index={index} favoritos={true} /> // <-- Passamos o index para o card
               : <RestaurantCardSearch
                 item={item as any} moreDetailsPress={() => abrirDetalhes(item)} />
           )}

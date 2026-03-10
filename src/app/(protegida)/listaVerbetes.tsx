@@ -1,14 +1,14 @@
 import { Header } from '@/components/Header';
 import { MockTabBar } from '@/components/MockTabBar';
-import { VerbeteCard } from '@/components/VerbeteCard';
+import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';
 import Colors from '@/theme/Colors';
 import React from 'react';
 import {
   FlatList,
-  ScrollView,
   StatusBar,
   StyleSheet,
-  View,
+  Text,
+  View
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -37,21 +37,21 @@ export default function ListaVerbertes() {
         {/* Header Fixo */}
         <Header />
 
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <FlatList
-            data={MOCK_VERBETES}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <VerbeteCard
-                title={item.title}
-                description={item.desc}
+        {/* <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}> */}
+        <Text style={styles.pageTitle}>Verbetes</Text>
+        <FlatList
+          data={MOCK_VERBETES as any[]}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item, index }) => (
+            <VerbeteCardSearch
+              item={item} index={index} favoritos={true}
 
-              />
-            )}
-          />
+            />
+          )}
+        />
 
 
-        </ScrollView>
+        {/* </ScrollView> */}
 
         {/* Bottom Tab Bar (Posicionada Absolutamente) */}
         <MockTabBar />
@@ -78,6 +78,15 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
 
+  pageTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#333',
+    paddingHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 16,
+  },
+
   // Chips
   horizontalScroll: {
     marginVertical: 24,
@@ -100,5 +109,6 @@ const styles = StyleSheet.create({
     gap: 8,
     // backgroundColor: '#FFF',
   },
+
 
 });
