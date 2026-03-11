@@ -1,5 +1,5 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {
+  Image,
   Pressable,
   StyleSheet,
   Text
@@ -11,7 +11,7 @@ interface EventItemProps {
 
 export const EventItem = ({ ...props }: EventItemProps) => (
   <Pressable style={styles.eventItem} onPress={props.onPress}>
-    <MaterialCommunityIcons name="bullhorn-outline" size={20} color={'#2F4F2F'} />
+    <Image source={require('../../assets/images/icones/pin-green.png')} style={{ width: 16, height: 16 }} />
     <Text style={styles.eventTitle}>{props.title}</Text>
   </Pressable>
 );
@@ -22,10 +22,11 @@ const styles = StyleSheet.create({
   eventItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F2E8D5',
+    backgroundColor: '#FFFAEB',
     padding: 15,
     borderRadius: 12,
     gap: 10,
+    boxShadow: '0 1px 3px 0 rgba(25, 25, 28, 0.12)',
   },
   eventTitle: {
     fontSize: 16,

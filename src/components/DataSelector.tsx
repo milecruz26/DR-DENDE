@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#F2E8D5',
+
     borderRadius: 12,
     padding: 10,
     // marginBottom: 15,
@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#999',
     borderRadius: 8,
+    backgroundColor: '#FDFDFD',
   },
   dateItem: {
     paddingVertical: 8,
@@ -56,7 +57,6 @@ const styles = StyleSheet.create({
   },
   dateText: {
     color: '#2F4F2F',
-    fontWeight: 'bold',
   },
   dateTextSelected: {
     color: '#FFF',
