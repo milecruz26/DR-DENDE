@@ -1,15 +1,23 @@
+import CustomDatePicker from '@/components/CustomDatePicker';
 import { DateSelector } from '@/components/DataSelector';
 import { EventItem } from '@/components/EventItem';
 import { Header } from '@/components/Header';
 import EventsInfo from '@/components/Modal/Info/EventsInfo';
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { MOCK_DATA } from '@/data/mock';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Eventos() {
-  const [modalVisivel, setModalVisivel] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  useEffect(() => {
+    console.log('data:', new Date())
+    console.log('data atualizada:', selectedDate)
+  }, [])
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={'#FFFBE6'} />
@@ -22,21 +30,34 @@ export default function Eventos() {
         </View>
 
         <View style={styles.eventContainer} >
-          <DateSelector />
+          <DateSelector
+            currentDate={new Date()}
+            onDateChange={(newDate) => setSelectedDate(newDate)}
+            onOpenPicker={() => setShowDatePicker(true)}
+          />
           <View style={styles.eventList}>
             <EventItem title="FEIJOADA DE SEU ZÉ"
-              onPress={() => setModalVisivel(true)}
+              onPress={() => setModalVisible(true)}
             />
             <EventItem title="CEIA BENEFICENTE" />
             <EventItem title="CEIA BENEFICENTE" />
             <EventItem title="REUNIÃO GERAL" />
           </View>
         </View>
+        <CustomDatePicker
+          visible={showDatePicker}
+          selectedDate={selectedDate}
+          onClose={() => setShowDatePicker(false)}
+          onSelectDate={(date) => {
+            setSelectedDate(date);
+            setShowDatePicker(false);
+          }}
+        />
       </SafeAreaView>
 
       <ReadMoreModal
-        visible={modalVisivel}
-        onClose={() => setModalVisivel(false)}
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
         title={MOCK_DATA.titulo}
       >
 

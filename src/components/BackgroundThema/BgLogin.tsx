@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BannerStrip } from '../BannerStrip/BannerStrip';
@@ -14,42 +15,48 @@ interface BgLoginProps {
 export default function BgLogin({ children, logo, card, hearder }: BgLoginProps) {
 
   return (
+    <LinearGradient
+      colors={['#FFF0C8', '#FFF']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      style={styles.container}
+    >
+      <SafeAreaView style={styles.container}>
+        {/* <RadialBackground> */}
+        <BannerStrip />
+        <ScrollView >
+          <View style={styles.content}>
+            {/* <StatusBar style="auto" /> */}
+            {hearder ??
+              <View style={styles.logoContainer}>
+                <Image source={require('../../../assets/images/logos/pnab-logo.png')} />
+                <LogoCulinaria />
+              </View>
 
-    <SafeAreaView style={styles.container}>
-      {/* <RadialBackground> */}
-      <BannerStrip />
-      <ScrollView >
-        <View style={styles.content}>
-          {/* <StatusBar style="auto" /> */}
-          {hearder ??
-            <View style={styles.logoContainer}>
-              <Image source={require('../../../assets/images/logos/pnab-logo.png')} />
-              <LogoCulinaria />
-            </View>
-
-          }
+            }
 
 
-          {/* <V style={styles.card}> */}
+            {/* <V style={styles.card}> */}
 
-          {
-            card ? <View style={styles.card}>{children}</View> : children
-          }
-          {logo ?? <Image source={require('../../../assets/images/logos/apoio-financeiro-logo.png')} style={styles.logoApoioFinanceiro} />
-          }
-        </View>
-      </ScrollView>
-      <BannerStrip />
-      {/* </RadialBackground> */}
-    </SafeAreaView>
-
+            {
+              card ? <View style={styles.card}>{children}</View> : children
+            }
+            {logo ?? <Image source={require('../../../assets/images/logos/apoio-financeiro-logo.png')} style={styles.logoApoioFinanceiro} />
+            }
+          </View>
+        </ScrollView>
+        <BannerStrip />
+        {/* </RadialBackground> */}
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFBE6',
+    // backgroundColor: '#FFFBE6',
+    // backgroundImage: 'radial-gradient(circle at top left, #fa0303, #0308ff)',
   },
   content: {
     flex: 1,

@@ -94,9 +94,9 @@ export default function CustomDatePicker({ visible, onClose, onSelectDate, selec
 
     for (let i = 1; i <= diasNoMes; i++) {
       const isSelected = selectedDate &&
-        selectedDate.getDate() === i &&
-        selectedDate.getMonth() === mes &&
-        selectedDate.getFullYear() === ano;
+        selectedDate?.getDate() === i &&
+        selectedDate?.getMonth() === mes &&
+        selectedDate?.getFullYear() === ano;
 
       dias.push(
         <TouchableOpacity
