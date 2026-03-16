@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   },
   safeAreaContent: {
     flex: 1,
-    backgroundColor: '#FFFBE6',
+    // backgroundColor: '#FFFBE6',
     width: Dimensions.get('window').width, // 
     alignItems: 'center',
   },

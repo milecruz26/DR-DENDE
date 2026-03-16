@@ -19,6 +19,12 @@ export default function Eventos() {
     console.log('data atualizada:', selectedDate)
   }, [])
   return (
+    // <LinearGradient
+    //   colors={['#FFF', '#FFF0C8']}
+    //   start={{ x: 0, y: 0 }}
+    //   end={{ x: 0, y: 0.8 }}
+    //   style={styles.container}
+    // >
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={'#FFFBE6'} />
       <Header />
@@ -70,13 +76,14 @@ export default function Eventos() {
       </ReadMoreModal>
 
     </View>
+    // </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFBE6',
+    // backgroundColor: '#FFFBE6',
   },
   contentContainer: {
     flex: 1,

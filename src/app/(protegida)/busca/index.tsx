@@ -191,7 +191,7 @@ export default function BuscaScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFBE6',
+    // backgroundColor: '#FFFBE6',
   },
 
   // --- Mapa e Header ---

@@ -1,4 +1,5 @@
 import { MockTabBar } from '@/components/MockTabBar';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Slot } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -7,9 +8,16 @@ export default function ProtegidaLayout() {
   return (
     <View style={styles.container}>
       {/* O Slot renderiza a tela atual (index, verbete, etc.) */}
-      <View style={styles.content}>
-        <Slot />
-      </View>
+      <LinearGradient
+        colors={['#FFF', '#FFF0C8']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 0.8 }}
+        style={styles.container}
+      >
+        <View style={styles.content}>
+          <Slot />
+        </View>
+      </LinearGradient>
 
       {/* O seu Menu fica fixo aqui embaixo, fora do Slot */}
       <View style={styles.tabBarContainer}>

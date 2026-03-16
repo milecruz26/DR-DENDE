@@ -14,9 +14,9 @@ export const EventItem = ({ ...props }: EventItemProps) => (
   <Pressable style={styles.eventItem} onPress={props.onPress}>
     <Image source={require('../../assets/images/icones/pin-green.png')} style={{ width: 16, height: 16 }} />
     <Text style={styles.eventTitle}>{props.title}</Text>
-    <View>
-      <Text style={{ fontSize: 12, color: '#2F4F2F' }}>Clique para detalhes</Text>
-      <Image source={require('../../assets/images/icones/tres-pontos-line-black.png')} />
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, marginLeft: 'auto' }}>
+      <Text style={{ fontSize: 12, color: '#2F4F2F' }}>Saiba mais</Text>
+      <Image source={require('../../assets/images/icones/tres-pontos-line-black.png')} style={{ width: 24, height: 24 }} />
     </View>
 
   </Pressable>
