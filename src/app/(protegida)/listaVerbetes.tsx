@@ -1,7 +1,9 @@
+import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 import { Header } from '@/components/Header';
 import { MockTabBar } from '@/components/MockTabBar';
 import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';
 import Colors from '@/theme/Colors';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import {
   FlatList,
@@ -28,17 +30,24 @@ const MOCK_VERBETES = [
 
 
 export default function ListaVerbertes() {
+  const router = useRouter();
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={'#FFFBE6'} />
 
       <View style={styles.contentContainer}>
-        {/* Header Fixo */}
-        <Header />
 
-        {/* <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}> */}
-        <Text style={styles.pageTitle}>Verbetes</Text>
+        <Header />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, }}>
+          <Text style={styles.pageTitle}>Verbetes</Text>
+          <SecondaryButton
+            onPress={() => router.push('/configuracoes/adicionarVerbetePasso1')}
+            title='+ Criar Novo'
+            size='small'
+          />
+        </View>
+
         <FlatList
           data={MOCK_VERBETES as any[]}
           keyExtractor={(item) => item.id}
@@ -48,6 +57,8 @@ export default function ListaVerbertes() {
 
             />
           )}
+          style={{ marginTop: 16 }}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 80 }}
         />
 
 
@@ -82,7 +93,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: '#333',
-    paddingHorizontal: 20,
+
     marginTop: 20,
     marginBottom: 16,
   },

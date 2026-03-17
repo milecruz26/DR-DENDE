@@ -12,6 +12,7 @@ export const MockTabBar = () => {
   const isSearch = pathname.startsWith('/busca');
   const isEvents = pathname.startsWith('/eventos');
   const isDinner = pathname.startsWith('/estabelecimentos');
+  const isVerbete = pathname.startsWith('/listaVerbetes');
   const isHome = pathname === '/' || pathname === '/index';
   return (
 
@@ -27,7 +28,10 @@ export const MockTabBar = () => {
       </Link>
       <Link href="/(protegida)/listaVerbetes" asChild>
         <Pressable>
-          <Image source={require('../../assets/images/icones/book-line-white.png')} style={{ height: 24, width: 24 }} />
+          <Image source={
+            isVerbete ? require('../../assets/images/icones/book-line-orage.png') :
+              require('../../assets/images/icones/book-line-white.png')
+          } style={{ height: 24, width: 24 }} />
         </Pressable>
       </Link>
 
@@ -38,7 +42,7 @@ export const MockTabBar = () => {
               source={isSearch
                 ? require('../../assets/images/icones/search-line-orage.png') // Opcional, se quiser a lupa laranja
                 : require('../../assets/images/icones/search-line-white.png')}
-              style={{ height: 32, width: 32 }} />
+              style={{ height: 24, width: 24 }} />
             {/* <Feather name="search" size={32} color="#FFF" /> */}
           </Pressable>
         </Link>

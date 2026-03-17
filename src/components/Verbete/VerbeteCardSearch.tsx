@@ -85,11 +85,10 @@ const styles = StyleSheet.create({
   },
   verbeteTitle: {
     fontSize: 18, // Fonte estilo "Passarinha"
-    fontWeight: '900',
     color: '#2C2C2C',
     marginBottom: 4,
     textTransform: 'uppercase',
-    fontStyle: 'italic',
+    fontFamily: "OfertaDoDia"
   },
   verbeteDesc: {
     fontSize: 12,
