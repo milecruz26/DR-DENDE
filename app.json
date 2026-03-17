@@ -33,9 +33,7 @@
       [
         "expo-font",
         {
-          "fonts": [
-            "./assets/fonts/FiraSansCondensed-Regular.ttf"
-          ],
+          "fonts": ["./assets/fonts/FiraSansCondensed-Regular.ttf"],
           "android": {
             "fonts": [
               {
@@ -123,6 +121,15 @@
                     "style": "italic"
                   }
                 ]
+              },
+              {
+                "fontFamily": "OfertaDoDia",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/Oferta-do-Dia.ttf",
+                    "weight": 400
+                  }
+                ]
               }
             ]
           },
@@ -145,7 +152,8 @@
               "./assets/fonts/FiraSansCondensed-ExtraBold.ttf",
               "./assets/fonts/FiraSansCondensed-ExtraBoldItalic.ttf",
               "./assets/fonts/FiraSansCondensed-Black.ttf",
-              "./assets/fonts/FiraSansCondensed-BlackItalic.ttf"
+              "./assets/fonts/FiraSansCondensed-BlackItalic.ttf",
+              "./assets/fonts/Oferta-do-Dia.ttf"
             ]
           }
         }

@@ -1,7 +1,6 @@
 import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 import { Header } from '@/components/Header';
 import { InfoPill } from '@/components/InfoPill';
-import { IngredientItem } from '@/components/IngredientItem';
 import { InstructionStep } from '@/components/InstructionStep';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -21,6 +20,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import VerbetesInfo from '@/components/Modal/Info/VerbetesInfo';
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { MOCK_DATA } from '@/data/mock';
+
+import arrow from '@/assets/images/icones/arrow-left-line-white.png';
+import share from "@/assets/images/icones/share-line-white.png";
+import prato from '@/assets/images/pratos/passarinha.png';
 
 
 const COLORS = {
@@ -42,53 +45,41 @@ export default function VerbeteScreen() {
   }
 
   return (
-    // <View style={styles.container}>
     <SafeAreaView style={styles.safeAreaContent}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.orangeHeader} />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        {/* Header Curvo Laranja */}
+        <View style={styles.curvedHeader} />
 
-        {/* Header Curvo Laranja (Agora mais alto para caber tudo) */}
-        <View style={styles.curvedHeader}>
+        {/* 1. Header Usuário (Avatar e CEP) */}
+        {/* <TopUserHeader /> */}
+        <Header />
 
-          {/* 1. Header Usuário (Avatar e CEP) */}
-          {/* <TopUserHeader /> */}
-          <Header />
+        {/* 2. Header de Navegação (Voltar / Título / Share) */}
+        <View style={styles.navHeader}>
+          <Pressable onPress={navegarParaHome} style={{ zIndex: 99 }}>
+            <Image
+              source={arrow}
+              style={styles.navButton}
+            />
+          </Pressable>
 
-          {/* 2. Header de Navegação (Voltar / Título / Share) */}
-          <View style={styles.navHeader}>
-            <Pressable
-              onPress={navegarParaHome}
-              style={{ zIndex: 99 }}
-            >
-              <Image
-                source={require('../../../../assets/images/icones/arrow-left-line-white.png')}
-                style={styles.navButton}
-              />
+          <Text style={styles.headerTitle}>PASSARINHA</Text>
 
-            </Pressable>
-
-            <Text style={styles.headerTitle}>PASSARINHA</Text>
-
-            <TouchableOpacity
-              onPress={navegarParaHome}
-            >
-              <Image
-                source={require('../../../../assets/images/icones/share-line-white.png')}
-                style={styles.navButton}
-              />
-
-            </TouchableOpacity>
-          </View>
-
+          <TouchableOpacity onPress={navegarParaHome}>
+            <Image
+              source={share}
+              style={styles.navButton}
+            />
+          </TouchableOpacity>
         </View>
-
         {/* Imagem do Prato */}
         <View style={styles.imageContainer}>
           <Image
-            source={require('../../../../assets/images/pratos/passarinha.png')}
+            source={prato}
             style={styles.mainImage}
-            resizeMode="contain" // Garante que a imagem caiba inteira
+            resizeMode="contain"
           />
         </View>
 
@@ -99,21 +90,18 @@ export default function VerbeteScreen() {
           <View style={styles.plateContainer}>
             <Text style={styles.sectionTitle}>Sobre o prato</Text>
             <Text style={styles.descriptionText}>
-              A passarinha, apesar de como é chamada, nada tem a ver com uma ave.
-              Na verdade, é o nome popular dado ao prato feito com o baço do boi.
-              Assim como outras vísceras de origem animal, a passarinha possui alto valor nutricional...
+              A passarinha, apesar de como é chamada, nada tem a ver com uma ave. Na verdade, é o nome popular dado ao prato feito com o baço do boi. Assim como outras vísceras de origem animal, a passarinha possui alto valor nutricional, sendo rica em ferro e vitaminas. Depois de bem temperado, o baço é frito no azeite de dendê e servido, geralmente, com farofa, salada vinagrete e pimenta.
             </Text>
             <SecondaryButton
               title='Ler tudo'
               onPress={() => setModalVisible(true)}
               size='small'
-
             />
-
           </View>
 
           {/* SEÇÃO INGREDIENTES */}
-          <View style={styles.ingredientContainer}>
+          {/* TODO: fix scroll */}
+          {/* <View style={styles.ingredientContainer}>
             <Text style={styles.sectionTitle}>Ingredientes (6)</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.ingredientsScroll}>
               <IngredientItem name="Baço bovino" ingredientPath='dende' />
@@ -124,10 +112,10 @@ export default function VerbeteScreen() {
               <IngredientItem name="Pimentao" ingredientPath='pimentao' />
               <IngredientItem name="Sal" ingredientPath="sal" />
               <IngredientItem name="manteiga" ingredientPath='manteiga' />
-              {/* <IngredientItem name="Pimenta" color="#D92B2B" /> */}
-              <View style={{ width: 20 }} />
-            </ScrollView>
-          </View>
+              <View style={{ width: 20 }} /> */}
+          {/* <IngredientItem name="Pimenta" color="#D92B2B" /> */}
+          {/* </ScrollView>
+          </View> */}
 
           <InfoPill />
 
@@ -151,9 +139,7 @@ export default function VerbeteScreen() {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
       >
-
         <VerbetesInfo content={MOCK_DATA.content} />
-
       </ReadMoreModal>
       {/* <ReadMoreModal
         visible={modalVisible}
@@ -162,7 +148,6 @@ export default function VerbeteScreen() {
       /> */}
       {/* <MockTabBar /> */}
     </SafeAreaView>
-    // </View>
   );
 }
 
@@ -176,23 +161,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFBE6',
   },
   scrollContent: {
-
-    // paddingHorizontal: 20,
-    // paddingBottom: 20,
+    display: "flex"
   },
-
-  // Header Curvo
   curvedHeader: {
     backgroundColor: COLORS.orangeHeader,
-    height: 280, // Aumentei a altura para caber os dois headers
-    borderBottomLeftRadius: 300,
-    borderBottomRightRadius: 300,
-    // width: '105%',
+    width: "100%",
+    height: 280,
+    borderBottomLeftRadius: 600,
+    borderBottomRightRadius: 600,
     alignSelf: 'center',
-    position: 'relative',
-    top: -20,
-    paddingTop: 20,
+    paddingTop: 16,
     alignItems: 'center',
+    justifyContent: 'flex-start',
+    display: "flex",
+    position: 'absolute',
+    zIndex: 0,
+    left: 0,
+    top: 0,
   },
   safeAreaContent: {
     flex: 1,
@@ -200,8 +185,6 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width, // 
     alignItems: 'center',
   },
-
-
   // Header Navegação (Voltar / Título)
   navHeader: {
     flexDirection: 'row',
@@ -209,22 +192,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     paddingHorizontal: 16,
-    marginTop: 5,
+    paddingVertical: 20,
+    zIndex: 10,
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: '900',
+    fontSize: 32,
+    fontWeight: '400',
     color: '#FFF',
     textTransform: 'uppercase',
-    fontStyle: 'italic',
+    letterSpacing: 4,
+    flex: 1,
+    textAlign: 'center',
+    fontFamily: "OfertaDoDia"
   },
   navButton: {
     width: 28,
     height: 28,
-
     padding: 4,
-    // zIndex: 99
-
   },
   backButton: {
     width: 48,
@@ -235,33 +219,32 @@ const styles = StyleSheet.create({
 
   // Imagem Principal
   imageContainer: {
-    marginTop: -200, // Ajuste fino para a nova altura do header
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 10,
-
+    zIndex: 5,
+    position: "relative",
   },
   mainImage: {
     width: "100%",
-    height: 210,
+    height: 200,
+    marginBottom: 24,
   },
-
   // ... (Restante dos estilos body, title, etc. permanecem iguais) ...
   bodyContainer: {
     paddingHorizontal: 16,
-    marginVertical: 24,
-    gap: 24
-
+    marginVertical: 0,
+    gap: 0,
+    zIndex: 10,
   },
   plateContainer: {
-    marginBottom: 24
+    marginBottom: 0,
+    paddingBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#D4C5B9',
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '700',
     color: COLORS.textDark,
-
-    marginBottom: 16,
+    marginBottom: 12,
   },
   descriptionText: {
     fontSize: 14,
@@ -272,23 +255,20 @@ const styles = StyleSheet.create({
   },
 
   ingredientContainer: {
-    // backgroundColor: 'red'
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#D4C5B9',
   },
-
   ingredientsScroll: {
     flexDirection: 'row',
-
     gap: 8,
-
   },
-
   ingredientCircle: {
     width: 60,
     height: 60,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
-
     borderWidth: 2,
     borderColor: '#FFF',
   },
@@ -299,7 +279,7 @@ const styles = StyleSheet.create({
     lineHeight: 14,
   },
   stepsListContainer: {
-
+    paddingVertical: 20,
   },
   stepsList: {
     marginTop: 10,
