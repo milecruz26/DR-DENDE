@@ -13,6 +13,7 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     // Carregamos a referência principal da família
     'FiraSansCondensed': require('../../assets/fonts/FiraSansCondensed-Regular.ttf'),
+    'OfertaDoDia': require("../../assets/fonts/Oferta-do-Dia.ttf")
   });
 
   useEffect(() => {

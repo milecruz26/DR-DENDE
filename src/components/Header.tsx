@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     width: '100%',
+    zIndex: 10,
   },
   outsideClick: {
     position: 'absolute',
