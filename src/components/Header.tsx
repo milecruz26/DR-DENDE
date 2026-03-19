@@ -1,4 +1,5 @@
 import { Avatar } from '@/components/Avatar';
+import { useAuth } from '@/context/AuthContext';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -11,11 +12,18 @@ import {
 export const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const router = useRouter();
+  const { signOut } = useAuth(); // Pegamos o usuário logado e a função de sair
 
   const handleNavigation = (route: string) => {
     setShowMenu(false);
     // @ts-ignore - Ajuste conforme sua estrutura de rotas
     router.push(route);
+  };
+
+
+  const handleLogout = () => {
+    signOut();
+    router.replace('/(login)'); // Volta para o login ao sair
   };
 
   return (
@@ -56,7 +64,7 @@ export const Header = () => {
 
               <Pressable
                 style={styles.menuItem}
-                onPress={() => handleNavigation('/(login)')}
+                onPress={handleLogout}
               >
                 <Text style={[styles.menuItemText, { color: '#C0392B' }]}>Sair</Text>
                 <Feather name="external-link" size={16} color="#C0392B" />

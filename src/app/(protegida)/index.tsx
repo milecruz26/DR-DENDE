@@ -10,7 +10,7 @@ import { SectionTitle } from '@/components/SectionTitle';
 import { VerbeteCard } from '@/components/VerbeteCard';
 import { MOCK_DATA } from '@/data/mock';
 import { Link } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StatusBar,
@@ -26,10 +26,10 @@ export default function HomeScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  useEffect(() => {
-    console.log('data:', new Date())
-    console.log('data atualizada:', selectedDate)
-  }, [])
+  // useEffect(() => {
+  //   console.log('data:', new Date())
+  //   console.log('data atualizada:', selectedDate)
+  // }, [])
   return (
     <LinearGradient
       colors={['#FFF', '#FFF0C8']}
@@ -38,7 +38,7 @@ export default function HomeScreen() {
       style={styles.container}
     >
       <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor={'#FFFBE6'} />
+        <StatusBar backgroundColor={'#FFFBE6'} />
 
         <View style={styles.contentContainer}>
           {/* Header Fixo */}

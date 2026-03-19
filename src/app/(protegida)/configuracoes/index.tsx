@@ -1,13 +1,13 @@
+import { useAuth } from '@/context/AuthContext'; // <-- Importando o contexto
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-type UserRole = 'usuario' | 'equipe' | 'estabelecimento';
-
 export default function Configuracoes() {
-  const [role, setRole] = useState<UserRole>('usuario');
   const router = useRouter();
+  const { user } = useAuth(); // Pegamos o usuário logado e a função de sair
+
 
   const renderSection = (title: string, items: { label: string, badge?: number, route?: string }[]) => (
     <View style={styles.section}>
@@ -16,7 +16,6 @@ export default function Configuracoes() {
         <TouchableOpacity
           key={index}
           style={styles.settingItem}
-          // Se o item tiver uma rota, ele navega para ela ao clicar
           onPress={() => item.route && router.push(item.route as any)}
         >
           <View style={styles.labelContainer}>
@@ -33,78 +32,77 @@ export default function Configuracoes() {
     </View>
   );
 
+  // Se por algum motivo entrar aqui sem usuário, mostra carregando ou nulo
+  if (!user) return null;
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
-      {/* Logo e Fechar */}
-      <View style={styles.topHeader}>
-        <Image source={require('../../../../assets/images/logos/pnab-logo.png')} style={styles.logo} resizeMode="contain" />
-        <TouchableOpacity style={styles.closeBtn} onPress={() => router.back()}>
-          <Feather name="x" size={24} color="#666" />
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.mainTitle}>Tipos de acesso de configuração</Text>
-
-      {/* Seletor de Tipo (Botões conforme imagem) */}
-      <View style={styles.roleSelector}>
-        {(['usuario', 'equipe', 'estabelecimento'] as UserRole[]).map((r) => (
-          <TouchableOpacity
-            key={r}
-            style={[styles.roleBtn, role === r && styles.roleBtnActive]}
-            onPress={() => setRole(r)}
-          >
-            <Text style={[styles.roleBtnText, role === r && styles.roleBtnTextActive]}>
-              {r.charAt(0).toUpperCase() + r.slice(1)}
-            </Text>
+    <ScrollView style={styles.container}
+      contentContainerStyle={{ justifyContent: 'space-between', minHeight: '100%', paddingBottom: 50 }}
+    >
+      <View>
+        {/* Logo e Fechar */}
+        <View style={styles.topHeader}>
+          <Image source={require('../../../../assets/images/logos/pnab-color.png')} style={styles.logo} resizeMode="contain" />
+          <TouchableOpacity style={styles.closeBtn} onPress={() => router.back()}>
+            <Feather name="x" size={24} color="#666" />
           </TouchableOpacity>
-        ))}
+        </View>
+
+        <View>
+          <View>
+            <Text style={styles.mainTitle}>{
+              (user.role === 'usuario' || user.role === 'equipe') ? 'Usuário' : 'Estabelecimento'
+            }</Text>
+            <View style={styles.userInfo}>
+
+              <Text style={styles.userEmail}>{user.email}</Text>
+            </View>
+          </View>
+
+
+          {/* Info do Usuário real (vem do Contexto) */}
+
+          <View style={styles.divider} />
+
+          {/* SEÇÕES DINÂMICAS BASEADAS EM user.role */}
+          {renderSection('Configurações', [
+            { label: 'Meu perfil', route: '/configuracoes/meuPerfil' },
+            ...(user.role === 'usuario' ? [{ label: 'Denunciar', route: '/configuracoes/denunciar' }] : [])
+          ])}
+
+          {(user.role === 'equipe' || user.role === 'estabelecimento') && renderSection('Administrar',
+            user.role === 'equipe' ? [
+              { label: 'Editar time', route: '/configuracoes/editarTimes' },
+              { label: 'Moderar estabelecimentos', badge: 1, route: '/configuracoes/moderarEstabelecimentos' },
+              { label: 'Moderar denúncias', badge: 2, route: '/configuracoes/moderarDenuncias' },
+            ] : [
+              { label: 'Cupons solicitados', badge: 2, route: '/configuracoes/cuponsSolicitados' },
+              { label: 'Editar meu estabelecimento', route: '/configuracoes/editarEstabelecimento' },
+              { label: 'Editar galeria do cardápio', route: '/configuracoes/editarGaleria' },
+            ]
+          )}
+
+          {user.role === 'equipe' && renderSection('Adicionar', [
+            { label: 'Adicionar verbete', route: '/configuracoes/adicionarVerbetePasso1' },
+            { label: 'Adicionar evento', route: '/configuracoes/adicionarEvento' },
+          ])}
+        </View>
       </View>
-
-      {/* Info do Usuário */}
-      <View style={styles.userInfo}>
-        <Text style={styles.userLabel}>Usuário</Text>
-        <Text style={styles.userEmail}>user@drdende.com.br</Text>
-      </View>
-
-      {/* SEÇÕES DINÂMICAS POR ROLE */}
-      <View style={styles.divider} />
-
-      {/* Aqui adicionamos a rota para a página de perfil */}
-      {renderSection('Configurações', [
-        { label: 'Meu perfil', route: '/configuracoes/meuPerfil' },
-        ...(role === 'usuario' ? [{ label: 'Denunciar', route: '/configuracoes/denunciar' }] : [])
-      ])}
-
-      {(role === 'equipe' || role === 'estabelecimento') && renderSection('Administrar',
-        role === 'equipe' ? [
-          { label: 'Editar time', route: '/configuracoes/editarTimes' },
-          { label: 'Moderar estabelecimentos', badge: 1, route: '/configuracoes/moderarEstabelecimentos' },
-          { label: 'Moderar denúncias', badge: 2, route: '/configuracoes/moderarDenuncias' },
-        ] : [
-          { label: 'Cupons solicitados', badge: 2, route: '/configuracoes/cuponsSolicitados' },
-          { label: 'Editar meu estabelecimento', route: '/configuracoes/editarEstabelecimento' },
-          { label: 'Editar galeria do cardápio', route: '/configuracoes/editarGaleria' },
-        ]
-      )}
-
-      {role === 'equipe' && renderSection('Adicionar', [
-        { label: 'Adicionar verbete', route: '/configuracoes/adicionarVerbetePasso1' },
-        { label: 'Adicionar evento', route: '/configuracoes/adicionarEvento' },
-      ])}
-
       {/* Logos de Patrocínio no final */}
-      <View style={styles.footerLogos}>
-        {/* Adicionar suas imagens de marcas aqui */}
-        <Text style={{ fontSize: 10, color: '#999' }}>Apoio Financeiro / Governo / PNAB</Text>
-      </View>
+      {/* <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: 'blue', }}> */}
+      <Image source={require('../../../../assets/images/logos/apoio-financeiro-colorida.png')} style={{ width: '100%', height: 47 }} resizeMode='contain' />
+      {/* </View> */}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF' },
+  userRoleText: { fontSize: 12, color: '#34523B', fontWeight: 'bold', marginTop: 4 },
+  logoutButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 20, gap: 8 },
+  logoutText: { color: '#E74C3C', fontWeight: 'bold', fontSize: 16 },
+  container: { flex: 1, backgroundColor: '#FFF', height: '100%', },
   topHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, marginTop: 20 },
-  logo: { width: 100, height: 50 },
+  logo: { width: 110, height: 92 },
   closeBtn: { padding: 8, borderWidth: 1, borderColor: '#DDD', borderRadius: 8 },
   mainTitle: { fontSize: 18, fontWeight: 'bold', color: '#333', paddingHorizontal: 20, marginTop: 10 },
 
@@ -128,5 +126,5 @@ const styles = StyleSheet.create({
   badge: { backgroundColor: '#E74C3C', borderRadius: 12, paddingHorizontal: 6, paddingVertical: 2 },
   badgeText: { color: '#FFF', fontSize: 10, fontWeight: 'bold' },
 
-  footerLogos: { marginTop: 40, padding: 20, alignItems: 'center', opacity: 0.6 }
+  footerLogos: { marginTop: 40, padding: 20, alignItems: 'center', justifyContent: 'center' },
 });

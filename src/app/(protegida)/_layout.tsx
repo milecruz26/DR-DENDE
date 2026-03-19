@@ -3,8 +3,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Slot } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ProtegidaLayout() {
+  const insets = useSafeAreaInsets();
   return (
     <View style={styles.container}>
       {/* O Slot renderiza a tela atual (index, verbete, etc.) */}
@@ -20,7 +22,7 @@ export default function ProtegidaLayout() {
       </LinearGradient>
 
       {/* O seu Menu fica fixo aqui embaixo, fora do Slot */}
-      <View style={styles.tabBarContainer}>
+      <View style={[styles.tabBarContainer, { paddingBottom: insets.bottom > 0 ? insets.bottom : 20 }]}>
         <MockTabBar />
       </View>
     </View>
@@ -40,5 +42,6 @@ const styles = StyleSheet.create({
     // e fique sempre no rodapé
     backgroundColor: 'transparent',
     zIndex: 999,
+
   },
 });
