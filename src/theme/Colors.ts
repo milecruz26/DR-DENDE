@@ -65,9 +65,9 @@ export default {
     lighter: '#FFEFEC'
   },
   ATTENTION: {
-    deeper: '#C0780',
-    deep: '#FFC839',
-    darker: '#FFD361',
+    deeper: '#734704',
+    deep: '#985F0A',
+    darker: '#CE8D2C',
     dark: '#FFDE88',
     base: '#FFE9B0',
     light: '#FFF4D7',

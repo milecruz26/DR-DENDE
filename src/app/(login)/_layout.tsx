@@ -2,12 +2,14 @@
 import { Stack } from 'expo-router'
 import React from 'react'
 
-export default function StackLayout() {
+export default function LoginLayout() {
   return (
-    <Stack />
-    // <Stack>
-    //   <Stack.Screen name="index" options={{ title: 'Login' }} />
-    //   <Stack.Screen name="cadastro" options={{ title: 'Cadastro' }} />
-    // </Stack>
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name='(cadastro)' options={{ headerShown: false }} />
+      <Stack.Screen name='(esqueceuSenha)' options={{ headerShown: false }} />
+
+    </Stack>
+
   )
 }

@@ -7,9 +7,13 @@
     "icon": "./assets/images/icon.png",
     "scheme": "drdende",
     "userInterfaceStyle": "automatic",
+    "androidNavigationBar": {
+      "visible": "always",
+      "barStyle": "dark-content"
+    },
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash-icon.png",
+      "image": "./assets/images/stick-logo-letra-c.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -30,7 +34,145 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/FiraSansCondensed-Regular.ttf"
+          ],
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "FiraSansCondensed",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-Thin.ttf",
+                    "weight": "100"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-ThinItalic.ttf",
+                    "weight": "100",
+                    "style": "italic"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-ExtraLight.ttf",
+                    "weight": "200"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-ExtraLightItalic.ttf",
+                    "weight": "200",
+                    "style": "italic"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-Light.ttf",
+                    "weight": "300"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-LightItalic.ttf",
+                    "weight": "300",
+                    "style": "italic"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-Regular.ttf",
+                    "weight": "400"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-Italic.ttf",
+                    "weight": "400",
+                    "style": "italic"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-Medium.ttf",
+                    "weight": "500"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-MediumItalic.ttf",
+                    "weight": "500",
+                    "style": "italic"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-SemiBold.ttf",
+                    "weight": "600"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-SemiBoldItalic.ttf",
+                    "weight": "600",
+                    "style": "italic"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-Bold.ttf",
+                    "weight": "700"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-BoldItalic.ttf",
+                    "weight": "700",
+                    "style": "italic"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-ExtraBold.ttf",
+                    "weight": "800"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-ExtraBoldItalic.ttf",
+                    "weight": "800",
+                    "style": "italic"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-Black.ttf",
+                    "weight": "900"
+                  },
+                  {
+                    "path": "./assets/fonts/FiraSansCondensed-BlackItalic.ttf",
+                    "weight": "900",
+                    "style": "italic"
+                  }
+                ]
+              },
+              {
+                "fontFamily": "OfertaDoDia",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/Oferta-do-Dia.ttf",
+                    "weight": 400
+                  }
+                ]
+              }
+            ]
+          },
+          "ios": {
+            "fonts": [
+              "./assets/fonts/FiraSansCondensed-Thin.ttf",
+              "./assets/fonts/FiraSansCondensed-ThinItalic.ttf",
+              "./assets/fonts/FiraSansCondensed-ExtraLight.ttf",
+              "./assets/fonts/FiraSansCondensed-ExtraLightItalic.ttf",
+              "./assets/fonts/FiraSansCondensed-Light.ttf",
+              "./assets/fonts/FiraSansCondensed-LightItalic.ttf",
+              "./assets/fonts/FiraSansCondensed-Regular.ttf",
+              "./assets/fonts/FiraSansCondensed-Italic.ttf",
+              "./assets/fonts/FiraSansCondensed-Medium.ttf",
+              "./assets/fonts/FiraSansCondensed-MediumItalic.ttf",
+              "./assets/fonts/FiraSansCondensed-SemiBold.ttf",
+              "./assets/fonts/FiraSansCondensed-SemiBoldItalic.ttf",
+              "./assets/fonts/FiraSansCondensed-Bold.ttf",
+              "./assets/fonts/FiraSansCondensed-BoldItalic.ttf",
+              "./assets/fonts/FiraSansCondensed-ExtraBold.ttf",
+              "./assets/fonts/FiraSansCondensed-ExtraBoldItalic.ttf",
+              "./assets/fonts/FiraSansCondensed-Black.ttf",
+              "./assets/fonts/FiraSansCondensed-BlackItalic.ttf",
+              "./assets/fonts/Oferta-do-Dia.ttf"
+            ]
+          }
+        }
+      ],
+      "expo-router",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone.",
+          "enableBackgroundPlayback": true,
+          "enableBackgroundRecording": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
