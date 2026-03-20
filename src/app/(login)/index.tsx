@@ -1,101 +1,100 @@
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-
 import BgLogin from '@/components/BackgroundThema/BgLogin'
 import { PrimaryButton } from '@/components/Buttons/PrimaryButton'
 import { SecondaryButton } from '@/components/Buttons/SecondaryButton'
 import { TertiaryButton } from '@/components/Buttons/TertiaryButton'
 import LoginLoading from '@/components/LoginLoading'
+import { useAuth } from '@/context/AuthContext'; // <-- Importando o contexto
 import { Link, router } from 'expo-router'
 import React, { useState } from 'react'
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import Abertura from '../(protegida)/abertura'
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState(''); // Estado para capturar o email
+  const { signIn } = useAuth(); // Função de login do nosso contexto
+  const [showAbertura, setShowAbertura] = useState(false); // Novo estado
 
   const handleLogin = async () => {
-    setLoading(true); // Ativa a tela de carregamento que você quer
-
+    setLoading(true);
     try {
-      // Simulação de chamada de API / Login
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      const success = await signIn(email);
 
-      router.replace('/(protegida)'); // Navega para a próxima tela
-    } catch (error) {
-      console.log(error);
-    } finally {
-      // Importante: Não desative o loading aqui se for navegar, 
-      // para evitar que a tela de login "pisque" antes de mudar.
+      if (success) {
+        // Buscamos o usuário que acabou de logar (precisamos expor o 'user' no useAuth)
+        // Aqui simulamos a checagem do mock:
+        const isFirstTime = email.toLowerCase() === 'usuario@teste.com';
+
+        if (isFirstTime) {
+          setShowAbertura(true); // Exibe a abertura em vez de navegar
+          setLoading(false);     // Para o loading para mostrar a abertura
+        } else {
+          router.replace('/(protegida)');
+        }
+      } else {
+        alert('Usuário não encontrado');
+        setLoading(false);
+      }
+    } catch (e) {
+      setLoading(false);
     }
   };
+
   return (
     <>
       <LoginLoading visible={loading} />
+      <Abertura visible={showAbertura} />
+      {!showAbertura && (
+        <BgLogin card >
+          <Text style={styles.cardTitle}>Fazer login</Text>
 
-      <BgLogin card >
-        <Text style={styles.cardTitle}>Fazer login</Text>
-
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Ex: seunome@gmail.com"
-            keyboardType="email-address"
-          />
-          <Text style={styles.helperText}>ⓘ Insira o email cadastrado</Text>
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Senha</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="********"
-            secureTextEntry
-          />
-        </View>
-        <View style={{ gap: 8 }}>
-
-          <PrimaryButton
-            title='Entrar'
-            onPress={handleLogin}
-
-          />
-
-          <Link href="/(login)/(cadastro)/perfil" asChild>
-            <SecondaryButton
-              title='Criar conta'
-              onPress={() => { }}
-
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ex: seunome@gmail.com"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={email}
+              onChangeText={setEmail}
             />
-          </Link>
+            <Text style={styles.helperText}>ⓘ Insira o email cadastrado</Text>
+          </View>
 
-          <Link href="/(login)/(esqueceuSenha)/emailEsqueceuSenha" asChild>
-            <TertiaryButton
-              title='Esqueci a senha'
-
-              onPress={() => { }}
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Senha</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="********"
+              secureTextEntry
             />
-          </Link>
+          </View>
 
-        </View>
+          <View style={{ gap: 8 }}>
+            <PrimaryButton title='Entrar' onPress={handleLogin} />
 
-        <View style={styles.dividerContainer}>
-          <View style={styles.line} />
-          <Text style={styles.dividerText}>Ou</Text>
-          <View style={styles.line} />
-        </View>
-        <TouchableOpacity
-          style={styles.googleButton}
-          onPress={() => { }}
-          activeOpacity={0.7}
-        >
-          <Image
-            source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png' }}
-            style={styles.googleIcon}
-          />
-          <Text style={styles.googleText}>Faça login com Google</Text>
-        </TouchableOpacity>
-      </BgLogin>
+            <Link href="/(login)/(cadastro)/perfil" asChild>
+              <SecondaryButton title='Criar conta' onPress={() => { }} />
+            </Link>
+
+            <Link href="/(login)/(esqueceuSenha)/emailEsqueceuSenha" asChild>
+              <TertiaryButton title='Esqueci a senha' onPress={() => { }} />
+            </Link>
+          </View>
+
+          <View style={styles.dividerContainer}>
+            <View style={styles.line} />
+            <Text style={styles.dividerText}>Ou</Text>
+            <View style={styles.line} />
+          </View>
+
+          <TouchableOpacity style={styles.googleButton} onPress={() => { }} activeOpacity={0.7}>
+            <Image source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png' }} style={styles.googleIcon} />
+            <Text style={styles.googleText}>Faça login com Google</Text>
+          </TouchableOpacity>
+        </BgLogin>
+      )}
     </>
-
   )
 }
 

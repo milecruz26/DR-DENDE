@@ -1,8 +1,10 @@
+import { AuthProvider } from '@/context/AuthContext';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -35,9 +37,15 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <Stack>
-      <Stack.Screen name="(login)" options={{ headerShown: false }} />
-      <Stack.Screen name="(protegida)" options={{ headerShown: false }} />
-    </Stack>
+    <AuthProvider>
+      <SafeAreaProvider>
+
+
+        <Stack>
+          <Stack.Screen name="(login)" options={{ headerShown: false }} />
+          <Stack.Screen name="(protegida)" options={{ headerShown: false }} />
+        </Stack>
+      </SafeAreaProvider>
+    </AuthProvider>
   );
 }

@@ -7,6 +7,10 @@
     "icon": "./assets/images/icon.png",
     "scheme": "drdende",
     "userInterfaceStyle": "automatic",
+    "androidNavigationBar": {
+      "visible": "always",
+      "barStyle": "dark-content"
+    },
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/stick-logo-letra-c.png",
@@ -33,7 +37,9 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/FiraSansCondensed-Regular.ttf"],
+          "fonts": [
+            "./assets/fonts/FiraSansCondensed-Regular.ttf"
+          ],
           "android": {
             "fonts": [
               {

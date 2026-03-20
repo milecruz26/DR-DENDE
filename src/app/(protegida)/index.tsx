@@ -1,16 +1,10 @@
 import { CategoryChip } from '@/components/CategoryChip';
-import CustomDatePicker from '@/components/CustomDatePicker';
-import { DateSelector } from '@/components/DataSelector';
-import { EventItem } from '@/components/EventItem';
 import { Header } from '@/components/Header';
 import { HighlightCard } from '@/components/HighlightCard';
-import EventsInfo from '@/components/Modal/Info/EventsInfo';
-import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { SectionTitle } from '@/components/SectionTitle';
 import { VerbeteCard } from '@/components/VerbeteCard';
-import { MOCK_DATA } from '@/data/mock';
 import { Link } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StatusBar,
@@ -19,6 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import EventCalendarList from '@/components/Eventos/ListaEventos';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function HomeScreen() {
@@ -26,10 +21,10 @@ export default function HomeScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  useEffect(() => {
-    console.log('data:', new Date())
-    console.log('data atualizada:', selectedDate)
-  }, [])
+  // useEffect(() => {
+  //   console.log('data:', new Date())
+  //   console.log('data atualizada:', selectedDate)
+  // }, [])
   return (
     <LinearGradient
       colors={['#FFF', '#FFF0C8']}
@@ -38,7 +33,7 @@ export default function HomeScreen() {
       style={styles.container}
     >
       <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor={'#FFFBE6'} />
+        <StatusBar backgroundColor={'#FFFBE6'} />
 
         <View style={styles.contentContainer}>
           {/* Header Fixo */}
@@ -76,7 +71,8 @@ export default function HomeScreen() {
 
             {/* Seção Eventos */}
             <SectionTitle title="Eventos" showLink />
-            <View style={styles.eventContainer} >
+            <EventCalendarList />
+            {/* <View style={styles.eventContainer} >
               <DateSelector
                 currentDate={selectedDate}
                 onDateChange={(newDate) => setSelectedDate(newDate)}
@@ -90,7 +86,7 @@ export default function HomeScreen() {
                 <EventItem title="CEIA BENEFICENTE" />
                 <EventItem title="REUNIÃO GERAL" />
               </View>
-            </View>
+            </View> */}
 
 
             {/* Espaço extra para não ficar atrás da TabBar */}
@@ -101,7 +97,7 @@ export default function HomeScreen() {
 
         </View>
         {/* MODAL DE DATA (O mesmo que você usa na outra tela) */}
-        <CustomDatePicker
+        {/* <CustomDatePicker
           visible={showDatePicker}
           selectedDate={selectedDate}
           onClose={() => setShowDatePicker(false)}
@@ -122,7 +118,7 @@ export default function HomeScreen() {
             description={MOCK_DATA.aboutEvent}
           />
 
-        </ReadMoreModal>
+        </ReadMoreModal> */}
       </SafeAreaView>
     </LinearGradient>
   );
