@@ -5,7 +5,7 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 
 
 export const MockTabBar = () => {
@@ -15,12 +15,12 @@ export const MockTabBar = () => {
   const isDinner = pathname.startsWith('/estabelecimentos');
   const isVerbete = pathname.startsWith('/listaVerbetes');
   const isHome = pathname === '/' || pathname === '/index';
-  const insets = useSafeAreaInsets();
+
   return (
 
     <View style={[
       styles.tabBar,
-      { paddingBottom: insets.bottom > 0 ? insets.bottom : 20 } // Se houver barra de sistema, ele usa o tamanho dela + um respiro
+      // { paddingBottom: insets.bottom > 0 ? insets.bottom : 20 } // Se houver barra de sistema, ele usa o tamanho dela + um respiro
     ]}>
       <Link href="/(protegida)" asChild>
         <Pressable>

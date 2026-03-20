@@ -1,5 +1,8 @@
+import { adicionarEventoMock, Evento } from '@/data/mocksEvents';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+
+// Dica técnica: Quando você mudar para o Axios, lembre-se de configurar o useEffect na sua tela de listagem para buscar os dados (GET) sempre que a tela ganhar foco, usando o hook useFocusEffect do Expo, para garantir que o novo evento apareça lá sem precisar reiniciar o app.
 
 export const useAdicionarEvento = () => {
   const router = useRouter();
@@ -56,21 +59,34 @@ export const useAdicionarEvento = () => {
     const dataFinal = new Date(dataSelecionada);
     dataFinal.setHours(horas, minutos, 0, 0);
 
-    const payload = {
+    const novoEvento: Evento = {
+      id: Math.random().toString(36).substr(2, 9), // Gera um ID temporário
       nome,
+      data: dataSelecionada.toISOString().split('T')[0],
+      horario,
       descricao,
-      data_horario: dataFinal.toISOString(),
-      localizacao: {
-        cep,
-        rua,
-        bairro,
-        cidade // Usando a variável do estado agora
-      }
+      cidade,
+      cep,
+      rua,
+      bairro
     };
 
-    console.log('Salvando evento:', payload);
-    alert('Sucesso!');
-    router.back();
+    try {
+      /* --- IMPLEMENTAÇÃO COM AXIOS (COMENTADA PARA O FUTURO) ---
+      const response = await api.post('/eventos', novoEvento);
+      if (response.status === 201) {
+         alert('Evento salvo no banco de dados!');
+      }
+      */
+
+      // --- IMPLEMENTAÇÃO ATUAL COM MOCK --- 
+      adicionarEventoMock(novoEvento);
+
+      alert('Evento cadastrado com sucesso!');
+      router.back(); // Volta para a lista e ela já estará atualizada
+    } catch (error) {
+      alert('Erro ao salvar o evento');
+    }
   };
 
   return {

@@ -1,7 +1,7 @@
 import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 import { Header } from '@/components/Header';
-import { MockTabBar } from '@/components/MockTabBar';
 import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';
+import { useAuth } from '@/context/AuthContext';
 import Colors from '@/theme/Colors';
 import { useRouter } from 'expo-router';
 import React from 'react';
@@ -31,6 +31,7 @@ const MOCK_VERBETES = [
 
 export default function ListaVerbertes() {
   const router = useRouter();
+  const { user } = useAuth();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -41,11 +42,12 @@ export default function ListaVerbertes() {
         <Header />
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, }}>
           <Text style={styles.pageTitle}>Verbetes</Text>
-          <SecondaryButton
-            onPress={() => router.push('/configuracoes/adicionarVerbetePasso1')}
-            title='+ Criar Novo'
-            size='small'
-          />
+          {user?.role !== 'usuario' && (
+            <SecondaryButton
+              onPress={() => router.push('/configuracoes/adicionarVerbetePasso1')}
+              title='+ Criar Novo'
+              size='small'
+            />)}
         </View>
 
         <FlatList
@@ -64,8 +66,7 @@ export default function ListaVerbertes() {
 
         {/* </ScrollView> */}
 
-        {/* Bottom Tab Bar (Posicionada Absolutamente) */}
-        <MockTabBar />
+
       </View>
     </SafeAreaView>
   );
