@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+import ImageUploadField from '@/components/ImageUploadField';
 
 const COLORS = {
   primary: '#34523B',
@@ -122,26 +123,11 @@ export default function AdicionarVerbetePasso1() {
 
         <View style={styles.inputGroup}>
           <Text style={styles.label}><Text style={styles.required}>*</Text> Foto representativa</Text>
-          <TouchableOpacity
-            style={[styles.uploadArea, imageUri && { borderColor: COLORS.primary }]}
-            onPress={pickImage}
-          >
-            {imageUri ? (
-              /* Se tiver imagem, mostra o nome do arquivo ou um preview pequeno */
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                <Feather name="image" size={20} color={COLORS.primary} />
-                <Text style={{ color: COLORS.primary, fontWeight: '500' }}>Imagem selecionada!</Text>
-                <TouchableOpacity onPress={() => setImageUri(null)}>
-                  <Feather name="x-circle" size={18} color={COLORS.danger} />
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <>
-                <Feather name="upload" size={20} color={COLORS.textLight} />
-                <Text style={styles.uploadText}>Clique para selecionar uma imagem</Text>
-              </>
-            )}
-          </TouchableOpacity>
+          <ImageUploadField
+            imageUri={imageUri}
+            onPickImage={pickImage}
+            onRemoveImage={() => setImageUri(null)}
+          />
         </View>
 
         {/* Campo de Áudio Atualizado */}

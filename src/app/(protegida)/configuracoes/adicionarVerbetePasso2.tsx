@@ -3,6 +3,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import ImageUploadField from '@/components/ImageUploadField';
 
 // (Mantenha o objeto COLORS igual à tela 1)
 const COLORS = { primary: '#34523B', white: '#FFFFFF', textDark: '#333333', textLight: '#666666', border: '#CCCCCC', danger: '#D32F2F', uploadBg: '#FAFAFA', placeholder: '#888888', };
@@ -14,6 +15,12 @@ export default function AdicionarVerbetePasso2() {
 
   const adicionarIngrediente = () => {
     setIngredientes([...ingredientes, { id: Date.now(), imageUri: null }]);
+  };
+
+  const removeImage = (index: number) => {
+    const novosIngredientes = [...ingredientes];
+    novosIngredientes[index].imageUri = null;
+    setIngredientes(novosIngredientes);
   };
 
   const pickImage = async (index: number) => {
@@ -59,19 +66,11 @@ export default function AdicionarVerbetePasso2() {
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}><Text style={styles.required}>*</Text> Foto representativa</Text>
-              <TouchableOpacity
-                style={[styles.uploadArea, item.imageUri && { borderColor: COLORS.primary }]}
-                onPress={() => pickImage(index)}
-              >
-                {item.imageUri ? (
-                  <Text style={{ color: COLORS.primary }}>Foto do ingrediente adicionada! ✓</Text>
-                ) : (
-                  <>
-                    <Feather name="upload" size={20} color={COLORS.textLight} />
-                    <Text style={styles.uploadText}>Clique para selecionar uma imagem</Text>
-                  </>
-                )}
-              </TouchableOpacity>
+              <ImageUploadField
+                imageUri={item.imageUri}
+                onPickImage={() => pickImage(index)}
+                onRemoveImage={() => removeImage(index)}
+              />
             </View>
 
             {/* Botão de Adicionar Novo sempre embaixo de cada bloco no protótipo */}
@@ -122,6 +121,8 @@ const styles = StyleSheet.create({
 
   uploadArea: { height: 55, borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, backgroundColor: COLORS.uploadBg, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
   uploadText: { fontSize: 14, color: COLORS.textLight },
+
+  deleteBtn: { width: 55, height: 55, borderWidth: 1, borderColor: COLORS.danger, borderRadius: 8, justifyContent: 'center', alignItems: 'center' },
 
   textAreaContainer: { borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, backgroundColor: COLORS.white, padding: 15, height: 120 },
   textArea: { flex: 1, fontSize: 16, color: COLORS.textDark },
