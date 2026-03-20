@@ -1,5 +1,5 @@
 import { Feather } from '@expo/vector-icons';
-import React, { useEffect, useRef } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 import {
   Animated,
   Dimensions,
@@ -18,7 +18,7 @@ type ModalType = 'small' | 'medium' | 'full';
 interface ReadMoreModalProps {
   visible: boolean;
   onClose: () => void;
-  children: React.JSX.Element;
+  children: ReactNode;
   title?: string
   type?: ModalType;
 }
