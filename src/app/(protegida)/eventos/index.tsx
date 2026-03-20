@@ -1,6 +1,7 @@
 import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 import EventCalendarList from '@/components/Eventos/ListaEventos';
 import { Header } from '@/components/Header';
+import { useAuth } from '@/context/AuthContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React from 'react';
@@ -8,17 +9,22 @@ import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Eventos() {
+  const { user } = useAuth();
   return (
     <LinearGradient colors={['#FFF', '#FFF0C8']} style={styles.container}>
       <Header />
       <SafeAreaView style={styles.scrollContent}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Text style={styles.textPage}>Eventos</Text>
-          <SecondaryButton
-            title="+ Criar Evento"
-            onPress={() => router.push('/(protegida)/configuracoes/adicionarEvento')}
-            size='small'
-          />
+
+          {user?.role !== 'usuario' && (
+
+            <SecondaryButton
+              title="+ Criar Evento"
+              onPress={() => router.push('/(protegida)/configuracoes/adicionarEvento')}
+              size='small'
+            />)
+          }
         </View>
 
         {/* O COMPONENTE REUTILIZÁVEL AQUI */}

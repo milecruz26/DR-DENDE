@@ -13,7 +13,7 @@ export interface Evento {
 }
 
 // Criando 3 eventos. Note que coloquei um para o dia de "hoje" (ajuste a data se necessário para testar)
-export const MOCK_EVENTOS: Evento[] = [
+export let MOCK_EVENTOS: Evento[] = [
   {
     id: '1',
     nome: 'FEIJOADA DE SEU ZÉ',
@@ -48,3 +48,9 @@ export const MOCK_EVENTOS: Evento[] = [
     bairro: 'Itinga'
   }
 ];
+
+// 2. Função simuladora de "POST" do Backend
+export const adicionarEventoMock = (novoEvento: Evento) => {
+  MOCK_EVENTOS = [...MOCK_EVENTOS, novoEvento];
+  console.log("Evento adicionado ao Mock com sucesso!", MOCK_EVENTOS);
+};

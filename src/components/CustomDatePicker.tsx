@@ -16,7 +16,7 @@ const MESES_CURTO = [
   'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
   'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
 ];
-const DIAS_SEMANA = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+const DIAS_SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
 interface CustomDatePickerProps {
   visible: boolean;
@@ -85,7 +85,7 @@ export default function CustomDatePicker({ visible, onClose, onSelectDate, selec
     const mes = dataVisualizacao.getMonth();
     const diasNoMes = new Date(ano, mes + 1, 0).getDate();
     const primeiroDiaMes = new Date(ano, mes, 1).getDay();
-    const espacosVaziosInicio = primeiroDiaMes === 0 ? 6 : primeiroDiaMes - 1;
+    const espacosVaziosInicio = primeiroDiaMes;
 
     const dias = [];
     for (let i = 0; i < espacosVaziosInicio; i++) {
@@ -189,9 +189,9 @@ const styles = StyleSheet.create({
   monthText: { fontSize: 16, fontWeight: 'bold', color: COLORS.textDark },
   weekDaysRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
   weekDayText: { width: 40, textAlign: 'center', fontSize: 12, color: COLORS.placeholder, fontWeight: '500' },
-  daysGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
+  daysGrid: { flexDirection: 'row', flexWrap: 'wrap', },
   gridContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: 10 },
-  dayCell: { width: 40, height: 40, justifyContent: 'center', alignItems: 'center', marginBottom: 8, borderRadius: 8 },
+  dayCell: { width: '14.28%', height: 40, justifyContent: 'center', alignItems: 'center', marginBottom: 8, borderRadius: 8 },
   gridCell: { width: '30%', height: 46, justifyContent: 'center', alignItems: 'center', marginBottom: 16, borderRadius: 8 },
   dayText: { fontSize: 14, color: COLORS.textDark, fontWeight: '500' },
   gridText: { fontSize: 15, color: COLORS.textDark, fontWeight: '500' },
