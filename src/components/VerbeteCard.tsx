@@ -1,31 +1,39 @@
+import { useRouter } from 'expo-router';
 import {
   Image,
+  Pressable,
   StyleSheet,
   Text,
   View
 } from 'react-native';
 
 interface VerbeteCardProps {
+  id: string; // <-- Novo
   title: string;
   description: string;
+  imagem: any; // <-- Novo
 }
 
-export const VerbeteCard = ({ title, description }: VerbeteCardProps) => (
-  <View style={styles.verbeteCard}>
-    <Image
-      source={require('../../assets/images/pratos/feijoada.png')}
-      style={styles.verbeteImage}
-    />
-    <View style={styles.verbeteContent}>
-      <View style={styles.verbeteHeaderRow}>
-        <Text style={styles.verbeteTitle}>{title}</Text>
-        <Image source={require('../../assets/images/icones/saved-line-white.png')} style={{ width: 32, height: 32 }} />
-        {/* <Feather name="bookmark" size={20} color="#FFF" /> */}
+export const VerbeteCard = ({ id, title, description, imagem }: VerbeteCardProps) => {
+  const router = useRouter()
+
+  return (
+    <Pressable
+      style={styles.verbeteCard}
+      // Navega passando o ID pela URL
+      onPress={() => router.push({ pathname: '/verbete', params: { id } })}
+    >
+      <Image source={imagem} style={styles.verbeteImage} resizeMode="contain" />
+      <View style={styles.verbeteContent}>
+        <View style={styles.verbeteHeaderRow}>
+          <Text style={styles.verbeteTitle}>{title}</Text>
+          <Image source={require('../../assets/images/icones/saved-line-white.png')} style={{ width: 32, height: 32 }} />
+        </View>
+        <Text style={styles.verbeteDesc} numberOfLines={4}>{description}</Text>
       </View>
-      <Text style={styles.verbeteDesc} numberOfLines={4}>{description}</Text>
-    </View>
-  </View>
-);
+    </Pressable>
+  );
+};
 
 const styles = StyleSheet.create({
   verbeteCard: {

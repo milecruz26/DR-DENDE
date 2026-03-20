@@ -8,22 +8,28 @@ import {
 } from 'react-native';
 const { TERTIARY } = Colors;
 
-export const InfoPill = () => (
+export interface InfoPillProps {
+  categoria: string;
+  tempo: string;
+  dificuldade: string;
+}
+
+export const InfoPill = ({ categoria, tempo, dificuldade }: InfoPillProps) => (
   <View style={styles.infoPillContainer}>
     <View style={styles.infoItem}>
-      <Text style={styles.infoTextBold}>Tira-gosto</Text>
+      <Text style={styles.infoTextBold}>{categoria}</Text>
     </View>
     {/* <View style={styles.infoSeparator} /> */}
 
     <View style={styles.infoItemRight}>
       <View style={styles.infoItem}>
         <Feather name="clock" size={14} color={'#2C2C2C'} />
-        <Text style={styles.infoText}>35 min</Text>
+        <Text style={styles.infoText}>{tempo}</Text>
       </View>
 
       <View style={styles.infoItem}>
         <Feather name="alert-triangle" size={14} color={'#2C2C2C'} />
-        <Text style={styles.infoText}>Fácil</Text>
+        <Text style={styles.infoText}>{dificuldade}</Text>
       </View>
     </View>
   </View>

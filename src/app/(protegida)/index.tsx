@@ -3,9 +3,11 @@ import { Header } from '@/components/Header';
 import { HighlightCard } from '@/components/HighlightCard';
 import { SectionTitle } from '@/components/SectionTitle';
 import { VerbeteCard } from '@/components/VerbeteCard';
+import { apiGetVerbetes, Verbete } from '@/data/mockVerbetes';
 import { Link } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -17,14 +19,21 @@ import EventCalendarList from '@/components/Eventos/ListaEventos';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function HomeScreen() {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-
-  // useEffect(() => {
-  //   console.log('data:', new Date())
-  //   console.log('data atualizada:', selectedDate)
-  // }, [])
+  const [verbetes, setVerbetes] = useState<Verbete[]>([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const carregarVerbetes = async () => {
+      try {
+        const dados = await apiGetVerbetes();
+        setVerbetes(dados);
+      } catch (error) {
+        console.error("Erro ao buscar verbetes", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    carregarVerbetes();
+  }, []);
   return (
     <LinearGradient
       colors={['#FFF', '#FFF0C8']}
@@ -57,18 +66,21 @@ export default function HomeScreen() {
             {/* Seção Verbetes */}
             <SectionTitle title="Verbetes" showLink />
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
-              <VerbeteCard
-                title="FEIJOADA"
-                description="A feijoada é um prato muito popular em todo o Brasil."
-              />
-              <VerbeteCard
-                title="FEIJOADA"
-                description="A feijoada é um prato muito popular em todo o Brasil."
-              />
-              {/* Adicione mais cards aqui se necessário */}
+              {loading ? (
+                <ActivityIndicator size="large" color="#E87C38" style={{ margin: 20 }} />
+              ) : (
+                verbetes.map((verbete) => (
+                  <VerbeteCard
+                    key={verbete.id}
+                    id={verbete.id}
+                    title={verbete.titulo}
+                    description={verbete.descricaoCurta}
+                    imagem={verbete.img}
+                  />
+                ))
+              )}
               <View style={{ width: 20 }} />
             </ScrollView>
-
             {/* Seção Eventos */}
             <SectionTitle title="Eventos" showLink />
             <EventCalendarList />

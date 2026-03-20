@@ -2,10 +2,11 @@ import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 import { Header } from '@/components/Header';
 import { InfoPill } from '@/components/InfoPill';
 import { InstructionStep } from '@/components/InstructionStep';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { apiGetVerbeteById, Verbete } from '@/data/mockVerbetes';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import {
-  Dimensions,
+  ActivityIndicator, Dimensions,
   Image,
   Pressable,
   ScrollView,
@@ -19,11 +20,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import VerbetesInfo from '@/components/Modal/Info/VerbetesInfo';
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
-import { MOCK_DATA } from '@/data/mock';
 
 import arrow from '@/assets/images/icones/arrow-left-line-white.png';
 import share from "@/assets/images/icones/share-line-white.png";
-import prato from '@/assets/images/pratos/passarinha.png';
+import { IngredientItem } from '@/components/IngredientItem';
 
 
 const COLORS = {
@@ -38,10 +38,47 @@ const COLORS = {
 
 export default function VerbeteScreen() {
   const router = useRouter();
-  const [modalVisible, setModalVisible] = useState(false);
+  const { id } = useLocalSearchParams<{ id: string }>();
 
-  const navegarParaHome = () => {
-    router.back();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [verbete, setVerbete] = useState<Verbete | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const buscarDetalhes = async () => {
+      if (!id) return;
+      try {
+        const dados = await apiGetVerbeteById(id);
+        if (dados) {
+          setVerbete(dados);
+        }
+      } catch (error) {
+        console.error("Erro", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    buscarDetalhes();
+  }, [id]);
+
+  const navegarParaHome = () => router.back();
+
+  if (loading) {
+    return (
+      <SafeAreaView style={[styles.safeAreaContent, { justifyContent: 'center' }]}>
+        <ActivityIndicator size="large" color={COLORS.orangeHeader} />
+      </SafeAreaView>
+    );
+  }
+
+  if (!verbete) {
+    return (
+      <SafeAreaView style={[styles.safeAreaContent, { justifyContent: 'center' }]}>
+        <Text>Prato não encontrado!</Text>
+        <SecondaryButton title="Voltar" onPress={navegarParaHome} />
+      </SafeAreaView>
+    );
   }
 
   return (
@@ -65,7 +102,7 @@ export default function VerbeteScreen() {
             />
           </Pressable>
 
-          <Text style={styles.headerTitle}>PASSARINHA</Text>
+          <Text style={styles.headerTitle}>{verbete.titulo}</Text>
 
           <TouchableOpacity onPress={navegarParaHome}>
             <Image
@@ -76,11 +113,7 @@ export default function VerbeteScreen() {
         </View>
         {/* Imagem do Prato */}
         <View style={styles.imageContainer}>
-          <Image
-            source={prato}
-            style={styles.mainImage}
-            resizeMode="contain"
-          />
+          <Image source={verbete.img} style={styles.mainImage} resizeMode="contain" />
         </View>
 
         {/* Conteúdo do Corpo */}
@@ -89,9 +122,7 @@ export default function VerbeteScreen() {
           {/* SEÇÃO TEXTO DO PRATO: */}
           <View style={styles.plateContainer}>
             <Text style={styles.sectionTitle}>Sobre o prato</Text>
-            <Text style={styles.descriptionText}>
-              A passarinha, apesar de como é chamada, nada tem a ver com uma ave. Na verdade, é o nome popular dado ao prato feito com o baço do boi. Assim como outras vísceras de origem animal, a passarinha possui alto valor nutricional, sendo rica em ferro e vitaminas. Depois de bem temperado, o baço é frito no azeite de dendê e servido, geralmente, com farofa, salada vinagrete e pimenta.
-            </Text>
+            <Text style={styles.descriptionText}>{verbete.sobre}</Text>
             <SecondaryButton
               title='Ler tudo'
               onPress={() => setModalVisible(true)}
@@ -101,34 +132,25 @@ export default function VerbeteScreen() {
 
           {/* SEÇÃO INGREDIENTES */}
           {/* TODO: fix scroll */}
-          {/* <View style={styles.ingredientContainer}>
-            <Text style={styles.sectionTitle}>Ingredientes (6)</Text>
+          <View style={styles.ingredientContainer}>
+            <Text style={styles.sectionTitle}>Ingredientes ({verbete.ingredientes.length})</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.ingredientsScroll}>
-              <IngredientItem name="Baço bovino" ingredientPath='dende' />
-              <IngredientItem name="Pimentao" ingredientPath='pimentao' />
-              <IngredientItem name="Sal" ingredientPath="sal" />
-              <IngredientItem name="manteiga" ingredientPath='manteiga' />
-              <IngredientItem name="Baço bovino" ingredientPath='dende' />
-              <IngredientItem name="Pimentao" ingredientPath='pimentao' />
-              <IngredientItem name="Sal" ingredientPath="sal" />
-              <IngredientItem name="manteiga" ingredientPath='manteiga' />
-              <View style={{ width: 20 }} /> */}
-          {/* <IngredientItem name="Pimenta" color="#D92B2B" /> */}
-          {/* </ScrollView>
-          </View> */}
+              {verbete.ingredientes.map((ing, idx) => (
+                <IngredientItem key={idx} name={ing.nome} ingredientPath={ing.icone} />
+              ))}
+              <View style={{ width: 20 }} />
+            </ScrollView>
+          </View>
 
-          <InfoPill />
+          <InfoPill tempo={verbete.tempoPreparo} dificuldade={verbete.dificuldade} categoria={verbete.categoria} />
 
           {/* SEÇÃO COMO FAZER */}
           <View style={styles.stepsListContainer}>
             <Text style={styles.sectionTitle}>Como fazer</Text>
             <View style={styles.stepsList}>
-              <InstructionStep number={1} text="Limpe bem o baço tirando a pele;" />
-              <InstructionStep number={2} text="Corte em uma espessura menor, fazendo talhos;" />
-              <InstructionStep number={3} text="Tempere com limão, sal, pimenta e azeite;" />
-              <InstructionStep number={4} text="Deixe na geladeira por 1 hora para pegar sabor;" />
-              <InstructionStep number={5} text="Na sequência, frite a iguaria no azeite de dendê bem quente;" />
-              <InstructionStep number={6} text="Para servir, junte com molho de pimenta, vinagrete, farofa e pronto." />
+              {verbete.etapas.map((etapa, idx) => (
+                <InstructionStep key={idx} number={idx + 1} text={etapa} />
+              ))}
             </View>
           </View>
 
@@ -139,7 +161,7 @@ export default function VerbeteScreen() {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
       >
-        <VerbetesInfo content={MOCK_DATA.content} />
+        <VerbetesInfo content={verbete.sobre} />
       </ReadMoreModal>
       {/* <ReadMoreModal
         visible={modalVisible}
@@ -237,8 +259,8 @@ const styles = StyleSheet.create({
   plateContainer: {
     marginBottom: 0,
     paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D4C5B9',
+    // borderBottomWidth: 1,
+    // borderBottomColor: '#D4C5B9',
   },
   sectionTitle: {
     fontSize: 16,
@@ -256,8 +278,8 @@ const styles = StyleSheet.create({
 
   ingredientContainer: {
     paddingVertical: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D4C5B9',
+    // borderBottomWidth: 1,
+    // borderBottomColor: '#D4C5B9',
   },
   ingredientsScroll: {
     flexDirection: 'row',

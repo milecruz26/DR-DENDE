@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
 
 const api = axios.create({
   // Se for testar com o celular físico e o backend no PC, 
@@ -11,9 +12,36 @@ const api = axios.create({
   },
 });
 
-/* DICA: Aqui você pode adicionar interceptors no futuro 
-  para injetar o token do usuário logado automaticamente 
-  em todas as requisições.
-*/
+// --- O INTERCEPTOR ---
+api.interceptors.request.use(
+  async (config) => {
+    // 1. Buscamos o token que você salvou no login
+    const token = await SecureStore.getItemAsync('user_token');
+
+    // 2. Se o token existir, injetamos no Header
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    // Caso ocorra erro antes mesmo de enviar a requisição
+    return Promise.reject(error);
+  }
+);
+
+// --- INTERCEPTOR DE RESPOSTA (Bônus) ---
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    // Se o servidor retornar 401 (Não autorizado), o token expirou
+    if (error.response && error.response.status === 401) {
+      // Aqui você poderia deslogar o usuário automaticamente
+      console.log("Token expirado, redirecionando para login...");
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;
