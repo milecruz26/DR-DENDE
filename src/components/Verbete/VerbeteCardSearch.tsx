@@ -1,15 +1,16 @@
 import Colors from "@/theme/Colors";
+import { useRouter } from 'expo-router';
 import { useState } from "react";
 import { Image, ImageSourcePropType, Pressable, StyleSheet, Text, View } from "react-native";
 
 export interface VerbeteCardProps {
-  item: {
-    id: number;
-    title: string;
-    desc: string;
-    bg: string;
-    img: ImageSourcePropType; // <-- Este é o tipo correto para imagens locais no Expo/React Native
-  },
+
+  id: string;
+  title: string;
+  desc: string;
+  bg?: string;
+  img: ImageSourcePropType; // <-- Este é o tipo correto para imagens locais no Expo/React Native
+
   index: number;
   favoritos?: boolean;
 }
@@ -17,7 +18,8 @@ const { SECONDARY, TERTIARY } = Colors
 
 
 SECONDARY.lighter
-export const VerbeteCardSearch = ({ item, index, favoritos }: VerbeteCardProps) => {
+export const VerbeteCardSearch = ({ index, favoritos, id, title, desc, bg, img }: VerbeteCardProps) => {
+  const router = useRouter();
   const backgroundColor = index % 2 === 0 ? TERTIARY.light : SECONDARY.light;
   const borderColor = index % 2 === 0 ? TERTIARY.dark : 'transparent';
   const [isSaved, setIsSaved] = useState(false);
@@ -26,11 +28,14 @@ export const VerbeteCardSearch = ({ item, index, favoritos }: VerbeteCardProps) 
   };
   return (
     // <View style={styles.verbeteCard}>
-    <View style={[styles.verbeteCard, { backgroundColor, borderColor }]}>
-      <Image source={item.img} style={styles.verbeteImage} resizeMode="contain" />
+    <Pressable
+      style={[styles.verbeteCard, { backgroundColor, borderColor }]}
+      onPress={() => router.push({ pathname: '/verbete', params: { id: id } })}
+    >
+      <Image source={img} style={styles.verbeteImage} resizeMode="contain" />
       <View style={styles.verbeteInfo}>
-        <Text style={styles.verbeteTitle}>{item.title}</Text>
-        <Text style={styles.verbeteDesc} numberOfLines={2}>{item.desc}</Text>
+        <Text style={styles.verbeteTitle}>{title}</Text>
+        <Text style={styles.verbeteDesc} numberOfLines={2}>{desc}</Text>
       </View>
 
       <View style={{ alignItems: 'center' }}>
@@ -52,7 +57,7 @@ export const VerbeteCardSearch = ({ item, index, favoritos }: VerbeteCardProps) 
           </Pressable>
         }
       </View>
-    </View>
+    </Pressable>
   )
 };
 

@@ -2,9 +2,10 @@ import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 import { Header } from '@/components/Header';
 import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';
 import { useAuth } from '@/context/AuthContext';
+import { apiGetVerbetes, Verbete } from '@/data/mockVerbetes';
 import Colors from '@/theme/Colors';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   StatusBar,
@@ -32,6 +33,22 @@ const MOCK_VERBETES = [
 export default function ListaVerbertes() {
   const router = useRouter();
   const { user } = useAuth();
+  const [verbetes, setVerbetes] = useState<Verbete[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const carregarVerbetes = async () => {
+      try {
+        const dados = await apiGetVerbetes();
+        setVerbetes(dados);
+      } catch (error) {
+        console.error("Erro ao buscar verbetes", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    carregarVerbetes();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -51,13 +68,17 @@ export default function ListaVerbertes() {
         </View>
 
         <FlatList
-          data={MOCK_VERBETES as any[]}
+          data={verbetes}
           keyExtractor={(item) => item.id}
           renderItem={({ item, index }) => (
             <VerbeteCardSearch
-              item={item} index={index} favoritos={true}
-
-            />
+              img={item.img}
+              id={item.id}
+              title={item.titulo}
+              desc={item.descricaoCurta}
+              // bg={item.bg}
+              index={index}
+              favoritos={true} />
           )}
           style={{ marginTop: 16 }}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 80 }}
