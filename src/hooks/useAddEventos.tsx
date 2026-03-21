@@ -41,7 +41,7 @@ export const useAdicionarEvento = () => {
   };
 
   // Lógica de Salvar
-  const handleSalvarEvento = () => {
+  const handleSalvarEvento = async () => {
     if (!nome ||
       !dataSelecionada ||
       !horario ||
@@ -73,10 +73,9 @@ export const useAdicionarEvento = () => {
 
     try {
       /* --- IMPLEMENTAÇÃO COM AXIOS (COMENTADA PARA O FUTURO) ---
-      const response = await api.post('/eventos', novoEvento);
-      if (response.status === 201) {
-         alert('Evento salvo no banco de dados!');
-      }
+      const response = await StaffService.createEvent(payload);
+    //   console.log("Evento salvo:", response.data);
+    //   alert('Evento adicionado com sucesso!');
       */
 
       // --- IMPLEMENTAÇÃO ATUAL COM MOCK --- 

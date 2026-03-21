@@ -1,4 +1,5 @@
 import BgLogin from "@/components/BackgroundThema/BgLogin";
+import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
 import { ProfileOption } from "@/components/ProfileOption";
 import { Link } from "expo-router";
 import React from "react";
@@ -27,6 +28,9 @@ export default function Perfil() {
             iconSource={require('../../../../assets/images/icons/estabelecimento.png')}
 
           />
+        </Link>
+        <Link href="/(login)" asChild>
+          <TertiaryButton title='Cancelar e Voltar' onPress={() => { }} />
         </Link>
       </View>
     </BgLogin>

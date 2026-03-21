@@ -4,14 +4,20 @@ import { SecondaryButton } from '@/components/Buttons/SecondaryButton'
 import { TertiaryButton } from '@/components/Buttons/TertiaryButton'
 import LoginLoading from '@/components/LoginLoading'
 import { useAuth } from '@/context/AuthContext'; // <-- Importando o contexto
+import Colors from '@/theme/Colors'
+import { Ionicons } from '@expo/vector-icons'
 import { Link, router } from 'expo-router'
 import React, { useState } from 'react'
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Abertura from '../(protegida)/abertura'
+const { NEUTRAL } = Colors;
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState(''); // Estado para capturar o email
+  const [senha, setSenha] = useState('');
+  const [erroSenha, setErroSenha] = useState<string | null>(null);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
   const { signIn } = useAuth(); // Função de login do nosso contexto
   const [showAbertura, setShowAbertura] = useState(false); // Novo estado
 
@@ -63,11 +69,26 @@ export default function Login() {
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Senha</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="********"
-              secureTextEntry
-            />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={[styles.inputPassword, erroSenha && styles.inputError]}
+                placeholder="********"
+                secureTextEntry={!mostrarSenha} // Inverte com base no estado
+                value={senha}
+                onChangeText={setSenha}
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setMostrarSenha(!mostrarSenha)}
+              >
+                <Ionicons
+                  name={mostrarSenha ? "eye-off-outline" : "eye-outline"}
+                  size={20}
+                  color="#888"
+                />
+              </TouchableOpacity>
+            </View>
+            {erroSenha && <Text style={styles.errorText}>{erroSenha}</Text>}
           </View>
 
           <View style={{ gap: 8 }}>
@@ -149,6 +170,32 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
+  },
+  inputError: {
+    borderColor: '#D32F2F', // Vermelho para indicar erro
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: NEUTRAL.base,
+    backgroundColor: NEUTRAL.lighter,
+    borderRadius: 8,
+    width: '100%',
+  },
+  inputPassword: {
+    flex: 1, // Ocupa todo o espaço menos o do ícone
+    padding: 12,
+    fontSize: 16,
+    color: NEUTRAL.dark,
+  },
+  eyeIcon: {
+    paddingHorizontal: 12,
+  },
+  errorText: {
+    color: '#D32F2F',
+    fontSize: 12,
+    marginTop: 4,
   },
   helperText: {
     fontSize: 12,
