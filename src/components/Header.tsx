@@ -21,10 +21,10 @@ export const Header = () => {
   };
 
 
-  // const handleLogout = () => {
-  //   signOut();
-  //   router.replace('/(login)'); // Volta para o login ao sair
-  // };
+  const handleLogout = async () => {
+    await signOut();          // Aguarda a remoção do token e invalidação da query
+    router.replace('/(login)'); // Redireciona para a tela de login
+  };
 
   return (
     <View style={styles.headerContainer}>
@@ -64,7 +64,7 @@ export const Header = () => {
 
               <Pressable
                 style={styles.menuItem}
-                onPress={signOut}
+                onPress={handleLogout}
               >
                 <Text style={[styles.menuItemText, { color: '#C0392B' }]}>Sair</Text>
                 <Feather name="external-link" size={16} color="#C0392B" />

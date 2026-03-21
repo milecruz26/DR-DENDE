@@ -13,42 +13,83 @@ import Abertura from '../(protegida)/abertura'
 const { NEUTRAL } = Colors;
 
 export default function Login() {
-  const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState(''); // Estado para capturar o email
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erroSenha, setErroSenha] = useState<string | null>(null);
   const [mostrarSenha, setMostrarSenha] = useState(false);
-  const { signIn } = useAuth(); // Função de login do nosso contexto
-  const [showAbertura, setShowAbertura] = useState(false); // Novo estado
+  const { signIn, isLoading } = useAuth(); // loading vem da mutation
 
   const handleLogin = async () => {
-    setLoading(true);
+    if (!email || !senha) {
+      setErroSenha('Preencha e‑mail e senha');
+      return;
+    }
     try {
-      const success = await signIn(email);
-
-      if (success) {
-        // Buscamos o usuário que acabou de logar (precisamos expor o 'user' no useAuth)
-        // Aqui simulamos a checagem do mock:
-        const isFirstTime = email.toLowerCase() === 'usuario@teste.com';
-
-        if (isFirstTime) {
-          setShowAbertura(true); // Exibe a abertura em vez de navegar
-          setLoading(false);     // Para o loading para mostrar a abertura
-        } else {
-          router.replace('/(protegida)');
-        }
-      } else {
-        alert('Usuário não encontrado');
-        setLoading(false);
-      }
-    } catch (e) {
-      setLoading(false);
+      await signIn(email, senha);
+      // Se chegou aqui, login bem sucedido
+      router.replace('/(protegida)');
+    } catch (error) {
+      // erro tratado pela mutation
+      alert('E‑mail ou senha inválidos');
     }
   };
+  // const [loading, setLoading] = useState(false);
+  // const [email, setEmail] = useState(''); // Estado para capturar o email
+  // const [senha, setSenha] = useState('');
+  // const [erroSenha, setErroSenha] = useState<string | null>(null);
+  // const [mostrarSenha, setMostrarSenha] = useState(false);
+  // const { signIn } = useAuth(); // Função de login do nosso contexto
+  const [showAbertura, setShowAbertura] = useState(false); // Novo estado
+
+  // const handleLogin = async () => {
+  //   if (!email || !senha) {
+  //     setErroSenha('Preencha e‑mail e senha');
+  //     return;
+  //   }
+  //   setLoading(true);
+  //   try {
+  //     const success = await signIn(email, senha); // agora com senha
+  //     if (success) {
+  //       // Navegar para a área protegida (ou abertura)
+  //       router.replace('/(protegida)');
+  //     } else {
+  //       alert('E‑mail ou senha inválidos');
+  //     }
+  //   } catch (e) {
+  //     alert('Erro ao fazer login');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const handleLogin = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const success = await signIn(email);
+
+  //     if (success) {
+  //       // Buscamos o usuário que acabou de logar (precisamos expor o 'user' no useAuth)
+  //       // Aqui simulamos a checagem do mock:
+  //       const isFirstTime = email.toLowerCase() === 'usuario@teste.com';
+
+  //       if (isFirstTime) {
+  //         setShowAbertura(true); // Exibe a abertura em vez de navegar
+  //         setLoading(false);     // Para o loading para mostrar a abertura
+  //       } else {
+  //         router.replace('/(protegida)');
+  //       }
+  //     } else {
+  //       alert('Usuário não encontrado');
+  //       setLoading(false);
+  //     }
+  //   } catch (e) {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <>
-      <LoginLoading visible={loading} />
+      <LoginLoading visible={isLoading} />
       <Abertura visible={showAbertura} />
       {!showAbertura && (
         <BgLogin card >

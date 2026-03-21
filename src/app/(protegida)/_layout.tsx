@@ -1,12 +1,19 @@
+import LoginLoading from '@/components/LoginLoading';
 import { MockTabBar } from '@/components/MockTabBar';
+import { useAuth } from '@/context/AuthContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Slot } from 'expo-router';
+import { Redirect, Slot } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ProtegidaLayout() {
   const insets = useSafeAreaInsets();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) return <LoginLoading visible={isLoading} />;
+  if (!isAuthenticated) return <Redirect href="/(login)" />;
+
   return (
     <View style={styles.container}>
       {/* O Slot renderiza a tela atual (index, verbete, etc.) */}

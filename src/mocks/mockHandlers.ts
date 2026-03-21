@@ -28,7 +28,7 @@ if (USE_MOCKS) {
         // Validação simples
         if (username && password) {
           return Promise.resolve({
-            data: { access_token: 'fake-jwt-token', token_type: 'bearer' },
+            data: { access_token: 'fakejwttoken', token_type: 'bearer' },
             status: 200,
           });
         }
