@@ -158,7 +158,20 @@ export default function AdicionarVerbetePasso2() {
                 </TouchableOpacity>
               )}
               ListEmptyComponent={
-                <Text style={styles.modalEmptyText}>Nenhum ingrediente encontrado</Text>
+                <View style={styles.modalEmpty}>
+                  <Text style={styles.modalEmptyText}>Nenhum ingrediente encontrado</Text>
+                  <TouchableOpacity
+                    style={styles.modalAddBtn}
+                    onPress={() => {
+                      if (search.trim() && modalIndex !== null) {
+                        selectIngredient(modalIndex, search.trim());
+                      }
+                    }}
+                  >
+                    <Feather name="plus" size={18} color={COLORS.white} />
+                    <Text style={styles.modalAddBtnText}>Adicionar "{search.trim()}"</Text>
+                  </TouchableOpacity>
+                </View>
               }
             />
           </View>
@@ -221,5 +234,8 @@ const styles = StyleSheet.create({
   modalList: { maxHeight: 350 },
   modalOption: { paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE' },
   modalOptionText: { fontSize: 16, color: COLORS.textDark, textAlign: 'center' },
-  modalEmptyText: { textAlign: 'center', color: COLORS.placeholder, marginTop: 20, fontSize: 14 },
+  modalEmpty: { alignItems: 'center', paddingVertical: 20, gap: 12 },
+  modalEmptyText: { textAlign: 'center', color: COLORS.placeholder, fontSize: 14 },
+  modalAddBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: COLORS.primary, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 8 },
+  modalAddBtnText: { color: COLORS.white, fontSize: 14, fontWeight: '500' },
 });
