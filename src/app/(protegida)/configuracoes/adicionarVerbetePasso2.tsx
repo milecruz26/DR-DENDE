@@ -2,25 +2,62 @@ import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import ImageUploadField from '@/components/ImageUploadField';
 
-// (Mantenha o objeto COLORS igual à tela 1)
+// Keep COLORS same as step 1
 const COLORS = { primary: '#34523B', white: '#FFFFFF', textDark: '#333333', textLight: '#666666', border: '#CCCCCC', danger: '#D32F2F', uploadBg: '#FAFAFA', placeholder: '#888888', };
+
+const INGREDIENTS_LIST = [
+  'Abóbora', 'Água', 'Aipim (mandioca/macaxeira)', 'Alho', 'Alfavaquinha', 'Amendoim',
+  'Arroz branco', 'Azeite (doce)', 'Azeite de dendê', 'Azeite de oliva', 'Bacon', 'Bacalhau',
+  'Banana-da-terra', 'Batata-doce', 'Batata inglesa', 'Baço bovino', 'Cabeça de porco',
+  'Camarão fresco', 'Camarão seco', 'Canela em pó', 'Carne (filé mignon ou alcatra)',
+  'Carne bovina', 'Carne de fumeiro', 'Carneiro (vísceras)', 'Castanha de caju', 'Cebola',
+  'Cebola roxa', 'Cenoura', 'Charque', 'Cheiro-verde', 'Chouriço / Paio', 'Chuchu',
+  'Colorau', 'Cominho', 'Coco ralado', 'Coco seco', 'Coentro', 'Costela bovina',
+  'Costela de porco defumada', 'Couve', 'Dobradinha (bucho bovino)', 'Espiga de milho',
+  'Extrato de tomate', 'Farinha de mandioca', 'Farinha de milho', 'Farinha de tapioca',
+  'Farinha de trigo', 'Fato de porco', 'Feijão-fradinho', 'Folha de louro',
+  'Folhas de aipim', 'Folhas de bananeira', 'Folhas de língua de vaca', 'Frango', 'Galinha',
+  'Gengibre', 'Hortelã', 'Jiló', 'Leite', 'Leite condensado', 'Leite de coco', 'Limão',
+  'Linguiça (calabresa/toscana)', 'Manteiga', 'Manteiga de garrafa', 'Margarina', 'Maxixe',
+  'Milho branco', 'Mocotó', 'Mocotó de gado bovino', 'Óleo', 'Orelha de porco', 'Ovos',
+  'Pimenta', 'Pimenta malagueta', 'Pimenta-do-reino', 'Pimentão', 'Pó de arroz', 'Quiabo',
+  'Rabo bovino', 'Rabo de porco', 'Repolho', 'Sal', 'Salsa', 'Sangue de galinha',
+  'Sangue de porco', 'Sementes de abóbora ou melancia', 'Siri mole', 'Tomate', 'Toucinho',
+  'Vinho tinto seco', 'Vinagre',
+];
 
 export default function AdicionarVerbetePasso2() {
   const router = useRouter();
-  // Estado para armazenar os blocos de ingredientes dinâmicos
-  const [ingredientes, setIngredientes] = useState<{ id: number; imageUri: string | null }[]>([{ id: 1, imageUri: null }]);
+  // Dynamic ingredient blocks state
+  const [ingredients, setIngredients] = useState<{ id: number; name: string | null; imageUri: string | null }[]>([{ id: 1, name: null, imageUri: null }]);
+  const [modalIndex, setModalIndex] = useState<number | null>(null);
+  const [search, setSearch] = useState('');
 
-  const adicionarIngrediente = () => {
-    setIngredientes([...ingredientes, { id: Date.now(), imageUri: null }]);
+  const addIngredient = () => {
+    setIngredients([...ingredients, { id: Date.now(), name: null, imageUri: null }]);
   };
 
+  const selectIngredient = (index: number, name: string) => {
+    const updated = [...ingredients];
+    updated[index].name = name;
+    setIngredients(updated);
+    setModalIndex(null);
+    setSearch('');
+  };
+
+  const normalize = (str: string) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+  const filteredIngredients = INGREDIENTS_LIST.filter((item) =>
+    normalize(item).includes(normalize(search))
+  );
+
   const removeImage = (index: number) => {
-    const novosIngredientes = [...ingredientes];
-    novosIngredientes[index].imageUri = null;
-    setIngredientes(novosIngredientes);
+    const updated = [...ingredients];
+    updated[index].imageUri = null;
+    setIngredients(updated);
   };
 
   const pickImage = async (index: number) => {
@@ -31,9 +68,9 @@ export default function AdicionarVerbetePasso2() {
     });
 
     if (!result.canceled) {
-      const novosIngredientes = [...ingredientes];
-      novosIngredientes[index].imageUri = result.assets[0].uri;
-      setIngredientes(novosIngredientes);
+      const updated = [...ingredients];
+      updated[index].imageUri = result.assets[0].uri;
+      setIngredients(updated);
     }
   };
 
@@ -49,7 +86,7 @@ export default function AdicionarVerbetePasso2() {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 
-        {ingredientes.map((item, index) => (
+        {ingredients.map((item, index) => (
           <View key={item.id} style={styles.dynamicBlock}>
             <View style={styles.sectionHeader}>
               <MaterialCommunityIcons name="chef-hat" size={24} color={COLORS.textDark} />
@@ -58,8 +95,10 @@ export default function AdicionarVerbetePasso2() {
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}><Text style={styles.required}>*</Text> Ingrediente</Text>
-              <TouchableOpacity style={styles.selectInput}>
-                <Text style={styles.selectText}>Selecionar</Text>
+              <TouchableOpacity style={styles.selectInput} onPress={() => setModalIndex(index)}>
+                <Text style={[styles.selectText, item.name && { color: COLORS.textDark }]}>
+                  {item.name || 'Selecionar'}
+                </Text>
                 <Feather name="chevron-down" size={20} color={COLORS.textLight} />
               </TouchableOpacity>
             </View>
@@ -73,15 +112,15 @@ export default function AdicionarVerbetePasso2() {
               />
             </View>
 
-            {/* Botão de Adicionar Novo sempre embaixo de cada bloco no protótipo */}
-            <TouchableOpacity style={styles.addBtn} onPress={adicionarIngrediente}>
+            {/* Add new ingredient button */}
+            <TouchableOpacity style={styles.addBtn} onPress={addIngredient}>
               <Feather name="plus" size={20} color={COLORS.primary} />
               <Text style={styles.addBtnText}>Adicionar novo</Text>
             </TouchableOpacity>
           </View>
         ))}
 
-        {/* Botões do Rodapé Duplos */}
+        {/* Footer buttons */}
         <View style={styles.footerButtons}>
           <TouchableOpacity style={styles.btnOutline} onPress={() => router.push('/configuracoes/adicionarVerbetePasso3')}>
             <Text style={styles.btnOutlineText}>Pular</Text>
@@ -92,6 +131,52 @@ export default function AdicionarVerbetePasso2() {
         </View>
 
       </ScrollView>
+
+      {/* Ingredient selection modal */}
+      <Modal visible={modalIndex !== null} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={() => { setModalIndex(null); setSearch(''); }} />
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Selecione um Ingrediente</Text>
+            <TextInput
+              style={styles.modalSearch}
+              placeholder="Buscar ingrediente..."
+              placeholderTextColor={COLORS.placeholder}
+              value={search}
+              onChangeText={setSearch}
+            />
+            <FlatList
+              data={filteredIngredients}
+              keyExtractor={(item) => item}
+              style={styles.modalList}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.modalOption}
+                  onPress={() => modalIndex !== null && selectIngredient(modalIndex, item)}
+                >
+                  <Text style={styles.modalOptionText}>{item}</Text>
+                </TouchableOpacity>
+              )}
+              ListEmptyComponent={
+                <View style={styles.modalEmpty}>
+                  <Text style={styles.modalEmptyText}>Nenhum ingrediente encontrado</Text>
+                  <TouchableOpacity
+                    style={styles.modalAddBtn}
+                    onPress={() => {
+                      if (search.trim() && modalIndex !== null) {
+                        selectIngredient(modalIndex, search.trim());
+                      }
+                    }}
+                  >
+                    <Feather name="plus" size={18} color={COLORS.white} />
+                    <Text style={styles.modalAddBtnText}>Adicionar "{search.trim()}"</Text>
+                  </TouchableOpacity>
+                </View>
+              }
+            />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -139,5 +224,18 @@ const styles = StyleSheet.create({
   btnOutline: { flex: 1, height: 55, borderWidth: 1, borderColor: COLORS.primary, borderRadius: 8, justifyContent: 'center', alignItems: 'center' },
   btnOutlineText: { color: COLORS.primary, fontSize: 16, fontWeight: 'bold' },
   btnSolid: { flex: 1, height: 55, backgroundColor: COLORS.primary, borderRadius: 8, justifyContent: 'center', alignItems: 'center' },
-  btnSolidText: { color: COLORS.white, fontSize: 16, fontWeight: 'bold' }
+  btnSolidText: { color: COLORS.white, fontSize: 16, fontWeight: 'bold' },
+
+  // Ingredient modal styles
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  modalContent: { width: '85%', maxHeight: '70%', backgroundColor: '#FFF', borderRadius: 12, padding: 20 },
+  modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 12, textAlign: 'center' },
+  modalSearch: { height: 45, borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, paddingHorizontal: 12, fontSize: 14, marginBottom: 10 },
+  modalList: { maxHeight: 350 },
+  modalOption: { paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE' },
+  modalOptionText: { fontSize: 16, color: COLORS.textDark, textAlign: 'center' },
+  modalEmpty: { alignItems: 'center', paddingVertical: 20, gap: 12 },
+  modalEmptyText: { textAlign: 'center', color: COLORS.placeholder, fontSize: 14 },
+  modalAddBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: COLORS.primary, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 8 },
+  modalAddBtnText: { color: COLORS.white, fontSize: 14, fontWeight: '500' },
 });
