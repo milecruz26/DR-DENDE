@@ -30,6 +30,7 @@ export default function Login() {
       router.replace('/(protegida)');
     } catch (error) {
       // erro tratado pela mutation
+      console.log('Login falhou:', error);
       alert('E‑mail ou senha inválidos');
     }
   };

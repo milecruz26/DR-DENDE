@@ -1,5 +1,5 @@
-import { api } from './api';
 import { User } from '../interfaces';
+import { api } from './apiTeste';
 
 interface LoginCredentials {
   username: string;
@@ -17,10 +17,19 @@ interface LoginResponse {
 
 export const authService = {
   // POST /token (OAuth2)
-  login: (credentials: LoginCredentials) =>
-    api.post<LoginResponse>('/token', new URLSearchParams(credentials), {
+  login: (credentials: LoginCredentials) => {
+    const params = new URLSearchParams();
+
+    Object.entries(credentials).forEach(([key, value]) => {
+      if (value) {
+        params.append(key, value);
+      }
+    });
+
+    return api.post<LoginResponse>('/token', params, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    }),
+    });
+  },
 
   // GET /users/me
   getCurrentUser: () => api.get<User>('/users/me'),

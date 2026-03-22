@@ -1,5 +1,5 @@
-import { api } from './api';
 import { Dish } from '../interfaces';
+import { api } from './apiTeste';
 
 export const dishService = {
   // POST /dishes/like/{dish_id}

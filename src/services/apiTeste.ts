@@ -2,6 +2,7 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 const BASE_URL = 'https://sua-api.com'; // substituir pela URL real
+const TOKEN_KEY = 'auth_token'
 
 export const api = axios.create({
   baseURL: BASE_URL,
@@ -12,7 +13,7 @@ export const api = axios.create({
 
 // Interceptor para adicionar token de autenticação
 api.interceptors.request.use(async (config) => {
-  const token = await SecureStore.getItem('token');
+  const token = await SecureStore.getItem(TOKEN_KEY);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

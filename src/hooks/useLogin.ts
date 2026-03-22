@@ -20,6 +20,7 @@ export const useLogin = () => {
         client_id: '',
         client_secret: '',
       });
+      console.log('Login response:', password);
       const { access_token } = loginResponse.data;
 
       // 2. Armazenar token

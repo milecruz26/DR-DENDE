@@ -8,46 +8,65 @@ import {
   mockUsers,
 } from './mockData';
 
-// Habilita mocks condicionalmente (ex: variável de ambiente)
-const USE_MOCKS = true; // alterar para false quando backend estiver pronto
+const USE_MOCKS = true;
 
-// Intercepta requisições se USE_MOCKS = true
+// Função auxiliar para obter usuário a partir do token no header
+function getUserFromToken(config: any): User | null {
+  const authHeader = config.headers?.Authorization || config.headers?.authorization;
+  if (!authHeader) return null;
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
+  // Token fictício: fake-token-<user-id>
+  if (token && token.startsWith('fake-token-')) {
+    const userId = token.replace('fake-token-', '');
+    const user = mockUsers.find(u => u.id === userId);
+    return user || null;
+  }
+  return null;
+}
+
 if (USE_MOCKS) {
-  // Token endpoint
   api.interceptors.response.use(
     (response) => response,
     async (error) => {
       const { config, response } = error;
       if (!config || !USE_MOCKS) return Promise.reject(error);
 
-      // Simula login
+      // Simula login (rota pública)
       if (config.url === '/token' && config.method === 'post') {
         const params = new URLSearchParams(config.data);
         const username = params.get('username');
         const password = params.get('password');
-        // Validação simples
-        if (username && password) {
+        const user = mockUsers.find(u => u.email === username);
+        if (user && password) {
+          // Gera token com o id do usuário
+          console.log('password:', password)
+          const token = `fake-token-${user.id}`;
           return Promise.resolve({
-            data: { access_token: 'fakejwttoken', token_type: 'bearer' },
+            data: { access_token: token, token_type: 'bearer' },
             status: 200,
           });
         }
         return Promise.reject({ response: { status: 401, data: { detail: 'Invalid credentials' } } });
       }
 
+      // Verifica autenticação para rotas protegidas
+      const user = getUserFromToken(config);
+      if (!user && config.url !== '/token') {
+        return Promise.reject({ response: { status: 401, data: { detail: 'Not authenticated' } } });
+      }
+
       // GET /users/me
       if (config.url === '/users/me' && config.method === 'get') {
-        // Simula retorno do usuário logado (ex: primeiro da lista)
-        return Promise.resolve({ data: mockUsers[0], status: 200 });
+        return Promise.resolve({ data: user, status: 200 });
       }
 
       // GET /users/{user_id}
       const userMatch = config.url?.match(/^\/users\/(.+)$/);
       if (userMatch && config.method === 'get') {
         const userId = userMatch[1];
-        const user = mockUsers.find(u => u.id === userId);
-        if (user) {
-          return Promise.resolve({ data: user, status: 200 });
+        const foundUser = mockUsers.find(u => u.id === userId);
+        if (foundUser) {
+          return Promise.resolve({ data: foundUser, status: 200 });
         }
         return Promise.reject({ response: { status: 404, data: { detail: 'User not found' } } });
       }
@@ -55,14 +74,14 @@ if (USE_MOCKS) {
       // PUT /users/me
       if (config.url === '/users/me' && config.method === 'put') {
         const updated = config.data;
-        // Atualiza mockUsers (apenas simulação)
-        return Promise.resolve({ data: { ...mockUsers[0], ...updated }, status: 200 });
+        Object.assign(user as User, updated);
+        return Promise.resolve({ data: user, status: 200 });
       }
 
       // POST /users
       if (config.url === '/users' && config.method === 'post') {
         const newUser = config.data as User;
-        newUser.id = 'new-user-id';
+        newUser.id = `user-${Date.now()}`;
         mockUsers.push(newUser);
         return Promise.resolve({ data: newUser, status: 201 });
       }
@@ -86,7 +105,7 @@ if (USE_MOCKS) {
 
       // GET /complaints/me
       if (config.url === '/complaints/me' && config.method === 'get') {
-        const userComplaints = mockComplaints.filter(c => c.user_id === mockUsers[0].id);
+        const userComplaints = mockComplaints.filter(c => c.user_id === user?.id);
         return Promise.resolve({ data: userComplaints, status: 200 });
       }
 
@@ -94,11 +113,12 @@ if (USE_MOCKS) {
       if (config.url === '/complaints' && config.method === 'post') {
         const newComplaint = config.data as Complaint;
         newComplaint.id = `complaint-${Date.now()}`;
+        newComplaint.user_id = user?.id;
         mockComplaints.push(newComplaint);
         return Promise.resolve({ data: newComplaint, status: 201 });
       }
 
-      // STAFF endpoints (exemplo para alguns)
+      // STAFF endpoints
       // GET /staff/complaints/{user_id}
       const staffComplaintsMatch = config.url?.match(/^\/staff\/complaints\/(.+)$/);
       if (staffComplaintsMatch && config.method === 'get') {
@@ -147,29 +167,30 @@ if (USE_MOCKS) {
         return Promise.resolve({ data: event, status: 201 });
       }
 
+      // ESTABLISHMENT endpoints
       // GET /establishments/me
       if (config.url === '/establishments/me' && config.method === 'get') {
-        const estabUser = mockUsers.find(u => u.user_type === 'establishment');
-        if (estabUser) return Promise.resolve({ data: estabUser, status: 200 });
-        return Promise.reject({ response: { status: 404 } });
+        if (user?.user_type === 'establishment') {
+          return Promise.resolve({ data: user, status: 200 });
+        }
+        return Promise.reject({ response: { status: 403, data: { detail: 'Not an establishment' } } });
       }
 
       // GET /establishments/dishes/me
       if (config.url === '/establishments/dishes/me' && config.method === 'get') {
-        const establishmentId = mockUsers.find(u => u.user_type === 'establishment')?.id;
-        const dishes = mockDishes.filter(d => d.establishment_id === establishmentId);
+        const dishes = mockDishes.filter(d => d.establishment_id === user?.id);
         return Promise.resolve({ data: dishes, status: 200 });
       }
 
       // POST /establishments/dish
       if (config.url === '/establishments/dish' && config.method === 'post') {
         const newDish = config.data as Omit<Dish, 'id'>;
-        const dish: Dish = { ...newDish, id: `dish-${Date.now()}` };
+        const dish: Dish = { ...newDish, id: `dish-${Date.now()}`, establishment_id: user?.id };
         mockDishes.push(dish);
         return Promise.resolve({ data: dish, status: 201 });
       }
 
-      // Se não mapeado, rejeita para passar para o backend real
+      // Se não mapeado, rejeita
       return Promise.reject(error);
     }
   );

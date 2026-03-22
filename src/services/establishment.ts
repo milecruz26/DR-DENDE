@@ -1,5 +1,5 @@
-import { api } from './api';
-import { User, Dish } from '../interfaces';
+import { Dish, User } from '../interfaces';
+import { api } from './apiTeste';
 
 export const establishmentService = {
   // GET /establishments/me

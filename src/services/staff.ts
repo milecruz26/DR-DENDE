@@ -1,5 +1,5 @@
-import { api } from './api';
-import { User, Complaint, ComplaintValidation, Entry, Event } from '../interfaces';
+import { Complaint, ComplaintValidation, Entry, Event, User } from '../interfaces';
+import { api } from './apiTeste';
 
 export const staffService = {
   // POST /staff/user

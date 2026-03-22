@@ -4,6 +4,7 @@ import VerbetesExcludConfirm from "@/components/Modal/ExcludConfirm/VerbetesExcl
 import { ReadMoreModal } from "@/components/Modal/ModalVerbete";
 import { RestaurantCardSearch } from "@/components/Restaurante/RestauranteCardSearch";
 import Colors from "@/theme/Colors";
+import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import { FlatList, ImageSourcePropType, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -79,67 +80,74 @@ export default function Estabelecimentos() {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor={'#FFFBE6'} />
-      <Header />
-      <SafeAreaView style={styles.scrollContent}>
+    <LinearGradient
+      colors={['#FFF', '#FFF0C8']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 0.8 }}
+      style={styles.container}
+    >
+      <View style={styles.container}>
+        <StatusBar barStyle="dark-content" backgroundColor={'#FFFBE6'} />
+        <Header />
+        <SafeAreaView style={styles.scrollContent}>
 
 
-        <View>
-          <Text style={styles.textPage}>Estabelecimentos </Text>
-        </View>
-        <View style={styles.subTabContainer}>
-          <TouchableOpacity onPress={() => setSubTab('todos')} style={styles.subTabItem}>
-            <Text style={[styles.subTabText, subTab === 'todos' && styles.subTabActiveText]}>Todos</Text>
-            {subTab === 'todos' && <View style={styles.subTabLine} />}
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setSubTab('cupom')} style={styles.subTabItem}>
-            <Text style={[styles.subTabText, subTab === 'cupom' && styles.subTabActiveText]}>Com cupom de desconto</Text>
-            {subTab === 'cupom' && <View style={[styles.subTabLine]} />}
-          </TouchableOpacity>
-        </View>
+          <View>
+            <Text style={styles.textPage}>Estabelecimentos </Text>
+          </View>
+          <View style={styles.subTabContainer}>
+            <TouchableOpacity onPress={() => setSubTab('todos')} style={styles.subTabItem}>
+              <Text style={[styles.subTabText, subTab === 'todos' && styles.subTabActiveText]}>Todos</Text>
+              {subTab === 'todos' && <View style={styles.subTabLine} />}
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setSubTab('cupom')} style={styles.subTabItem}>
+              <Text style={[styles.subTabText, subTab === 'cupom' && styles.subTabActiveText]}>Com cupom de desconto</Text>
+              {subTab === 'cupom' && <View style={[styles.subTabLine]} />}
+            </TouchableOpacity>
+          </View>
 
-        <FlatList
-          data={MOCK_RESTAURANTES}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={{ paddingBottom: 120 }}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item, index }) => (
-            <RestaurantCardSearch item={item as any} onDeletePress={() => openDeleteModal(item)} moreDetailsPress={() => abrirDetalhes(item)} />
-          )}
-          // Espaço extra embaixo para o menu não cobrir o último item
-          ListFooterComponent={<View style={{ height: 100 }} />}
-        />
+          <FlatList
+            data={MOCK_RESTAURANTES}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={{ paddingBottom: 120 }}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item, index }) => (
+              <RestaurantCardSearch item={item as any} onDeletePress={() => openDeleteModal(item)} moreDetailsPress={() => abrirDetalhes(item)} />
+            )}
+            // Espaço extra embaixo para o menu não cobrir o último item
+            ListFooterComponent={<View style={{ height: 100 }} />}
+          />
 
-      </SafeAreaView>
-      {/* MODAL DE CONFIRMAÇÃO DE EXCLUSÃO */}
-      <ReadMoreModal
-        visible={deleteModalVisible}
-        onClose={() => setDeleteModalVisible(false)}
-        title="Confirmar Exclusão"
-        type="small"
-      >
-        <VerbetesExcludConfirm
-          onCancel={() => setDeleteModalVisible(false)}
-          onConfirm={() => {
-            console.log("Excluindo:", selectedItem?.id);
-            setDeleteModalVisible(false);
-          }}
-        />
-      </ReadMoreModal>
+        </SafeAreaView>
+        {/* MODAL DE CONFIRMAÇÃO DE EXCLUSÃO */}
+        <ReadMoreModal
+          visible={deleteModalVisible}
+          onClose={() => setDeleteModalVisible(false)}
+          title="Confirmar Exclusão"
+          type="small"
+        >
+          <VerbetesExcludConfirm
+            onCancel={() => setDeleteModalVisible(false)}
+            onConfirm={() => {
+              console.log("Excluindo:", selectedItem?.id);
+              setDeleteModalVisible(false);
+            }}
+          />
+        </ReadMoreModal>
 
-      {/* O SEU MODAL SENDO USADO AQUI */}
-      <ReadMoreModal
-        visible={modalVisivel}
-        onClose={() => setModalVisivel(false)}
-        title="Estabelecimento ipsum"
-        type="full"
-      >
-        {/* O novo componente entra como 'children' mágico aqui dentro! */}
-        <EstabelecimentoDetalhes />
-      </ReadMoreModal>
+        {/* O SEU MODAL SENDO USADO AQUI */}
+        <ReadMoreModal
+          visible={modalVisivel}
+          onClose={() => setModalVisivel(false)}
+          title="Estabelecimento ipsum"
+          type="full"
+        >
+          {/* O novo componente entra como 'children' mágico aqui dentro! */}
+          <EstabelecimentoDetalhes />
+        </ReadMoreModal>
 
-    </View>
+      </View>
+    </LinearGradient>
   );
 };
 

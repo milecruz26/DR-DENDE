@@ -1,5 +1,5 @@
-import { api } from './api';
 import { Complaint } from '../interfaces';
+import { api } from './apiTeste';
 
 export const complaintService = {
   // GET /complaints/me

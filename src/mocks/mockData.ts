@@ -73,7 +73,7 @@ export const mockEvents: Event[] = [
   {
     id: 'event-1',
     name: 'Festival Gastronômico',
-    event_date: '2025-05-20',
+    event_date: '2026-03-21T19:00:00', // data + hora
     description: 'Degustação de pratos típicos',
     address: {
       city: 'São Paulo',
@@ -85,7 +85,7 @@ export const mockEvents: Event[] = [
   {
     id: 'event-2',
     name: 'Workshop de Culinária',
-    event_date: '2025-06-10',
+    event_date: '2026-03-22T14:30:00',
     description: 'Aprenda a cozinhar pratos italianos',
     address: {
       city: 'Rio de Janeiro',
