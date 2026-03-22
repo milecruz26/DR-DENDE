@@ -34,7 +34,7 @@ export default function Configuracoes() {
 
   // Se por algum motivo entrar aqui sem usuário, mostra carregando ou nulo
   if (!user) return null;
-
+  console.log('usuario', user.user_type, user.email);
   return (
     <ScrollView style={styles.container}
       contentContainerStyle={{ justifyContent: 'space-between', minHeight: '100%', paddingBottom: 50 }}
@@ -51,7 +51,7 @@ export default function Configuracoes() {
         <View>
           <View>
             <Text style={styles.mainTitle}>{
-              (user.role === 'usuario' || user.role === 'equipe') ? 'Usuário' : 'Estabelecimento'
+              (user.user_type === 'common' || user.user_type === 'staff') ? 'Usuário' : 'Estabelecimento'
             }</Text>
             <View style={styles.userInfo}>
 
@@ -67,11 +67,11 @@ export default function Configuracoes() {
           {/* SEÇÕES DINÂMICAS BASEADAS EM user.role */}
           {renderSection('Configurações', [
             { label: 'Meu perfil', route: '/configuracoes/meuPerfil' },
-            ...(user.role === 'usuario' ? [{ label: 'Denunciar', route: '/configuracoes/denunciar' }] : [])
+            ...(user.user_type === 'common' ? [{ label: 'Denunciar', route: '/configuracoes/denunciar' }] : [])
           ])}
 
-          {(user.role === 'equipe' || user.role === 'estabelecimento') && renderSection('Administrar',
-            user.role === 'equipe' ? [
+          {(user.user_type === 'staff' || user.user_type === 'establishment') && renderSection('Administrar',
+            user.user_type === 'staff' ? [
               { label: 'Editar time', route: '/configuracoes/editarTimes' },
               { label: 'Moderar estabelecimentos', badge: 1, route: '/configuracoes/moderarEstabelecimentos' },
               { label: 'Moderar denúncias', badge: 2, route: '/configuracoes/moderarDenuncias' },
@@ -82,7 +82,7 @@ export default function Configuracoes() {
             ]
           )}
 
-          {user.role === 'equipe' && renderSection('Adicionar', [
+          {user.user_type === 'staff' && renderSection('Adicionar', [
             { label: 'Adicionar verbete', route: '/configuracoes/adicionarVerbetePasso1' },
             { label: 'Adicionar evento', route: '/configuracoes/adicionarEvento' },
           ])}

@@ -2,6 +2,7 @@ import BgLogin from "@/components/BackgroundThema/BgLogin";
 import { PrimaryButton } from "@/components/Buttons/PrimaryButton";
 import { TertiaryButton } from "@/components/Buttons/TertiaryButton";
 import LoginLoading from "@/components/LoginLoading";
+import { validarSenha } from '@/utils/validators';
 import { Link, router } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
@@ -10,21 +11,41 @@ const { NEUTRAL } = Colors;
 
 export default function ResetarSenha() {
   const [loading, setLoading] = useState(false);
-  const handleLogin = async () => {
-    setLoading(true); // Ativa a tela de carregamento que você quer
+  const [senha, setSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState('');
+
+  const [erroSenha, setErroSenha] = useState<string | null>(null);
+  const [erroConfirmacao, setErroConfirmacao] = useState<string | null>(null);
+
+  const handleResetarSenha = async () => {
+    setErroSenha(null);
+    setErroConfirmacao(null);
+
+    const erroValidacao = validarSenha(senha);
+    if (erroValidacao) {
+      setErroSenha(erroValidacao);
+      return;
+    }
+
+    if (senha !== confirmarSenha) {
+      setErroConfirmacao("As senhas não coincidem.");
+      return;
+    }
+
+    setLoading(true);
 
     try {
-      // Simulação de chamada de API / Login
-      await new Promise(resolve => setTimeout(resolve, 3000));
-
-      router.replace('/(protegida)'); // Navega para a próxima tela
+      // Aqui entraria a chamada da API real
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      alert("Senha alterada com sucesso!");
+      router.replace('/(login)'); // Volta para o login
     } catch (error) {
       console.log(error);
     } finally {
-      // Importante: Não desative o loading aqui se for navegar, 
-      // para evitar que a tela de login "pisque" antes de mudar.
+      setLoading(false);
     }
   };
+
   return (
     <>
       <LoginLoading visible={loading} />
@@ -32,43 +53,49 @@ export default function ResetarSenha() {
         <Text style={styles.cardTitle}>Altere a sua senha</Text>
         <Text style={styles.cardSubTitle}>Insira e confirme a sua nova senha para realizar a alteração.</Text>
 
-        {/* <View style={{ gap: 24 }}> */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Senha</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, erroSenha && styles.inputError]}
             placeholder="********"
             secureTextEntry
+            value={senha}
+            onChangeText={(texto) => {
+              setSenha(texto);
+              setErroSenha(null);
+            }}
           />
+          {erroSenha && <Text style={styles.errorText}>{erroSenha}</Text>}
         </View>
+
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Confirmar senha</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, erroConfirmacao && styles.inputError]}
             placeholder="********"
             secureTextEntry
+            value={confirmarSenha}
+            onChangeText={(texto) => {
+              setConfirmarSenha(texto);
+              setErroConfirmacao(null);
+            }}
           />
+          {erroConfirmacao && <Text style={styles.errorText}>{erroConfirmacao}</Text>}
         </View>
-        <View style={{ gap: 8 }}>
 
+        <View style={{ gap: 8, marginTop: 10 }}>
           <PrimaryButton
             title='Alterar senha'
-            onPress={handleLogin}
-
+            onPress={handleResetarSenha}
           />
           <Link href="/(login)" asChild>
-            <TertiaryButton
-              title='Voltar ao login'
-              onPress={() => { }}
-            />
+            <TertiaryButton title='Voltar ao login' onPress={() => { }} />
           </Link>
         </View>
-
-        {/* </View> */}
       </BgLogin>
     </>
   )
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -117,6 +144,14 @@ const styles = StyleSheet.create({
   },
   inputGroup: {
     marginBottom: 8,
+  },
+  inputError: {
+    borderColor: '#D32F2F',
+  },
+  errorText: {
+    color: '#D32F2F',
+    fontSize: 12,
+    marginTop: 4,
   },
   label: {
     fontWeight: 'bold',

@@ -4,45 +4,93 @@ import { SecondaryButton } from '@/components/Buttons/SecondaryButton'
 import { TertiaryButton } from '@/components/Buttons/TertiaryButton'
 import LoginLoading from '@/components/LoginLoading'
 import { useAuth } from '@/context/AuthContext'; // <-- Importando o contexto
+import Colors from '@/theme/Colors'
+import { Ionicons } from '@expo/vector-icons'
 import { Link, router } from 'expo-router'
 import React, { useState } from 'react'
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Abertura from '../(protegida)/abertura'
+const { NEUTRAL } = Colors;
 
 export default function Login() {
-  const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState(''); // Estado para capturar o email
-  const { signIn } = useAuth(); // Função de login do nosso contexto
-  const [showAbertura, setShowAbertura] = useState(false); // Novo estado
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [erroSenha, setErroSenha] = useState<string | null>(null);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const { signIn, isLoading } = useAuth(); // loading vem da mutation
 
   const handleLogin = async () => {
-    setLoading(true);
+    if (!email || !senha) {
+      setErroSenha('Preencha e‑mail e senha');
+      return;
+    }
     try {
-      const success = await signIn(email);
-
-      if (success) {
-        // Buscamos o usuário que acabou de logar (precisamos expor o 'user' no useAuth)
-        // Aqui simulamos a checagem do mock:
-        const isFirstTime = email.toLowerCase() === 'usuario@teste.com';
-
-        if (isFirstTime) {
-          setShowAbertura(true); // Exibe a abertura em vez de navegar
-          setLoading(false);     // Para o loading para mostrar a abertura
-        } else {
-          router.replace('/(protegida)');
-        }
-      } else {
-        alert('Usuário não encontrado');
-        setLoading(false);
-      }
-    } catch (e) {
-      setLoading(false);
+      await signIn(email, senha);
+      // Se chegou aqui, login bem sucedido
+      router.replace('/(protegida)');
+    } catch (error) {
+      // erro tratado pela mutation
+      console.log('Login falhou:', error);
+      alert('E‑mail ou senha inválidos');
     }
   };
+  // const [loading, setLoading] = useState(false);
+  // const [email, setEmail] = useState(''); // Estado para capturar o email
+  // const [senha, setSenha] = useState('');
+  // const [erroSenha, setErroSenha] = useState<string | null>(null);
+  // const [mostrarSenha, setMostrarSenha] = useState(false);
+  // const { signIn } = useAuth(); // Função de login do nosso contexto
+  const [showAbertura, setShowAbertura] = useState(false); // Novo estado
+
+  // const handleLogin = async () => {
+  //   if (!email || !senha) {
+  //     setErroSenha('Preencha e‑mail e senha');
+  //     return;
+  //   }
+  //   setLoading(true);
+  //   try {
+  //     const success = await signIn(email, senha); // agora com senha
+  //     if (success) {
+  //       // Navegar para a área protegida (ou abertura)
+  //       router.replace('/(protegida)');
+  //     } else {
+  //       alert('E‑mail ou senha inválidos');
+  //     }
+  //   } catch (e) {
+  //     alert('Erro ao fazer login');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const handleLogin = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const success = await signIn(email);
+
+  //     if (success) {
+  //       // Buscamos o usuário que acabou de logar (precisamos expor o 'user' no useAuth)
+  //       // Aqui simulamos a checagem do mock:
+  //       const isFirstTime = email.toLowerCase() === 'usuario@teste.com';
+
+  //       if (isFirstTime) {
+  //         setShowAbertura(true); // Exibe a abertura em vez de navegar
+  //         setLoading(false);     // Para o loading para mostrar a abertura
+  //       } else {
+  //         router.replace('/(protegida)');
+  //       }
+  //     } else {
+  //       alert('Usuário não encontrado');
+  //       setLoading(false);
+  //     }
+  //   } catch (e) {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <>
-      <LoginLoading visible={loading} />
+      <LoginLoading visible={isLoading} />
       <Abertura visible={showAbertura} />
       {!showAbertura && (
         <BgLogin card >
@@ -63,11 +111,26 @@ export default function Login() {
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Senha</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="********"
-              secureTextEntry
-            />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={[styles.inputPassword, erroSenha && styles.inputError]}
+                placeholder="********"
+                secureTextEntry={!mostrarSenha} // Inverte com base no estado
+                value={senha}
+                onChangeText={setSenha}
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setMostrarSenha(!mostrarSenha)}
+              >
+                <Ionicons
+                  name={mostrarSenha ? "eye-off-outline" : "eye-outline"}
+                  size={20}
+                  color="#888"
+                />
+              </TouchableOpacity>
+            </View>
+            {erroSenha && <Text style={styles.errorText}>{erroSenha}</Text>}
           </View>
 
           <View style={{ gap: 8 }}>
@@ -149,6 +212,32 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
+  },
+  inputError: {
+    borderColor: '#D32F2F', // Vermelho para indicar erro
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: NEUTRAL.base,
+    backgroundColor: NEUTRAL.lighter,
+    borderRadius: 8,
+    width: '100%',
+  },
+  inputPassword: {
+    flex: 1, // Ocupa todo o espaço menos o do ícone
+    padding: 12,
+    fontSize: 16,
+    color: NEUTRAL.dark,
+  },
+  eyeIcon: {
+    paddingHorizontal: 12,
+  },
+  errorText: {
+    color: '#D32F2F',
+    fontSize: 12,
+    marginTop: 4,
   },
   helperText: {
     fontSize: 12,

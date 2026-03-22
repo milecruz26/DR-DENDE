@@ -84,22 +84,6 @@ export default function HomeScreen() {
             {/* Seção Eventos */}
             <SectionTitle title="Eventos" showLink />
             <EventCalendarList />
-            {/* <View style={styles.eventContainer} >
-              <DateSelector
-                currentDate={selectedDate}
-                onDateChange={(newDate) => setSelectedDate(newDate)}
-                onOpenPicker={() => setShowDatePicker(true)}
-              />
-              <View style={styles.eventList}>
-                <EventItem title="FEIJOADA DE SEU ZÉ"
-                  onPress={() => setModalVisible(true)}
-                />
-                <EventItem title="CEIA BENEFICENTE" />
-                <EventItem title="CEIA BENEFICENTE" />
-                <EventItem title="REUNIÃO GERAL" />
-              </View>
-            </View> */}
-
 
             {/* Espaço extra para não ficar atrás da TabBar */}
             <View style={{ height: 100 }} />
@@ -108,29 +92,7 @@ export default function HomeScreen() {
 
 
         </View>
-        {/* MODAL DE DATA (O mesmo que você usa na outra tela) */}
-        {/* <CustomDatePicker
-          visible={showDatePicker}
-          selectedDate={selectedDate}
-          onClose={() => setShowDatePicker(false)}
-          onSelectDate={(date) => {
-            setSelectedDate(date);
-            setShowDatePicker(false);
-          }}
-        />
-        <ReadMoreModal
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          title={MOCK_DATA.titulo}
-        >
 
-          <EventsInfo
-            location={MOCK_DATA.location}
-            date={MOCK_DATA.date}
-            description={MOCK_DATA.aboutEvent}
-          />
-
-        </ReadMoreModal> */}
       </SafeAreaView>
     </LinearGradient>
   );
