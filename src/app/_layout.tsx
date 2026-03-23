@@ -1,4 +1,5 @@
 import { AuthProvider } from '@/context/AuthContext';
+import { useDeepLink } from '@/hooks/useDeepLink';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -8,6 +9,7 @@ import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import '../mocks/mockHandlers';
 
+
 export { ErrorBoundary } from 'expo-router';
 const queryClient = new QueryClient();
 
@@ -15,6 +17,7 @@ const queryClient = new QueryClient();
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useDeepLink();
   const [loaded, error] = useFonts({
     // Carregamos a referência principal da família
     'FiraSansCondensed': require('../../assets/fonts/FiraSansCondensed-Regular.ttf'),

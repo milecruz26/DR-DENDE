@@ -1,6 +1,7 @@
 import BgLogin from '@/components/BackgroundThema/BgLogin';
 import { PrimaryButton } from '@/components/Buttons/PrimaryButton';
 import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
+import { useCreateUser } from '@/hooks/useUsers';
 import { validarSenha } from '@/utils/validators';
 import { Ionicons } from '@expo/vector-icons';
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -12,10 +13,10 @@ const { NEUTRAL } = Colors;
 
 export default function CadastroCPF() {
   // Estados para os inputs
-  const [nome, setNome] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
-  const [senha, setSenha] = useState('');
+  const [password, setPassword] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
   // Estados para controlar a visibilidade
   const [mostrarSenha, setMostrarSenha] = useState(false);
@@ -25,28 +26,37 @@ export default function CadastroCPF() {
   const [erroSenha, setErroSenha] = useState<string | null>(null);
   const [erroConfirmacao, setErroConfirmacao] = useState<string | null>(null);
 
+  const createUserMutation = useCreateUser();
 
-  const handleCadastro = () => {
-    // Limpa erros anteriores
+
+  const handleCadastro = async () => {
     setErroSenha(null);
     setErroConfirmacao(null);
 
-    // 1. Valida as regras da API
-    const erroValidacao = validarSenha(senha);
+    const erroValidacao = validarSenha(password);
     if (erroValidacao) {
       setErroSenha(erroValidacao);
       return;
     }
-
-    // 2. Valida se as senhas batem
-    if (senha !== confirmarSenha) {
+    if (password !== confirmarSenha) {
       setErroConfirmacao("As senhas não coincidem.");
       return;
     }
-
-    // 3. Tudo certo! Aqui você chamaria o UserService.createUser()
-    console.log("Validação passou! Pronto para chamar a API.");
-    router.push("/(login)/(cadastro)/perfil");
+    // console.log('Dados para cadastro no form de cadastro:', { name, email, telefone, password });
+    try {
+      await createUserMutation.mutateAsync({
+        username: name,
+        email: email,
+        password: password,
+        user_type: 'common',
+        address: null,
+        role: null,
+      });
+      router.push("/(login)/(cadastro)/emailEnviadoCadastro");
+    } catch (error) {
+      console.error(error);
+      alert('Erro ao criar conta. Tente novamente.');
+    }
   };
   return (
     <BgLogin logo={false} card>
@@ -57,8 +67,8 @@ export default function CadastroCPF() {
         <TextInput
           style={styles.input}
           placeholder="Ex: Larissa Duarte"
-          value={nome}
-          onChangeText={setNome}
+          value={name}
+          onChangeText={setName}
         />
       </View>
 
@@ -92,8 +102,8 @@ export default function CadastroCPF() {
             style={[styles.inputPassword, erroSenha && styles.inputError]}
             placeholder="********"
             secureTextEntry={!mostrarSenha} // Inverte com base no estado
-            value={senha}
-            onChangeText={setSenha}
+            value={password}
+            onChangeText={setPassword}
           />
           <TouchableOpacity
             style={styles.eyeIcon}

@@ -14,18 +14,18 @@ const { NEUTRAL } = Colors;
 
 export default function Login() {
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [password, setPassword] = useState('');
   const [erroSenha, setErroSenha] = useState<string | null>(null);
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const { signIn, isLoading } = useAuth(); // loading vem da mutation
 
   const handleLogin = async () => {
-    if (!email || !senha) {
+    if (!email || !password) {
       setErroSenha('Preencha e‑mail e senha');
       return;
     }
     try {
-      await signIn(email, senha);
+      await signIn(email, password);
       // Se chegou aqui, login bem sucedido
       router.replace('/(protegida)');
     } catch (error) {
@@ -34,59 +34,10 @@ export default function Login() {
       alert('E‑mail ou senha inválidos');
     }
   };
-  // const [loading, setLoading] = useState(false);
-  // const [email, setEmail] = useState(''); // Estado para capturar o email
-  // const [senha, setSenha] = useState('');
-  // const [erroSenha, setErroSenha] = useState<string | null>(null);
-  // const [mostrarSenha, setMostrarSenha] = useState(false);
-  // const { signIn } = useAuth(); // Função de login do nosso contexto
+
   const [showAbertura, setShowAbertura] = useState(false); // Novo estado
 
-  // const handleLogin = async () => {
-  //   if (!email || !senha) {
-  //     setErroSenha('Preencha e‑mail e senha');
-  //     return;
-  //   }
-  //   setLoading(true);
-  //   try {
-  //     const success = await signIn(email, senha); // agora com senha
-  //     if (success) {
-  //       // Navegar para a área protegida (ou abertura)
-  //       router.replace('/(protegida)');
-  //     } else {
-  //       alert('E‑mail ou senha inválidos');
-  //     }
-  //   } catch (e) {
-  //     alert('Erro ao fazer login');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
-  // const handleLogin = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const success = await signIn(email);
-
-  //     if (success) {
-  //       // Buscamos o usuário que acabou de logar (precisamos expor o 'user' no useAuth)
-  //       // Aqui simulamos a checagem do mock:
-  //       const isFirstTime = email.toLowerCase() === 'usuario@teste.com';
-
-  //       if (isFirstTime) {
-  //         setShowAbertura(true); // Exibe a abertura em vez de navegar
-  //         setLoading(false);     // Para o loading para mostrar a abertura
-  //       } else {
-  //         router.replace('/(protegida)');
-  //       }
-  //     } else {
-  //       alert('Usuário não encontrado');
-  //       setLoading(false);
-  //     }
-  //   } catch (e) {
-  //     setLoading(false);
-  //   }
-  // };
 
   return (
     <>
@@ -116,8 +67,8 @@ export default function Login() {
                 style={[styles.inputPassword, erroSenha && styles.inputError]}
                 placeholder="********"
                 secureTextEntry={!mostrarSenha} // Inverte com base no estado
-                value={senha}
-                onChangeText={setSenha}
+                value={password}
+                onChangeText={setPassword}
               />
               <TouchableOpacity
                 style={styles.eyeIcon}

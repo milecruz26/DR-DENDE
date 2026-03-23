@@ -1,14 +1,18 @@
+import * as SecureStore from 'expo-secure-store';
 import { Complaint, ComplaintValidation, Dish, Event, User } from '../interfaces';
 import { api } from '../services/apiTeste';
-import {
-  mockComplaints,
-  mockDishes,
-  mockEntries,
-  mockEvents,
-  mockUsers,
-} from './mockData';
+import { mockUsers as initialMockUsers, mockComplaints, mockDishes, mockEntries, mockEvents } from './mockData';
 
 const USE_MOCKS = true;
+const MOCK_USERS_KEY = 'mock_users';
+const CONFIRM_TOKENS_KEY = 'mock_confirm_tokens';
+
+let confirmationTokens: Record<string, string> = {};
+let mockUsers: User[] = [];
+
+let dataLoaded = false;
+let loadPromise: Promise<void> | null = null;
+
 
 // Função auxiliar para obter usuário a partir do token no header
 function getUserFromToken(config: any): User | null {
@@ -24,28 +28,85 @@ function getUserFromToken(config: any): User | null {
   return null;
 }
 
+
+
+// const teste = await SecureStore.getItemAsync((MOCK_USERS_KEY));
+const loadMockData = async () => {
+
+  // await SecureStore.deleteItemAsync(MOCK_USERS_KEY);
+  // await SecureStore.deleteItemAsync(CONFIRM_TOKENS_KEY);
+
+  try {
+    const storedUsers = await SecureStore.getItemAsync(MOCK_USERS_KEY);
+
+    if (storedUsers) {
+      console.log('teste:', storedUsers);
+      mockUsers = JSON.parse(storedUsers);
+      console.log('Usuários carregados:', mockUsers.map(u => u.email));
+
+    } else {
+      mockUsers = [...initialMockUsers];
+      console.log('mock inicial no else:', mockUsers)
+    }
+
+    const storedTokens = await SecureStore.getItemAsync(CONFIRM_TOKENS_KEY);
+    if (storedTokens) {
+      confirmationTokens = JSON.parse(storedTokens);
+      // console.log('confirmations token:', confirmationTokens);
+    } else {
+      confirmationTokens = {};
+      console.log('confirmation token vazio');
+    }
+  } catch (error) {
+    console.error('Falha ao carregar dados dos mocks:', error);
+    mockUsers = [...initialMockUsers];
+    confirmationTokens = {};
+  } finally {
+    dataLoaded = true;
+  }
+};
+
+// Salva os dados no SecureStore
+const saveMockData = async () => {
+  try {
+    await SecureStore.setItemAsync(MOCK_USERS_KEY, JSON.stringify(mockUsers));
+    await SecureStore.setItemAsync(CONFIRM_TOKENS_KEY, JSON.stringify(confirmationTokens));
+  } catch (error) {
+    console.error('Falha ao salvar dados dos mocks:', error);
+  }
+};
+
+// Inicia o carregamento
+loadPromise = loadMockData();
+
 if (USE_MOCKS) {
   api.interceptors.response.use(
     (response) => response,
     async (error) => {
       const { config, response } = error;
       if (!config || !USE_MOCKS) return Promise.reject(error);
+      if (!dataLoaded) {
+        await loadPromise;
+      }
 
       // Simula login (rota pública)
       if (config.url === '/token' && config.method === 'post') {
         const params = new URLSearchParams(config.data);
         const username = params.get('username');
         const password = params.get('password');
+        console.log('Login - email informado:', username);
+        console.log('Lista de emails disponíveis:', mockUsers.map(u => u.email));
         const user = mockUsers.find(u => u.email === username);
-        if (user && password) {
-          // Gera token com o id do usuário
-          console.log('password:', password)
+        console.log('Usuário encontrado?', user ? user.email : 'NÃO');
+        console.log('password:', password)
+        if (user && user.password === password) {
           const token = `fake-token-${user.id}`;
           return Promise.resolve({
             data: { access_token: token, token_type: 'bearer' },
             status: 200,
           });
         }
+        console.log(user?.password)
         return Promise.reject({ response: { status: 401, data: { detail: 'Invalid credentials' } } });
       }
 
@@ -73,17 +134,82 @@ if (USE_MOCKS) {
 
       // PUT /users/me
       if (config.url === '/users/me' && config.method === 'put') {
+        // Garante que o usuário está autenticado
+        const user = getUserFromToken(config);
+        if (!user) {
+          return Promise.reject({ response: { status: 401, data: { detail: 'Not authenticated' } } });
+        }
+
         const updated = config.data;
-        Object.assign(user as User, updated);
-        return Promise.resolve({ data: user, status: 200 });
+        Object.assign(user, updated);
+        await saveMockData();
+
+        // Remove a senha antes de retornar
+        const { password: _, ...userWithoutPassword } = user;
+        return Promise.resolve({ data: userWithoutPassword, status: 200 });
       }
 
       // POST /users
       if (config.url === '/users' && config.method === 'post') {
-        const newUser = config.data as User;
-        newUser.id = `user-${Date.now()}`;
+        const newUserData: User = JSON.parse(config.data);
+        const userId = `user-${Date.now()}`;
+        const token = `confirm-${userId}`;
+        confirmationTokens[token] = userId;
+        const { email, username, user_type, password } = newUserData
+
+        console.log('AQUII', config.data);
+        console.log('O TIPO AQUI:', typeof config.data);
+        console.log('tipo do newUserData:', typeof newUserData)
+
+        console.log('novo usuario na linha 153', newUserData)
+        console.log('DADOS DO NEWUSERDATA', 'email:', email, 'usernarme:', username)
+        const newUser: User = {
+          id: userId,
+          username,
+          email,
+          user_type,
+          address: newUserData.address || null,
+          role: newUserData.role || null,
+          confirmed: false,
+          password // armazenamos a senha (não será retornada nas respostas)
+        };
+
         mockUsers.push(newUser);
-        return Promise.resolve({ data: newUser, status: 201 });
+        await saveMockData();
+        console.log('novo usuario:', newUser)
+
+        // Simula envio de e-mail
+        console.log(`[MOCK] Usuário criado: ${newUser.email}`);
+        console.log(`[MOCK] Token de confirmação: ${token}`);
+        console.log(`[MOCK] Link: exp://.../--/confirm?token=${token}`);
+
+
+        // console.log('Novo usuário adicionado:', newUser.email);
+        // console.log('Total de usuários agora:', mockUsers.length);
+        // Retorna o usuário sem a senha
+        const { password: _, ...userWithoutPassword } = newUser;
+        return Promise.resolve({ data: userWithoutPassword, status: 201 });
+      }
+
+      if (config.url?.startsWith('/confirm') && config.method === 'get') {
+        const url = new URL(config.url, 'http://dummy.com');
+        const token = url.searchParams.get('token');
+        if (!token) {
+          return Promise.reject({ response: { status: 400, data: { detail: 'Token missing' } } });
+        }
+        const userId = confirmationTokens[token];
+        if (!userId) {
+          return Promise.reject({ response: { status: 400, data: { detail: 'Invalid token' } } });
+        }
+        const user = mockUsers.find(u => u.id === userId);
+        if (!user) {
+          return Promise.reject({ response: { status: 404, data: { detail: 'User not found' } } });
+        }
+        user.confirmed = true;
+        delete confirmationTokens[token];
+        await saveMockData();
+
+        return Promise.resolve({ data: { message: 'Email confirmed successfully' }, status: 200 });
       }
 
       // GET /dishes/liked
@@ -138,10 +264,17 @@ if (USE_MOCKS) {
         return Promise.resolve({ status: 200, data: null });
       }
 
-      // GET /staff/entry/{entry_id}
-      const entryMatch = config.url?.match(/^\/staff\/entry\/(.+)$/);
+      // GET /entries
+      if (config.url === '/entries' && config.method === 'get') {
+        // Retorna todos os entries (mockEntries do mockData)
+        return Promise.resolve({ data: mockEntries, status: 200 });
+      }
+
+      // GET /entries/{id}
+      const entryMatch = config.url?.match(/^\/entries\/(.+)$/);
       if (entryMatch && config.method === 'get') {
-        const entry = mockEntries.find(e => e.id === entryMatch[1]);
+        const entryId = entryMatch[1];
+        const entry = mockEntries.find(e => e.id === entryId);
         if (entry) return Promise.resolve({ data: entry, status: 200 });
         return Promise.reject({ response: { status: 404 } });
       }
@@ -193,5 +326,5 @@ if (USE_MOCKS) {
       // Se não mapeado, rejeita
       return Promise.reject(error);
     }
-  );
+  )
 }
