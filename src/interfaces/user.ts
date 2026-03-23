@@ -9,6 +9,10 @@ export interface User {
   role: string | null;
   confirmed?: boolean;
   password?: string; // apenas para mock (não é retornado pela API real)
+  avatar?: string;          // URL ou base64
+  phone?: string;
+  city?: string;            // cidade (ex: Salvador – BA)
+  zip_code?: string;
 }
 
 export interface UserCreate {

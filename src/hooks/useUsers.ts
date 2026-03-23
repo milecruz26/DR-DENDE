@@ -5,8 +5,11 @@ import { userService } from '../services/user';
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: userService.updateCurrentUser,
-    onSuccess: () => {
+    mutationFn: (data: FormData) => userService.updateCurrentUser(data),
+    onSuccess: (response) => {
+      const updatedUser = response.data;
+      queryClient.setQueryData(['currentUser'], updatedUser);
+      // Opcional: invalidar queries que dependem do usuário
       queryClient.invalidateQueries({ queryKey: ['currentUser'] });
     },
   });

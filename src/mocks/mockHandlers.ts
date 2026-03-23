@@ -134,17 +134,36 @@ if (USE_MOCKS) {
 
       // PUT /users/me
       if (config.url === '/users/me' && config.method === 'put') {
-        // Garante que o usuário está autenticado
         const user = getUserFromToken(config);
         if (!user) {
           return Promise.reject({ response: { status: 401, data: { detail: 'Not authenticated' } } });
         }
 
-        const updated = config.data;
+        let updated: any = {};
+        // Detecta se é FormData
+        if (config.data instanceof FormData) {
+          for (const [key, value] of (config.data as any)._parts) {
+            if (key === 'avatar') {
+              // No mock, vamos apenas guardar a URI como string (simulação)
+              updated.avatar = value.uri || value;
+            } else {
+              updated[key] = value;
+            }
+          }
+        } else {
+          // Se for JSON string, parse
+          let requestData = config.data;
+          if (typeof requestData === 'string') {
+            requestData = JSON.parse(requestData);
+          }
+          updated = requestData;
+        }
+
+        // Atualiza o objeto do usuário
         Object.assign(user, updated);
         await saveMockData();
 
-        // Remove a senha antes de retornar
+        // Retorna sem a senha
         const { password: _, ...userWithoutPassword } = user;
         return Promise.resolve({ data: userWithoutPassword, status: 200 });
       }

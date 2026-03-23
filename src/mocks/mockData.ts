@@ -8,8 +8,12 @@ export const mockUsers: User[] = [
     user_type: 'common',
     address: 'Rua das Flores, 123',
     role: null,
-    confirmed: true,   // já confirmado (primeira vez já passou)
-    password: 'Qwerty1@'
+    confirmed: true,
+    password: '123',
+    avatar: undefined,
+    phone: '(71) 99999-1111',
+    city: 'Salvador - BA',
+    zip_code: '40000-000',
   },
   {
     id: '22222222-2222-2222-2222-222222222222',
@@ -18,7 +22,11 @@ export const mockUsers: User[] = [
     user_type: 'staff',
     address: null,
     role: 'admin',
-    password: 'Qwerty1@'
+    password: '123',
+    avatar: undefined,
+    phone: '(71) 88888-2222',
+    city: 'Salvador - BA',
+    zip_code: '40000-000',
   },
   {
     id: '33333333-3333-3333-3333-333333333333',
@@ -27,7 +35,7 @@ export const mockUsers: User[] = [
     user_type: 'establishment',
     address: 'Av. Principal, 456',
     role: 'owner',
-    password: 'Qwerty1@'
+    password: '123',
   },
   {
     id: '44444444-4444-4444-4444-444444444444',
@@ -37,7 +45,7 @@ export const mockUsers: User[] = [
     address: null,
     role: null,
     confirmed: false,
-    password: 'Qwerty1@'
+    password: '123',
   },
 ];
 
