@@ -1,15 +1,21 @@
 import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 import EventCalendarList from '@/components/Eventos/ListaEventos';
 import { Header } from '@/components/Header';
+import EventsInfo from '@/components/Modal/Info/EventsInfo';
+import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { useAuth } from '@/context/AuthContext';
+import { Event } from '@/interfaces/event';
+import { formatDateTime } from '@/utils/formatDateTime';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Eventos() {
   const { user } = useAuth();
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+
   return (
     <LinearGradient colors={['#FFF', '#FFF0C8']} style={styles.container}>
       <Header />
@@ -17,7 +23,7 @@ export default function Eventos() {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Text style={styles.textPage}>Eventos</Text>
 
-          {user?.role !== 'usuario' && (
+          {user?.user_type !== 'common' && (
 
             <SecondaryButton
               title="+ Criar Evento"
@@ -28,9 +34,22 @@ export default function Eventos() {
         </View>
 
         {/* O COMPONENTE REUTILIZÁVEL AQUI */}
-        <EventCalendarList />
+        <EventCalendarList onSelectEvent={setSelectedEvent} />
 
       </SafeAreaView>
+      <ReadMoreModal
+        visible={!!selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+        title={selectedEvent?.name || ''}
+      >
+        {selectedEvent && (
+          <EventsInfo
+            location={`${selectedEvent.address.street}, ${selectedEvent.address.neighborhood} - ${selectedEvent.address.city}`}
+            date={formatDateTime(selectedEvent.event_date)}
+            description={selectedEvent.description}
+          />
+        )}
+      </ReadMoreModal>
     </LinearGradient>
   );
 }

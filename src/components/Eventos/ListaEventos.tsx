@@ -2,14 +2,16 @@
 import CustomDatePicker from '@/components/CustomDatePicker';
 import { DateSelector } from '@/components/DataSelector';
 import { EventItem } from '@/components/EventItem';
-import EventsInfo from '@/components/Modal/Info/EventsInfo';
-import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { useAllEvents } from '@/hooks/useStaff';
 import { Event } from '@/interfaces/event';
 import React, { useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
-export default function EventCalendarList() {
+interface EventCalendarListProps {
+  onSelectEvent?: (event: Event) => void;
+}
+
+export default function EventCalendarList({ onSelectEvent }: EventCalendarListProps) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -69,7 +71,7 @@ export default function EventCalendarList() {
             <EventItem
               key={evento.id}
               title={evento.name}
-              onPress={() => setSelectedEvent(evento)}
+              onPress={() => onSelectEvent && onSelectEvent(evento)}
             />
           ))
         ) : (
@@ -89,7 +91,7 @@ export default function EventCalendarList() {
       />
 
       {/* Detalhes do Evento selecionado */}
-      <ReadMoreModal
+      {/* <ReadMoreModal
         visible={!!selectedEvent}
         onClose={() => setSelectedEvent(null)}
         title={selectedEvent?.name || ''}
@@ -101,7 +103,7 @@ export default function EventCalendarList() {
             description={selectedEvent.description}
           />
         ) : <></>}
-      </ReadMoreModal>
+      </ReadMoreModal> */}
     </View>
   );
 }

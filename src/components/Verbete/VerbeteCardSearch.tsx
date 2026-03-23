@@ -1,7 +1,8 @@
+import { images } from '@/assets/images/pratos';
 import Colors from "@/theme/Colors";
 import { useRouter } from 'expo-router';
 import { useState } from "react";
-import { Image, ImageSourcePropType, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 export interface VerbeteCardProps {
 
@@ -9,7 +10,7 @@ export interface VerbeteCardProps {
   title: string;
   desc: string;
   bg?: string;
-  img: ImageSourcePropType; // <-- Este é o tipo correto para imagens locais no Expo/React Native
+  img: string; // <-- Este é o tipo correto para imagens locais no Expo/React Native
 
   index: number;
   favoritos?: boolean;
@@ -26,13 +27,17 @@ export const VerbeteCardSearch = ({ index, favoritos, id, title, desc, bg, img }
   const toggleSave = () => {
     setIsSaved(!isSaved);
   };
+
+  const imageKey = img.toLowerCase().replace(/\.png$/, '');
+  const imageSource = images[imageKey];
+  const defaultImage = require('@/assets/images/pratos/VATAPÁ.png');
   return (
     // <View style={styles.verbeteCard}>
     <Pressable
       style={[styles.verbeteCard, { backgroundColor, borderColor }]}
       onPress={() => router.push({ pathname: '/verbete', params: { id: id } })}
     >
-      <Image source={img} style={styles.verbeteImage} resizeMode="contain" />
+      <Image source={imageSource || defaultImage} style={styles.verbeteImage} resizeMode="contain" />
       <View style={styles.verbeteInfo}>
         <Text style={styles.verbeteTitle}>{title}</Text>
         <Text style={styles.verbeteDesc} numberOfLines={2}>{desc}</Text>

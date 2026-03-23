@@ -3,6 +3,7 @@ import { EstabelecimentoDetalhes } from '@/components/Modal/EstabelecimentoDetal
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { RestaurantCardSearch } from '@/components/Restaurante/RestauranteCardSearch';
 import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';
+import { useAllEntries } from '@/hooks/useEntries';
 import Colors from '@/theme/Colors';
 import { Feather } from '@expo/vector-icons';
 import React, { useState } from 'react';
@@ -28,10 +29,10 @@ const { NEUTRAL, primary, SECONDARY } = COLORS
 type CategoryType = 'verbetes' | 'restaurantes';
 
 // Mock Verbetes
-const MOCK_VERBETES = [
-  { id: 1, title: 'PASSARINHA', desc: 'A passarinha, apesar de como é chamada, nada tem a ver...', bg: '#E0F0E2', img: require('../../../../assets/images/pratos/feijoada.png') },
-  { id: 2, title: 'FEIJOADA', desc: 'A feijoada é um prato muito popular em todo o Brasil.', bg: '#FFC84A', img: require('../../../../assets/images/pratos/passarinha.png') },
-];
+// const MOCK_VERBETES = [
+//   { id: 1, title: 'PASSARINHA', desc: 'A passarinha, apesar de como é chamada, nada tem a ver...', bg: '#E0F0E2', img: require(`@/assets/images/pratos/FEIJOADA.png`) },
+//   { id: 2, title: 'FEIJOADA', desc: 'A feijoada é um prato muito popular em todo o Brasil.', bg: '#FFC84A', img: require(`@/assets/images/pratos/ABARÁ.png`) },
+// ];
 
 // Mock Restaurantes
 const MOCK_RESTAURANTES = [
@@ -67,6 +68,7 @@ export default function BuscaScreen() {
   const [searchText, setSearchText] = useState('');
   const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState(null);
   const [modalVisivel, setModalVisivel] = useState(false);
+  const { data: verbetes, isLoading } = useAllEntries();
 
   const abrirDetalhes = (item: any) => {
     setEstabelecimentoSelecionado(item);
@@ -156,13 +158,17 @@ export default function BuscaScreen() {
         {/* Lista de Conteúdo */}
         <FlatList
           // data={MOCK_RESTAURANTES}
-          data={(activeTab === 'verbetes' ? MOCK_VERBETES : MOCK_RESTAURANTES) as any[]}
+          data={(activeTab === 'verbetes' ? verbetes : MOCK_RESTAURANTES) as any[]}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => ( // <-- Pegamos o index aqui
             activeTab === 'verbetes'
-              ? <VerbeteCardSearch item={item} index={index} /> // <-- Passamos o index para o card
+              ? <VerbeteCardSearch img={item.picture}
+                id={item.id}
+                title={item.name}
+                desc={item.entry_text}
+                index={index} /> // <-- Passamos o index para o card
               : <RestaurantCardSearch
                 item={item as any} moreDetailsPress={() => abrirDetalhes(item)} />
           )}

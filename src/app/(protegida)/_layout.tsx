@@ -3,36 +3,60 @@ import { MockTabBar } from '@/components/MockTabBar';
 import { useAuth } from '@/context/AuthContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Redirect, Slot } from 'expo-router';
-import React from 'react';
+import * as SecureStore from 'expo-secure-store';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+
 export default function ProtegidaLayout() {
   const insets = useSafeAreaInsets();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   if (isLoading) return <LoginLoading visible={isLoading} />;
   if (!isAuthenticated) return <Redirect href="/(login)" />;
+  const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkOnboarding = async () => {
+      if (!user) return;
+      if (user.user_type === 'common') {
+        const hasSeen = await SecureStore.getItem(`onboarding_${user.id}`);
+        if (!hasSeen) {
+          setShowOnboarding(true);
+          await SecureStore.setItem(`onboarding_${user.id}`, 'true');
+        } else {
+          setShowOnboarding(false);
+        }
+      } else {
+        setShowOnboarding(false);
+      }
+    };
+    checkOnboarding();
+  }, [user]);
 
   return (
-    <View style={styles.container}>
-      {/* O Slot renderiza a tela atual (index, verbete, etc.) */}
-      <LinearGradient
-        colors={['#FFF', '#FFF0C8']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 0.8 }}
-        style={styles.container}
-      >
-        <View style={styles.content}>
-          <Slot />
-        </View>
-      </LinearGradient>
+    <>
+      <View style={styles.container}>
+        {/* O Slot renderiza a tela atual (index, verbete, etc.) */}
+        <LinearGradient
+          colors={['#FFF', '#FFF0C8']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 0.8 }}
+          style={styles.container}
+        >
+          <View style={styles.content}>
+            <Slot />
+          </View>
+        </LinearGradient>
 
-      {/* O seu Menu fica fixo aqui embaixo, fora do Slot */}
-      <View style={[styles.tabBarContainer, { paddingBottom: insets.bottom > 0 ? insets.bottom : 20 }]}>
-        <MockTabBar />
+        {/* O seu Menu fica fixo aqui embaixo, fora do Slot */}
+        <View style={[styles.tabBarContainer, { paddingBottom: insets.bottom > 0 ? insets.bottom : 20 }]}>
+          <MockTabBar />
+        </View>
       </View>
-    </View>
+
+    </>
   );
 }
 
