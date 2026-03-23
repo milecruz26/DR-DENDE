@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     position: 'absolute',
     bottom: 0,
-    backgroundColor: '#FFFBE6',
+    backgroundColor: 'red',
     width: '100%',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     color: '#2C2C2C',
   },
   scrollContent: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 1,
     gap: 24
   },
   textContent: {
