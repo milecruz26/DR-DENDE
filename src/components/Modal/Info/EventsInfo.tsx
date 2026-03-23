@@ -55,8 +55,8 @@ export default function EventsInfo({ ...props }: EventsInfoProps) {
 const styles = StyleSheet.create({
 
   scrollContent: {
-    // paddingHorizontal: 24,
-    gap: 24
+    paddingHorizontal: 24,
+    gap: 24,
   },
   textContent: {
     fontSize: 16,

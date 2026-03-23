@@ -71,7 +71,7 @@ export default function HomeScreen() {
                   />
                 ))
               }
-
+              {/* NÃO É PRA DELETAR ATÉ SER APLICADO */}
               {/* {loading ? (
                 <ActivityIndicator size="large" color="#E87C38" style={{ margin: 20 }} />
               ) : (

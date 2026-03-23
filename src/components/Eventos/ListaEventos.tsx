@@ -90,20 +90,6 @@ export default function EventCalendarList({ onSelectEvent }: EventCalendarListPr
         }}
       />
 
-      {/* Detalhes do Evento selecionado */}
-      {/* <ReadMoreModal
-        visible={!!selectedEvent}
-        onClose={() => setSelectedEvent(null)}
-        title={selectedEvent?.name || ''}
-      >
-        {selectedEvent ? (
-          <EventsInfo
-            location={`${selectedEvent.address.street}, ${selectedEvent.address.neighborhood} - ${selectedEvent.address.city}`}
-            date={formatDateTime(selectedEvent.event_date)}
-            description={selectedEvent.description}
-          />
-        ) : <></>}
-      </ReadMoreModal> */}
     </View>
   );
 }

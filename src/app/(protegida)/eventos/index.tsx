@@ -41,6 +41,7 @@ export default function Eventos() {
         visible={!!selectedEvent}
         onClose={() => setSelectedEvent(null)}
         title={selectedEvent?.name || ''}
+
       >
         {selectedEvent && (
           <EventsInfo
