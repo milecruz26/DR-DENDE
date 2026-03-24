@@ -3,11 +3,19 @@ import { Header } from '@/components/Header';
 import { HighlightCard } from '@/components/HighlightCard';
 import { SectionTitle } from '@/components/SectionTitle';
 import { VerbeteCard } from '@/components/VerbeteCard';
-import { apiGetVerbetes, Verbete } from '@/data/mockVerbetes';
-import { Link } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+// import { apiGetVerbetes, Verbete } from '@/data/mockVerbetes';
+import EventCalendarList from '@/components/Eventos/ListaEventos';
+import EventsInfo from '@/components/Modal/Info/EventsInfo';
+import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
+import { useDislikeDish, useLikedDishes, useLikeDish } from '@/hooks/useDish';
+import { useAllEntries } from '@/hooks/useEntries';
+import { Event } from '@/interfaces/event';
+import { formatDateTime } from '@/utils/formatDateTime';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Link, useRouter } from 'expo-router';
+import React, { useState } from 'react';
 import {
-  ActivityIndicator,
+  Pressable,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -15,25 +23,27 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import EventCalendarList from '@/components/Eventos/ListaEventos';
-import { LinearGradient } from 'expo-linear-gradient';
 
 export default function HomeScreen() {
-  const [verbetes, setVerbetes] = useState<Verbete[]>([]);
+  const { data: verbetes, } = useAllEntries();
+  const { data: likedDishes } = useLikedDishes();
+  const { mutate: like } = useLikeDish();
+  const { mutate: dislike } = useDislikeDish();
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  // const [verbetes, setVerbetes] = useState<Verbete[]>([]);
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const carregarVerbetes = async () => {
-      try {
-        const dados = await apiGetVerbetes();
-        setVerbetes(dados);
-      } catch (error) {
-        console.error("Erro ao buscar verbetes", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    carregarVerbetes();
-  }, []);
+  const router = useRouter();
+  const likedIds = likedDishes?.map(d => d.id) || [];
+
+  const handleToggleLike = (id: string) => {
+    if (likedIds.includes(id)) {
+      dislike(id);
+    } else {
+      like(id);
+    }
+  };
+
+
   return (
     <LinearGradient
       colors={['#FFF', '#FFF0C8']}
@@ -64,26 +74,46 @@ export default function HomeScreen() {
             </ScrollView>
 
             {/* Seção Verbetes */}
+
+            {/* <Pressable > */}
             <SectionTitle title="Verbetes" showLink />
+            {/* </Pressable> */}
+
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
-              {loading ? (
+
+              {verbetes?.map((verbete) => (
+                <VerbeteCard
+                  key={verbete.id}
+                  id={verbete.id}
+                  title={verbete.name}
+                  description={verbete.entry_text}
+                  imagem={verbete.picture}
+                  isLiked={likedIds.includes(verbete.id)}
+                  onToggleLike={handleToggleLike}
+                />
+              ))}
+              {/* NÃO É PRA DELETAR ATÉ SER APLICADO */}
+              {/* {loading ? (
                 <ActivityIndicator size="large" color="#E87C38" style={{ margin: 20 }} />
               ) : (
-                verbetes.map((verbete) => (
+                verbetes?.map((verbete) => (
                   <VerbeteCard
                     key={verbete.id}
                     id={verbete.id}
-                    title={verbete.titulo}
-                    description={verbete.descricaoCurta}
-                    imagem={verbete.img}
+                    title={verbete.name}
+                    description={verbete.entry_text}
+                    imagem={verbete.picture}
                   />
                 ))
-              )}
+              )} */}
               <View style={{ width: 20 }} />
             </ScrollView>
             {/* Seção Eventos */}
-            <SectionTitle title="Eventos" showLink />
-            <EventCalendarList />
+            <Pressable onPress={() => router.replace('/(protegida)/eventos')}>
+
+              <SectionTitle title="Eventos" showLink />
+            </Pressable>
+            <EventCalendarList onSelectEvent={setSelectedEvent} />
 
             {/* Espaço extra para não ficar atrás da TabBar */}
             <View style={{ height: 100 }} />
@@ -94,6 +124,19 @@ export default function HomeScreen() {
         </View>
 
       </SafeAreaView>
+      <ReadMoreModal
+        visible={!!selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+        title={selectedEvent?.name || ''}
+      >
+        {selectedEvent && (
+          <EventsInfo
+            location={`${selectedEvent.address.street}, ${selectedEvent.address.neighborhood} - ${selectedEvent.address.city}`}
+            date={formatDateTime(selectedEvent.event_date)}
+            description={selectedEvent.description}
+          />
+        )}
+      </ReadMoreModal>
     </LinearGradient>
   );
 }

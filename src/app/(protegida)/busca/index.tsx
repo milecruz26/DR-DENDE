@@ -3,8 +3,11 @@ import { EstabelecimentoDetalhes } from '@/components/Modal/EstabelecimentoDetal
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { RestaurantCardSearch } from '@/components/Restaurante/RestauranteCardSearch';
 import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';
+import { useDislikeDish, useLikedDishes, useLikeDish } from '@/hooks/useDish';
+import { useAllEntries } from '@/hooks/useEntries';
 import Colors from '@/theme/Colors';
 import { Feather } from '@expo/vector-icons';
+import { useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import {
   Dimensions,
@@ -28,10 +31,10 @@ const { NEUTRAL, primary, SECONDARY } = COLORS
 type CategoryType = 'verbetes' | 'restaurantes';
 
 // Mock Verbetes
-const MOCK_VERBETES = [
-  { id: 1, title: 'PASSARINHA', desc: 'A passarinha, apesar de como é chamada, nada tem a ver...', bg: '#E0F0E2', img: require('../../../../assets/images/pratos/feijoada.png') },
-  { id: 2, title: 'FEIJOADA', desc: 'A feijoada é um prato muito popular em todo o Brasil.', bg: '#FFC84A', img: require('../../../../assets/images/pratos/passarinha.png') },
-];
+// const MOCK_VERBETES = [
+//   { id: 1, title: 'PASSARINHA', desc: 'A passarinha, apesar de como é chamada, nada tem a ver...', bg: '#E0F0E2', img: require(`@/assets/images/pratos/FEIJOADA.png`) },
+//   { id: 2, title: 'FEIJOADA', desc: 'A feijoada é um prato muito popular em todo o Brasil.', bg: '#FFC84A', img: require(`@/assets/images/pratos/ABARÁ.png`) },
+// ];
 
 // Mock Restaurantes
 const MOCK_RESTAURANTES = [
@@ -62,15 +65,28 @@ const MOCK_RESTAURANTES = [
 // ==========================================
 
 export default function BuscaScreen() {
-  const [activeTab, setActiveTab] = useState<CategoryType>('verbetes');
+  const { tab } = useLocalSearchParams<{ tab?: string }>();
+  const [activeTab, setActiveTab] = useState<CategoryType>(tab === 'restaurantes' ? 'restaurantes' : 'verbetes');
   const [subTab, setSubTab] = useState<'todos' | 'cupom'>('todos');
   const [searchText, setSearchText] = useState('');
   const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState(null);
   const [modalVisivel, setModalVisivel] = useState(false);
+  const { data: verbetes } = useAllEntries();
+  const { data: likedDishes } = useLikedDishes();
+  const { mutate: like } = useLikeDish();
+  const { mutate: dislike } = useDislikeDish();
+
 
   const abrirDetalhes = (item: any) => {
     setEstabelecimentoSelecionado(item);
     setModalVisivel(true);
+  };
+
+  const likedIds = likedDishes?.map(d => d.id) || [];
+
+  const handleToggleLike = (id: string) => {
+    if (likedIds.includes(id)) dislike(id);
+    else like(id);
   };
 
   return (
@@ -156,13 +172,22 @@ export default function BuscaScreen() {
         {/* Lista de Conteúdo */}
         <FlatList
           // data={MOCK_RESTAURANTES}
-          data={(activeTab === 'verbetes' ? MOCK_VERBETES : MOCK_RESTAURANTES) as any[]}
+          data={(activeTab === 'verbetes' ? verbetes : MOCK_RESTAURANTES) as any[]}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => ( // <-- Pegamos o index aqui
             activeTab === 'verbetes'
-              ? <VerbeteCardSearch item={item} index={index} /> // <-- Passamos o index para o card
+              ? <VerbeteCardSearch
+                img={item.picture}
+                id={item.id}
+                title={item.name}
+                desc={item.entry_text}
+                index={index}
+                isLiked={likedIds.includes(item.id)}
+                onToggleLike={handleToggleLike}
+                favoritosPage={false} // ou omitir
+              />
               : <RestaurantCardSearch
                 item={item as any} moreDetailsPress={() => abrirDetalhes(item)} />
           )}

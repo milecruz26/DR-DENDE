@@ -1,12 +1,11 @@
 import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 import { Header } from '@/components/Header';
 import { InfoPill } from '@/components/InfoPill';
-import { InstructionStep } from '@/components/InstructionStep';
-import { apiGetVerbeteById, Verbete } from '@/data/mockVerbetes';
+import { useEntryById } from '@/hooks/useEntries';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  ActivityIndicator, Dimensions,
+  Dimensions,
   Image,
   Pressable,
   ScrollView,
@@ -23,6 +22,7 @@ import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 
 import arrow from '@/assets/images/icones/arrow-left-line-white.png';
 import share from "@/assets/images/icones/share-line-white.png";
+import { images } from '@/assets/images/pratos';
 import { IngredientItem } from '@/components/IngredientItem';
 
 
@@ -39,38 +39,44 @@ const COLORS = {
 export default function VerbeteScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { data: verbete, isLoading, error } = useEntryById(id);
+  console.log('id:', id)
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [verbete, setVerbete] = useState<Verbete | null>(null);
+  // const [verbete, setVerbete] = useState<Verbete | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const buscarDetalhes = async () => {
-      if (!id) return;
-      try {
-        const dados = await apiGetVerbeteById(id);
-        if (dados) {
-          setVerbete(dados);
-        }
-      } catch (error) {
-        console.error("Erro", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // const itemMaiusculo = item.toUpperCase()
 
-    buscarDetalhes();
-  }, [id]);
+  // useEffect(() => {
+  //   const buscarDetalhes = async () => {
+  //     if (!id) return;
+  //     try {
+  //       const dados = await apiGetVerbeteById(id);
+  //       if (dados) {
+  //         setVerbete(dados);
+  //       }
+  //     } catch (error) {
+  //       console.error("Erro", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   buscarDetalhes();
+  // }, [id]);
 
   const navegarParaHome = () => router.back();
 
-  if (loading) {
-    return (
-      <SafeAreaView style={[styles.safeAreaContent, { justifyContent: 'center' }]}>
-        <ActivityIndicator size="large" color={COLORS.orangeHeader} />
-      </SafeAreaView>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <SafeAreaView style={[styles.safeAreaContent, { justifyContent: 'center' }]}>
+  //       <ActivityIndicator size="large" color={COLORS.orangeHeader} />
+  //     </SafeAreaView>
+  //   );
+  // }
+
+  console.log(verbete)
 
   if (!verbete) {
     return (
@@ -80,6 +86,10 @@ export default function VerbeteScreen() {
       </SafeAreaView>
     );
   }
+
+  const imageKey = verbete?.picture as keyof typeof images;
+  const imageSource = imageKey && images[imageKey] ? images[imageKey] : null;
+  const defaultImage = require('@/assets/images/pratos/VATAPÁ.png');
 
   return (
     <SafeAreaView style={styles.safeAreaContent}>
@@ -102,7 +112,7 @@ export default function VerbeteScreen() {
             />
           </Pressable>
 
-          <Text style={styles.headerTitle}>{verbete.titulo}</Text>
+          <Text style={styles.headerTitle}>{verbete.name}</Text>
 
           <TouchableOpacity onPress={navegarParaHome}>
             <Image
@@ -113,7 +123,7 @@ export default function VerbeteScreen() {
         </View>
         {/* Imagem do Prato */}
         <View style={styles.imageContainer}>
-          <Image source={verbete.img} style={styles.mainImage} resizeMode="contain" />
+          <Image source={imageSource || defaultImage} style={styles.mainImage} resizeMode="contain" />
         </View>
 
         {/* Conteúdo do Corpo */}
@@ -122,7 +132,7 @@ export default function VerbeteScreen() {
           {/* SEÇÃO TEXTO DO PRATO: */}
           <View style={styles.plateContainer}>
             <Text style={styles.sectionTitle}>Sobre o prato</Text>
-            <Text style={styles.descriptionText}>{verbete.sobre}</Text>
+            <Text style={styles.descriptionText}>{verbete.entry_text}</Text>
             <SecondaryButton
               title='Ler tudo'
               onPress={() => setModalVisible(true)}
@@ -133,25 +143,27 @@ export default function VerbeteScreen() {
           {/* SEÇÃO INGREDIENTES */}
           {/* TODO: fix scroll */}
           <View style={styles.ingredientContainer}>
-            <Text style={styles.sectionTitle}>Ingredientes ({verbete.ingredientes.length})</Text>
+            <Text style={styles.sectionTitle}>Ingredientes ({verbete.ingredients.length})</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.ingredientsScroll}>
-              {verbete.ingredientes.map((ing, idx) => (
-                <IngredientItem key={idx} name={ing.nome} ingredientPath={ing.icone} />
+              {verbete.ingredients.map((ing, idx) => (
+                <IngredientItem key={idx} name={ing.name} ingredientPath={ing.name} />
               ))}
               <View style={{ width: 20 }} />
             </ScrollView>
           </View>
 
-          <InfoPill tempo={verbete.tempoPreparo} dificuldade={verbete.dificuldade} categoria={verbete.categoria} />
+          <InfoPill tempo={verbete.estimated_time} dificuldade={verbete.difficulty_level} categoria={verbete.category} />
 
           {/* SEÇÃO COMO FAZER */}
           <View style={styles.stepsListContainer}>
             <Text style={styles.sectionTitle}>Como fazer</Text>
+            {/* 
+            ADICIONAR DEPOIS:
             <View style={styles.stepsList}>
               {verbete.etapas.map((etapa, idx) => (
                 <InstructionStep key={idx} number={idx + 1} text={etapa} />
               ))}
-            </View>
+            </View> */}
           </View>
 
           <View style={{ height: 20 }} />
@@ -161,7 +173,7 @@ export default function VerbeteScreen() {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
       >
-        <VerbetesInfo content={verbete.sobre} />
+        <VerbetesInfo content={verbete.entry_text} />
       </ReadMoreModal>
       {/* <ReadMoreModal
         visible={modalVisible}

@@ -1,3 +1,4 @@
+import { images } from '@/assets/images/pratos';
 import React from 'react';
 import {
   Image,
@@ -26,7 +27,9 @@ const INGREDIENT_ICONS: Record<string, ImageSourcePropType> = {
 
 export const IngredientItem = ({ name, iconFallback, color, ingredientPath }: IngredientItemProps) => {
 
-  const imageSource = INGREDIENT_ICONS[ingredientPath];
+  const imageKey = ingredientPath.toLowerCase().replace(/\.png$/, '');
+  const imageSource = images[imageKey];
+  const defaultImage = require('@/assets/images/pratos/VATAPÁ.png');
   return (
     <View style={styles.ingredientContainer}>
       <View

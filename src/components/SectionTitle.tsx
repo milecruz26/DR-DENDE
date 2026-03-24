@@ -1,20 +1,31 @@
+import { useRouter } from 'expo-router';
 import {
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
   View
 } from 'react-native';
 
-export const SectionTitle = ({ title, showLink = false }: { title: string, showLink?: boolean }) => (
-  <View style={styles.sectionHeader}>
-    <Text style={styles.sectionTitleText}>{title}</Text>
-    {showLink && (
-      <TouchableOpacity>
-        <Text style={styles.linkText}>Ver todos</Text>
-      </TouchableOpacity>
-    )}
-  </View>
-);
+export const SectionTitle = ({ title, showLink = false, onPress }: { title: string, showLink?: boolean, onPress?: () => {} }) => {
+  const router = useRouter()
+  return (
+
+    <Pressable
+      onPress={onPress}
+    >
+
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitleText}>{title}</Text>
+        {showLink && (
+          <TouchableOpacity>
+            <Text style={styles.linkText}>Ver todos</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </Pressable>
+  )
+};
 
 const styles = StyleSheet.create({
   sectionHeader: {

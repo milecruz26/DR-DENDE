@@ -1,6 +1,8 @@
+import { useAuth } from '@/context/AuthContext';
 import Colors from "@/theme/Colors";
+import { router } from "expo-router";
 import { useState } from "react";
-import { Image, ImageSourcePropType, Pressable, StyleSheet, Text, View, GestureResponderEvent } from "react-native";
+import { Image, ImageSourcePropType, Pressable, StyleSheet, Text, View } from "react-native";
 
 export interface RestaurantCardProps {
   item: {
@@ -18,6 +20,7 @@ const { NEUTRAL, primary } = Colors
 
 
 export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: RestaurantCardProps) => {
+  const { user } = useAuth();
   const [isSaved, setIsSaved] = useState(false);
   const [showMenu, setShowMenu] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -69,34 +72,29 @@ export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: 
             {/* 4. O Menu Flutuante */}
             {showMenu && (
               <View style={styles.dropdownMenu}>
-                <Pressable
 
-                  onPress={() => {
-                    console.log("Denunciar clicado");
-                    setShowMenu(false); // Fecha o menu ao clicar
-                  }}
-                >
+
+                <Pressable onPress={() => {
+                  setShowMenu(false);
+                  // Navega para a tela de denúncia passando o ID do estabelecimento
+                  router.push(`/configuracoes/denunciar?establishment_id=${item.id}`);
+                }}>
                   <View style={[styles.menuItem, styles.menuItemHighlight]}>
-
                     <Text style={styles.menuItemText}>Denunciar</Text>
                     <Image source={require('../../../assets/images/icones/megaphone-line-neutral.png')} style={{ width: 16, height: 16 }} />
                   </View>
                 </Pressable>
 
                 <View style={styles.menuDivider} />
+                {user?.user_type !== 'common' && (
+                  <Pressable onPress={onDeletePress}>
+                    <View style={styles.menuItem}>
+                      <Text style={styles.menuItemTextRed}>Excluir</Text>
+                      <Image source={require('../../../assets/images/icones/trash-line-red.png')} style={{ width: 16, height: 16 }} />
+                    </View>
+                  </Pressable>)
+                }
 
-                <Pressable
-
-                  onPress={onDeletePress}
-                >
-
-                  <View style={[styles.menuItem]}>
-
-                    <Text style={styles.menuItemTextRed}>Excluir</Text>
-                    <Image source={require('../../../assets/images/icones/trash-line-red.png')} style={{ width: 16, height: 16 }} />
-
-                  </View>
-                </Pressable>
               </View>
             )}
           </View>

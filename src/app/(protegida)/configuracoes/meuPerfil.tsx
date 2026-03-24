@@ -1,6 +1,8 @@
+import { useAuth } from '@/context/AuthContext';
+import { useUpdateUser } from '@/hooks/useUsers';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
@@ -33,14 +35,17 @@ const InputLabel = ({ label, required = false }: { label: string; required?: boo
 
 export default function MeuPerfil() {
   const router = useRouter();
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [name, setName] = useState('Usuário');
-  const [email, setEmail] = useState('user@email.com.br');
-  const [phone, setPhone] = useState('(71) 00000-0000');
-  const [city, setCity] = useState('');
-  const [cep, setCep] = useState('');
+  const { user } = useAuth();
+  const { mutate: updateUser, isPending } = useUpdateUser();
 
-  // Solicitar permissão para acessar a galeria na montagem
+  const [profileImage, setProfileImage] = useState<string | null>(user?.avatar || null);
+  const [name, setName] = useState(user?.username || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [city, setCity] = useState(user?.city || '');
+  const [cep, setCep] = useState(user?.zip_code || '');
+
+  // Solicitar permissão para galeria
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -52,7 +57,7 @@ export default function MeuPerfil() {
     })();
   }, []);
 
-  // Função para escolher uma imagem
+  // Função para escolher imagem
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
@@ -66,9 +71,45 @@ export default function MeuPerfil() {
     }
   };
 
+  const handleSubmit = async () => {
+    // Validação básica
+    if (!name || !email || !phone || !city || !cep) {
+      Alert.alert('Atenção', 'Preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('username', name);
+    formData.append('email', email);
+    formData.append('phone', phone);
+    formData.append('city', city);
+    formData.append('zip_code', cep);
+    // Combina cidade e CEP em um campo address para compatibilidade com backend antigo
+    formData.append('address', `${city} - ${cep}`);
+
+    if (profileImage && profileImage !== user?.avatar) {
+      // Para React Native, precisamos criar um objeto com uri, type e name
+      formData.append('avatar', {
+        uri: profileImage,
+        type: 'image/jpeg',
+        name: 'avatar.jpg',
+      } as any);
+    }
+
+    updateUser(formData, {
+      onSuccess: () => {
+        Alert.alert('Sucesso', 'Perfil atualizado!');
+        router.back();
+      },
+      onError: (error) => {
+        Alert.alert('Erro', 'Não foi possível atualizar o perfil.');
+        console.error(error);
+      },
+    });
+  };
+
   return (
     <View style={styles.root}>
-      {/* Cabeçalho */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={COLORS.primary} />
@@ -78,7 +119,6 @@ export default function MeuPerfil() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-
         {/* Foto de Perfil */}
         <View style={styles.sectionHeader}>
           <Feather name="image" size={20} color={COLORS.textDark} />
@@ -148,11 +188,9 @@ export default function MeuPerfil() {
           <Text style={styles.sectionTitle}>Senha</Text>
         </View>
 
-        <Link href="/(protegida)/configuracoes/alterarSenha" asChild>
-          <TouchableOpacity style={styles.outlineButton}>
-            <Text style={styles.outlineButtonText}>Alterar senha</Text>
-          </TouchableOpacity>
-        </Link>
+        <TouchableOpacity style={styles.outlineButton} onPress={() => router.push('/configuracoes/alterarSenha')}>
+          <Text style={styles.outlineButtonText}>Alterar senha</Text>
+        </TouchableOpacity>
 
         {/* Localização */}
         <View style={styles.sectionHeader}>
@@ -184,15 +222,16 @@ export default function MeuPerfil() {
           />
         </View>
 
-        {/* Botão de Enviar */}
-        <TouchableOpacity style={styles.submitButton}>
-          <Text style={styles.submitButtonText}>Enviar instruções</Text>
+        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit} disabled={isPending}>
+          <Text style={styles.submitButtonText}>
+            {isPending ? 'Salvando...' : 'Salvar alterações'}
+          </Text>
         </TouchableOpacity>
-
       </ScrollView>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: COLORS.bg },

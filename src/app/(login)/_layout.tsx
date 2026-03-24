@@ -1,8 +1,10 @@
 
-import { Stack } from 'expo-router'
-import React from 'react'
+// import { useDeepLink } from '@/hooks/useDeepLink';
+import { Stack } from 'expo-router';
+import React from 'react';
 
 export default function LoginLayout() {
+  // useDeepLink();
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />

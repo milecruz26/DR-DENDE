@@ -23,7 +23,7 @@ export const HighlightCard = () => {
         {/* Imagem Placeholder - Substitua pela sua URL ou require */}
         <View style={styles.highlightImageContainer}>
           <Image
-            source={require('../../assets/images/pratos/passarinha.png')} // Imagem transparente do prato
+            source={require('../../assets/images/pratos/PASSARINHA.png')} // Imagem transparente do prato
             style={styles.highlightImage}
             resizeMode="cover"
           />

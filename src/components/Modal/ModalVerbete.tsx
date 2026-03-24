@@ -28,7 +28,7 @@ export function ReadMoreModal({ visible, onClose, title, children, type = 'full'
   const heightMap = {
     small: SCREEN_HEIGHT * 0.45,  // 35% da tela (Ideal para confirmação)
     medium: SCREEN_HEIGHT * 0.60, // 60% da tela
-    full: SCREEN_HEIGHT * 0.92,   // 92% da tela (Seu padrão atual)
+    full: SCREEN_HEIGHT * 0.82,   // 92% da tela (Seu padrão atual)
   };
   const currentHeight = heightMap[type];
 
@@ -53,6 +53,7 @@ export function ReadMoreModal({ visible, onClose, title, children, type = 'full'
 
   return (
     <View style={styles.root} pointerEvents={visible ? 'auto' : 'none'}>
+
 
       <Animated.View style={[styles.overlay, { opacity: opacityAnim }]}>
         <Pressable style={{ flex: 1 }} onPress={onClose} />
@@ -95,6 +96,7 @@ export function ReadMoreModal({ visible, onClose, title, children, type = 'full'
           <View style={{ height: 20 }} />
         </ScrollView>
       </Animated.View>
+
     </View>
   );
 }
@@ -110,8 +112,8 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     position: 'absolute',
+    backgroundColor: '#FFF0C8',
     bottom: 0,
-    backgroundColor: '#FFFBE6',
     width: '100%',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
     color: '#2C2C2C',
   },
   scrollContent: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 1,
     gap: 24
   },
   textContent: {
