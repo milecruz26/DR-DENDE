@@ -40,7 +40,7 @@ export default function ConfirmacaoDenuncia() {
 
         <TouchableOpacity
           style={styles.homeButton}
-          onPress={() => router.push('/configuracoes')}
+          onPress={() => router.back()}
         >
           <Text style={styles.homeButtonText}>Voltar para configurações</Text>
         </TouchableOpacity>

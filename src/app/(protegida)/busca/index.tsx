@@ -3,9 +3,11 @@ import { EstabelecimentoDetalhes } from '@/components/Modal/EstabelecimentoDetal
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { RestaurantCardSearch } from '@/components/Restaurante/RestauranteCardSearch';
 import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';
+import { useDislikeDish, useLikedDishes, useLikeDish } from '@/hooks/useDish';
 import { useAllEntries } from '@/hooks/useEntries';
 import Colors from '@/theme/Colors';
 import { Feather } from '@expo/vector-icons';
+import { useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import {
   Dimensions,
@@ -63,16 +65,28 @@ const MOCK_RESTAURANTES = [
 // ==========================================
 
 export default function BuscaScreen() {
-  const [activeTab, setActiveTab] = useState<CategoryType>('verbetes');
+  const { tab } = useLocalSearchParams<{ tab?: string }>();
+  const [activeTab, setActiveTab] = useState<CategoryType>(tab === 'restaurantes' ? 'restaurantes' : 'verbetes');
   const [subTab, setSubTab] = useState<'todos' | 'cupom'>('todos');
   const [searchText, setSearchText] = useState('');
   const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState(null);
   const [modalVisivel, setModalVisivel] = useState(false);
-  const { data: verbetes, isLoading } = useAllEntries();
+  const { data: verbetes } = useAllEntries();
+  const { data: likedDishes } = useLikedDishes();
+  const { mutate: like } = useLikeDish();
+  const { mutate: dislike } = useDislikeDish();
+
 
   const abrirDetalhes = (item: any) => {
     setEstabelecimentoSelecionado(item);
     setModalVisivel(true);
+  };
+
+  const likedIds = likedDishes?.map(d => d.id) || [];
+
+  const handleToggleLike = (id: string) => {
+    if (likedIds.includes(id)) dislike(id);
+    else like(id);
   };
 
   return (
@@ -164,11 +178,16 @@ export default function BuscaScreen() {
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => ( // <-- Pegamos o index aqui
             activeTab === 'verbetes'
-              ? <VerbeteCardSearch img={item.picture}
+              ? <VerbeteCardSearch
+                img={item.picture}
                 id={item.id}
                 title={item.name}
                 desc={item.entry_text}
-                index={index} /> // <-- Passamos o index para o card
+                index={index}
+                isLiked={likedIds.includes(item.id)}
+                onToggleLike={handleToggleLike}
+                favoritosPage={false} // ou omitir
+              />
               : <RestaurantCardSearch
                 item={item as any} moreDetailsPress={() => abrirDetalhes(item)} />
           )}

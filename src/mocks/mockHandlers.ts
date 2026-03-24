@@ -6,20 +6,21 @@ import { mockUsers as initialMockUsers, mockComplaints, mockDishes, mockEntries,
 const USE_MOCKS = true;
 const MOCK_USERS_KEY = 'mock_users';
 const CONFIRM_TOKENS_KEY = 'mock_confirm_tokens';
+const LIKED_DISHES_KEY = 'mock_liked_dishes'; // Chave para os likes
 
-let confirmationTokens: Record<string, string> = {};
+// Variáveis globais (carregadas do SecureStore)
 let mockUsers: User[] = [];
+let confirmationTokens: Record<string, string> = {};
+let likedDishesMap: Record<string, string[]> = {}; // userId -> array de entryIds
 
 let dataLoaded = false;
 let loadPromise: Promise<void> | null = null;
-
 
 // Função auxiliar para obter usuário a partir do token no header
 function getUserFromToken(config: any): User | null {
   const authHeader = config.headers?.Authorization || config.headers?.authorization;
   if (!authHeader) return null;
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
-  // Token fictício: fake-token-<user-id>
   if (token && token.startsWith('fake-token-')) {
     const userId = token.replace('fake-token-', '');
     const user = mockUsers.find(u => u.id === userId);
@@ -28,53 +29,58 @@ function getUserFromToken(config: any): User | null {
   return null;
 }
 
-
-
-// const teste = await SecureStore.getItemAsync((MOCK_USERS_KEY));
+// Carrega todos os dados (usuários, tokens, likes)
 const loadMockData = async () => {
-
-  // await SecureStore.deleteItemAsync(MOCK_USERS_KEY);
-  // await SecureStore.deleteItemAsync(CONFIRM_TOKENS_KEY);
-
   try {
     const storedUsers = await SecureStore.getItemAsync(MOCK_USERS_KEY);
-
     if (storedUsers) {
-      console.log('teste:', storedUsers);
       mockUsers = JSON.parse(storedUsers);
-      console.log('Usuários carregados:', mockUsers.map(u => u.email));
-
     } else {
       mockUsers = [...initialMockUsers];
-      console.log('mock inicial no else:', mockUsers)
     }
 
     const storedTokens = await SecureStore.getItemAsync(CONFIRM_TOKENS_KEY);
     if (storedTokens) {
       confirmationTokens = JSON.parse(storedTokens);
-      // console.log('confirmations token:', confirmationTokens);
     } else {
       confirmationTokens = {};
-      console.log('confirmation token vazio');
+    }
+
+    const storedLikes = await SecureStore.getItemAsync(LIKED_DISHES_KEY);
+    if (storedLikes) {
+      likedDishesMap = JSON.parse(storedLikes);
+    } else {
+      likedDishesMap = {};
     }
   } catch (error) {
     console.error('Falha ao carregar dados dos mocks:', error);
     mockUsers = [...initialMockUsers];
     confirmationTokens = {};
+    likedDishesMap = {};
   } finally {
     dataLoaded = true;
   }
 };
 
-// Salva os dados no SecureStore
+// Salva todos os dados (usuários, tokens, likes)
 const saveMockData = async () => {
   try {
     await SecureStore.setItemAsync(MOCK_USERS_KEY, JSON.stringify(mockUsers));
     await SecureStore.setItemAsync(CONFIRM_TOKENS_KEY, JSON.stringify(confirmationTokens));
+    await SecureStore.setItemAsync(LIKED_DISHES_KEY, JSON.stringify(likedDishesMap));
   } catch (error) {
     console.error('Falha ao salvar dados dos mocks:', error);
   }
 };
+
+// Inicia o carregamento
+
+const saveLikedDishes = async () => {
+  await SecureStore.setItemAsync(LIKED_DISHES_KEY, JSON.stringify(likedDishesMap));
+};
+
+// Carregar durante a inicialização
+// await loadLikedDishes();
 
 // Inicia o carregamento
 loadPromise = loadMockData();
@@ -233,18 +239,37 @@ if (USE_MOCKS) {
 
       // GET /dishes/liked
       if (config.url === '/dishes/liked' && config.method === 'get') {
-        return Promise.resolve({ data: mockDishes.slice(0, 1), status: 200 });
+        const user: User = getUserFromToken(config) as User
+        // if (!user) return reject(...);
+        const likedIds = likedDishesMap[user.id] || [];
+        const likedDishes = mockEntries.filter(entry => likedIds.includes(entry.id));
+        return Promise.resolve({ data: likedDishes, status: 200 });
       }
 
       // POST /dishes/like/{dish_id}
       const likeMatch = config.url?.match(/^\/dishes\/like\/(.+)$/);
       if (likeMatch && config.method === 'post') {
+        const dishId = likeMatch[1];
+        const user: User = getUserFromToken(config) as User
+        // if (!user) return reject(...);
+        if (!likedDishesMap[user.id]) likedDishesMap[user.id] = [];
+        if (!likedDishesMap[user.id].includes(dishId)) {
+          likedDishesMap[user.id].push(dishId);
+          await saveLikedDishes();
+        }
         return Promise.resolve({ status: 201, data: null });
       }
 
       // DELETE /dishes/dislike/{dish_id}
       const dislikeMatch = config.url?.match(/^\/dishes\/dislike\/(.+)$/);
       if (dislikeMatch && config.method === 'delete') {
+        const dishId = dislikeMatch[1];
+        const user: User = getUserFromToken(config) as User
+        // if (!user) return reject(...);
+        if (likedDishesMap[user.id]) {
+          likedDishesMap[user.id] = likedDishesMap[user?.id].filter(id => id !== dishId);
+          await saveLikedDishes();
+        }
         return Promise.resolve({ status: 204, data: null });
       }
 

@@ -67,7 +67,7 @@ export default function Configuracoes() {
           {/* SEÇÕES DINÂMICAS BASEADAS EM user.role */}
           {renderSection('Configurações', [
             { label: 'Meu perfil', route: '/configuracoes/meuPerfil' },
-            ...(user.user_type === 'common' ? [{ label: 'Denunciar', route: '/configuracoes/denunciar' }] : [])
+            ...(user.user_type === 'common' ? [{ label: 'Denunciar', route: '/busca?tab=restaurantes' }] : [])
           ])}
 
           {(user.user_type === 'staff' || user.user_type === 'establishment') && renderSection('Administrar',

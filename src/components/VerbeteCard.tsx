@@ -7,13 +7,19 @@ interface VerbeteCardProps {
   title: string;
   description: string;
   imagem: string;
+  isLiked?: boolean;
+  onToggleLike?: (id: string) => void;
 }
 
-export const VerbeteCard = ({ id, title, description, imagem }: VerbeteCardProps) => {
+export const VerbeteCard = ({ id, title, description, imagem, isLiked = false, onToggleLike }: VerbeteCardProps) => {
   const router = useRouter();
   const imageKey = imagem.toLowerCase().replace(/\.png$/, '');
   const imageSource = images[imageKey];
   const defaultImage = require('@/assets/images/pratos/VATAPÁ.png');
+
+  const handleToggle = () => {
+    onToggleLike?.(id);
+  };
 
   return (
     <Pressable
@@ -28,10 +34,16 @@ export const VerbeteCard = ({ id, title, description, imagem }: VerbeteCardProps
       <View style={styles.verbeteContent}>
         <View style={styles.verbeteHeaderRow}>
           <Text style={styles.verbeteTitle}>{title}</Text>
-          <Image
-            source={require('../../assets/images/icones/saved-line-white.png')}
-            style={{ width: 32, height: 32 }}
-          />
+          <Pressable onPress={handleToggle}>
+            <Image
+              source={
+                isLiked
+                  ? require('../../assets/images/icones/saved-filled-line-white.png')
+                  : require('../../assets/images/icones/saved-line-white.png')
+              }
+              style={{ width: 32, height: 32 }}
+            />
+          </Pressable>
         </View>
         <Text style={styles.verbeteDesc} numberOfLines={4}>
           {description}
@@ -40,6 +52,7 @@ export const VerbeteCard = ({ id, title, description, imagem }: VerbeteCardProps
     </Pressable>
   );
 };
+
 
 const styles = StyleSheet.create({
   verbeteCard: {

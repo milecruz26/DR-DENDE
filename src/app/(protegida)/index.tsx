@@ -7,13 +7,15 @@ import { VerbeteCard } from '@/components/VerbeteCard';
 import EventCalendarList from '@/components/Eventos/ListaEventos';
 import EventsInfo from '@/components/Modal/Info/EventsInfo';
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
+import { useDislikeDish, useLikedDishes, useLikeDish } from '@/hooks/useDish';
 import { useAllEntries } from '@/hooks/useEntries';
 import { Event } from '@/interfaces/event';
 import { formatDateTime } from '@/utils/formatDateTime';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
+  Pressable,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -21,11 +23,26 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+
 export default function HomeScreen() {
-  const { data: verbetes, isLoading, error } = useAllEntries();
+  const { data: verbetes, } = useAllEntries();
+  const { data: likedDishes } = useLikedDishes();
+  const { mutate: like } = useLikeDish();
+  const { mutate: dislike } = useDislikeDish();
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   // const [verbetes, setVerbetes] = useState<Verbete[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const likedIds = likedDishes?.map(d => d.id) || [];
+
+  const handleToggleLike = (id: string) => {
+    if (likedIds.includes(id)) {
+      dislike(id);
+    } else {
+      like(id);
+    }
+  };
+
 
   return (
     <LinearGradient
@@ -57,20 +74,24 @@ export default function HomeScreen() {
             </ScrollView>
 
             {/* Seção Verbetes */}
+
+            {/* <Pressable > */}
             <SectionTitle title="Verbetes" showLink />
+            {/* </Pressable> */}
+
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
 
-              {
-                verbetes?.map((verbete) => (
-                  <VerbeteCard
-                    key={verbete.id}
-                    id={verbete.id}
-                    title={verbete.name}
-                    description={verbete.entry_text}
-                    imagem={verbete.picture}
-                  />
-                ))
-              }
+              {verbetes?.map((verbete) => (
+                <VerbeteCard
+                  key={verbete.id}
+                  id={verbete.id}
+                  title={verbete.name}
+                  description={verbete.entry_text}
+                  imagem={verbete.picture}
+                  isLiked={likedIds.includes(verbete.id)}
+                  onToggleLike={handleToggleLike}
+                />
+              ))}
               {/* NÃO É PRA DELETAR ATÉ SER APLICADO */}
               {/* {loading ? (
                 <ActivityIndicator size="large" color="#E87C38" style={{ margin: 20 }} />
@@ -88,7 +109,10 @@ export default function HomeScreen() {
               <View style={{ width: 20 }} />
             </ScrollView>
             {/* Seção Eventos */}
-            <SectionTitle title="Eventos" showLink />
+            <Pressable onPress={() => router.replace('/(protegida)/eventos')}>
+
+              <SectionTitle title="Eventos" showLink />
+            </Pressable>
             <EventCalendarList onSelectEvent={setSelectedEvent} />
 
             {/* Espaço extra para não ficar atrás da TabBar */}

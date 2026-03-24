@@ -3,6 +3,7 @@ import { EstabelecimentoDetalhes } from '@/components/Modal/EstabelecimentoDetal
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { RestaurantCardSearch } from '@/components/Restaurante/RestauranteCardSearch';
 import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';
+import { useDislikeDish, useLikedDishes } from '@/hooks/useDish';
 import { useAllEntries } from '@/hooks/useEntries';
 import Colors from '@/theme/Colors';
 import React, { useState } from 'react';
@@ -16,6 +17,7 @@ import {
   View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 
 const { NEUTRAL, primary, SECONDARY } = Colors
@@ -83,11 +85,20 @@ const MOCK_RESTAURANTES = [
 
 type CategoryType = 'verbetes' | 'restaurantes';
 export default function Favoritos() {
-  const { data: verbetes, isLoading } = useAllEntries();
   const [modalVisivel, setModalVisivel] = useState(false);
   const [abaAtiva, setAbaAtiva] = useState<'verbetes' | 'restaurantes'>('verbetes');
   const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState(null);
   const [activeTab, setActiveTab] = useState<CategoryType>('verbetes');
+  const { data: verbetes, } = useAllEntries();
+
+  const { data: likedDishes, } = useLikedDishes();
+  const { mutate: dislike } = useDislikeDish();
+
+  const handleToggleLike = (id: string) => {
+    dislike(id); // apenas desfavoritar
+  };
+
+
 
   const abrirDetalhes = (item: any) => {
     setEstabelecimentoSelecionado(item);
@@ -143,19 +154,22 @@ export default function Favoritos() {
         {/* Lista de Conteúdo */}
         <FlatList
           // data={MOCK_RESTAURANTES}
-          data={(activeTab === 'verbetes' ? verbetes : MOCK_RESTAURANTES) as any[]}
+          data={(activeTab === 'verbetes' ? likedDishes : MOCK_RESTAURANTES) as any[]}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => ( // <-- Pegamos o index aqui
             activeTab === 'verbetes'
-              ? <VerbeteCardSearch img={item.picture}
+              ? <VerbeteCardSearch
+                img={item.picture}
                 id={item.id}
                 title={item.name}
                 desc={item.entry_text}
                 index={index}
-                favoritos={true}
-              /> // <-- Passamos o index para o card
+                favoritosPage={true}
+                isLiked={true}
+                onToggleLike={handleToggleLike}
+              />
               : <RestaurantCardSearch
                 item={item as any} moreDetailsPress={() => abrirDetalhes(item)} />
           )}

@@ -5,6 +5,7 @@ export const useLikedDishes = () => {
   return useQuery({
     queryKey: ['likedDishes'],
     queryFn: () => dishService.getLikedDishes().then(res => res.data),
+    staleTime: 5 * 60 * 1000,
   });
 };
 

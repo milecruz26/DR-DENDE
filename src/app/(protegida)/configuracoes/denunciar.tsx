@@ -1,5 +1,7 @@
+import { useAuth } from '@/context/AuthContext';
+import { useCreateComplaint } from '@/hooks/useComplaint';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -24,8 +26,35 @@ const COLORS = {
 
 export default function Denunciar() {
   const router = useRouter();
+  const { user } = useAuth();
   const [description, setDescription] = useState('');
   const maxLength = 120;
+  const createComplaint = useCreateComplaint();
+  const { establishment_id } = useLocalSearchParams<{ establishment_id: string }>();
+
+  const handleSubmit = async () => {
+    if (!description.trim()) {
+      alert('Descreva o motivo da denúncia');
+      return;
+    }
+    if (!establishment_id) {
+      alert('Estabelecimento não identificado');
+      return;
+    }
+    try {
+      await createComplaint.mutateAsync({
+        text: description,
+        establishment_id,
+        user_id: user?.id,
+      });
+      router.replace('/configuracoes/confirmacaoDenuncia');
+    } catch (error) {
+      alert('Erro ao registrar denúncia');
+      console.log(error)
+    }
+
+  };
+
 
   return (
     <KeyboardAvoidingView
@@ -78,9 +107,12 @@ export default function Denunciar() {
 
           <TouchableOpacity
             style={styles.submitButton}
-            onPress={() => router.push('/configuracoes/confirmacaoDenuncia')}
+            onPress={handleSubmit}
+            disabled={createComplaint.isPending}
           >
-            <Text style={styles.submitButtonText}>Registrar denúncia</Text>
+            <Text style={styles.submitButtonText}>
+              {createComplaint.isPending ? 'Enviando...' : 'Registrar denúncia'}
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
