@@ -1,7 +1,8 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
-const BASE_URL = 'https://sua-api.com'; // substituir pela URL real
+// const BASE_URL = 'https://34.231.84.142:8367/'
+const BASE_URL = 'https://sua-api.com';
 const TOKEN_KEY = 'auth_token'
 
 export const api = axios.create({
