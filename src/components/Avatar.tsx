@@ -27,7 +27,7 @@ export const Avatar = ({
       ) :
         <Image
           source={require('../../assets/images/icones/avatar-transparent.png')}
-          style={{ width: "100%", height: "100%", backgroundColor: primary.base }}
+          style={{ width: "100%", height: "100%", backgroundColor: primary.base, borderRadius: 50 }}
         />}
     </View>
   )

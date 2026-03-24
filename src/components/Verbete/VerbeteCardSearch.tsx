@@ -1,4 +1,5 @@
 import { images } from '@/assets/images/pratos';
+import { useAuth } from '@/context/AuthContext';
 import Colors from "@/theme/Colors";
 import { useRouter } from 'expo-router';
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
@@ -35,6 +36,8 @@ export const VerbeteCardSearch = ({
   const imageSource = images[imageKey];
   const defaultImage = require('@/assets/images/pratos/VATAPÁ.png');
 
+  const { user } = useAuth()
+
   const handleToggle = () => {
     onToggleLike?.(id);
   };
@@ -50,26 +53,30 @@ export const VerbeteCardSearch = ({
         <Text style={styles.verbeteDesc} numberOfLines={2}>{desc}</Text>
       </View>
 
-      <View style={{ alignItems: 'center' }}>
-        <Pressable style={styles.bookmarkIcon} onPress={handleToggle}>
-          <Image
-            source={
-              isLiked
-                ? require('../../../assets/images/icones/saved-filled-line-neutral.png')
-                : require('../../../assets/images/icones/saved-line-neutral.png')
-            }
-            style={{ width: 32, height: 32 }}
-          />
-        </Pressable>
-        {favoritosPage && (
-          <Pressable>
+      {
+        user?.user_type === "common" &&
+
+        <View style={{ alignItems: 'center' }}>
+          <Pressable style={styles.bookmarkIcon} onPress={handleToggle}>
             <Image
-              source={require('../../../assets/images/icones/tres-pontos-line-black.png')}
+              source={
+                isLiked
+                  ? require('../../../assets/images/icones/saved-filled-line-neutral.png')
+                  : require('../../../assets/images/icones/saved-line-neutral.png')
+              }
               style={{ width: 32, height: 32 }}
             />
           </Pressable>
-        )}
-      </View>
+          {favoritosPage && (
+            <Pressable>
+              <Image
+                source={require('../../../assets/images/icones/tres-pontos-line-black.png')}
+                style={{ width: 32, height: 32 }}
+              />
+            </Pressable>
+          )}
+        </View>
+      }
     </Pressable>
   );
 };

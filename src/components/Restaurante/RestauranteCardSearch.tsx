@@ -55,50 +55,63 @@ export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: 
 
         {/* Botoes flutuantes (Bookmark e Menu) */}
         <View style={styles.restActions}>
-          <Pressable style={styles.iconBtn} onPress={toggleSave}>
-            <Image source={
-              isSaved
-                ? require('../../../assets/images/icones/saved-filled-line-white.png')
-                : require('../../../assets/images/icones/saved-line-white.png')
-            } style={{ width: 24, height: 24 }} />
-          </Pressable>
-
+          {user?.user_type === "common" &&
+            <>
+              <Pressable style={styles.iconBtn} onPress={toggleSave}>
+                <Image source={
+                  isSaved
+                    ? require('../../../assets/images/icones/saved-filled-line-white.png')
+                    : require('../../../assets/images/icones/saved-line-white.png')
+                } style={{ width: 24, height: 24 }} />
+              </Pressable>
+            </>
+          }
           {/* 3. Container relativo para ancorar o menu absoluto */}
-          <View style={{ position: 'relative' }}>
-            <Pressable style={styles.iconBtn} onPress={toggleMenu}>
-              <Image source={require('../../../assets/images/icones/tres-pontos-line-white.png')} style={{ width: 24, height: 24 }} />
-            </Pressable>
+          {user?.user_type !== "establishment" &&
 
-            {/* 4. O Menu Flutuante */}
-            {showMenu && (
-              <View style={styles.dropdownMenu}>
+            <View style={{ position: 'relative' }}>
+              <Pressable style={styles.iconBtn} onPress={toggleMenu}>
+                <Image source={require('../../../assets/images/icones/tres-pontos-line-white.png')} style={{ width: 24, height: 24 }} />
+              </Pressable>
+
+              {/* 4. O Menu Flutuante */}
+              {showMenu && (
+                <View style={styles.dropdownMenu}>
+
+                  {user?.user_type === "common" &&
+
+                    <Pressable onPress={() => {
+                      setShowMenu(false);
+                      // Navega para a tela de denúncia passando o ID do estabelecimento
+                      router.push(`/configuracoes/denunciar?establishment_id=${item.id}`);
+                    }}>
+                      <View style={[styles.menuItem, styles.menuItemHighlight]}>
+                        <Text style={styles.menuItemText}>Denunciar</Text>
+                        <Image source={require('../../../assets/images/icones/megaphone-line-neutral.png')} style={{ width: 16, height: 16 }} />
+                      </View>
+                    </Pressable>
+                  }
+                  {user?.user_type === "staff" &&
+                    <>
+                      {/* <View style={styles.menuDivider} /> */}
+
+                      <Pressable onPress={onDeletePress}>
+                        <View style={styles.menuItem}>
+                          <Text style={styles.menuItemTextRed}>Excluir</Text>
+                          <Image source={require('../../../assets/images/icones/trash-line-red.png')} style={{ width: 16, height: 16 }} />
+                        </View>
+                      </Pressable>
+                    </>
+                  }
 
 
-                <Pressable onPress={() => {
-                  setShowMenu(false);
-                  // Navega para a tela de denúncia passando o ID do estabelecimento
-                  router.push(`/configuracoes/denunciar?establishment_id=${item.id}`);
-                }}>
-                  <View style={[styles.menuItem, styles.menuItemHighlight]}>
-                    <Text style={styles.menuItemText}>Denunciar</Text>
-                    <Image source={require('../../../assets/images/icones/megaphone-line-neutral.png')} style={{ width: 16, height: 16 }} />
-                  </View>
-                </Pressable>
 
-                <View style={styles.menuDivider} />
-                {user?.user_type !== 'common' && (
-                  <Pressable onPress={onDeletePress}>
-                    <View style={styles.menuItem}>
-                      <Text style={styles.menuItemTextRed}>Excluir</Text>
-                      <Image source={require('../../../assets/images/icones/trash-line-red.png')} style={{ width: 16, height: 16 }} />
-                    </View>
-                  </Pressable>)
-                }
-
-              </View>
-            )}
-          </View>
+                </View>
+              )}
+            </View>
+          }
         </View>
+
 
         {/* Conteúdo inferior */}
         <View style={styles.restContent}>

@@ -12,7 +12,7 @@ import {
 export const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const router = useRouter();
-  const { signOut } = useAuth(); // Pegamos o usuário logado e a função de sair
+  const { signOut, user } = useAuth(); // Pegamos o usuário logado e a função de sair
 
   const handleNavigation = (route: string) => {
     setShowMenu(false);
@@ -39,15 +39,20 @@ export const Header = () => {
 
             <View style={styles.dropdownMenu}>
               {/* Opção Favoritos */}
-              <Pressable
-                style={styles.menuItem}
-                onPress={() => handleNavigation('/favoritos')}
-              >
-                <Text style={styles.menuItemText}>Favoritos</Text>
-                <Feather name="star" size={16} color="#666" />
-              </Pressable>
 
-              <View style={styles.menuDivider} />
+              {user?.user_type === "common" &&
+                <>
+                  <Pressable
+                    style={styles.menuItem}
+                    onPress={() => handleNavigation('/favoritos')}
+                  >
+                    <Text style={styles.menuItemText}>Favoritos</Text>
+                    <Feather name="star" size={16} color="#666" />
+                  </Pressable>
+                  <View style={styles.menuDivider} />
+                </>
+              }
+
 
               {/* Opção Configurações */}
               <Pressable

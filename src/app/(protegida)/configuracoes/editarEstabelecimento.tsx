@@ -1,3 +1,4 @@
+import { InputField } from '@/components/InputField/InputField';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -26,7 +27,7 @@ export default function EditarEstabelecimento() {
   const router = useRouter();
   const [step, setStep] = useState(1);
 
-  // Estados do formulário
+  // Estados do formulário - Step 1 & 3
   const [form, setForm] = useState({
     nome: 'Usuário',
     email: 'user@email.com.br',
@@ -43,6 +44,23 @@ export default function EditarEstabelecimento() {
     linkedin: 'instagram.com.br/exemplo',
   });
 
+  // Estados do formulário - Step 2 (Horários)
+  const [horarios, setHorarios] = useState([
+    { id: '1', dia: 'Domingo', abre: '00:00', fecha: '00:00' },
+    { id: '2', dia: 'Segunda', abre: '00:00', fecha: '00:00' },
+    { id: '3', dia: 'Terça', abre: '00:00', fecha: '00:00' },
+    { id: '4', dia: 'Quarta', abre: '00:00', fecha: '00:00' },
+    { id: '5', dia: 'Quinta', abre: '00:00', fecha: '00:00' },
+    { id: '6', dia: 'Sexta', abre: '00:00', fecha: '00:00' },
+    { id: '7', dia: 'Sábado', abre: '00:00', fecha: '00:00' },
+  ]);
+
+  const handleHorarioChange = (index: number, campo: 'abre' | 'fecha', valor: string) => {
+    const novosHorarios = [...horarios];
+    novosHorarios[index][campo] = valor;
+    setHorarios(novosHorarios);
+  };
+
   const handleSave = () => {
     // Lógica para salvar os dados
     router.back();
@@ -55,10 +73,10 @@ export default function EditarEstabelecimento() {
         <Text style={styles.sectionTitle}>Detalhes</Text>
       </View>
 
-      <InputField label="Nome" value={form.nome} onChange={(item: string) => setForm({ ...form, nome: item })} required />
-      <InputField label="Email" value={form.email} onChange={(item: string) => setForm({ ...form, email: item })} required keyboardType="email-address" />
-      <InputField label="Número" value={form.telefone} onChange={(item: string) => setForm({ ...form, telefone: item })} required keyboardType="phone-pad" />
-      <InputField label="CNPJ" value={form.cnpj} onChange={(item: string) => setForm({ ...form, cnpj: item })} required />
+      <InputField label="Nome" value={form.nome} onChangeText={(item: string) => setForm({ ...form, nome: item })} required />
+      <InputField label="Email" value={form.email} onChangeText={(item: string) => setForm({ ...form, email: item })} required keyboardType="email-address" />
+      <InputField label="Número" value={form.telefone} onChangeText={(item: string) => setForm({ ...form, telefone: item })} required keyboardType="phone-pad" />
+      <InputField label="CNPJ" value={form.cnpj} onChangeText={(item: string) => setForm({ ...form, cnpj: item })} required />
 
       <Text style={styles.label}><Text style={{ color: 'red' }}>*</Text> Foto do estabelecimento</Text>
       <TouchableOpacity style={styles.uploadBtn}>
@@ -74,11 +92,11 @@ export default function EditarEstabelecimento() {
 
       <View style={styles.row}>
         <View style={{ flex: 1 }}>
-          <InputField label="Valor mínimo" value={form.valorMin} onChange={(item: string) => setForm({ ...form, valorMin: item })} required />
+          <InputField label="Valor mínimo" value={form.valorMin} onChangeText={(item: string) => setForm({ ...form, valorMin: item })} required />
         </View>
         <View style={{ width: 15 }} />
         <View style={{ flex: 1 }}>
-          <InputField label="Valor máximo" value={form.valorMax} onChange={(item: string) => setForm({ ...form, valorMax: item })} required />
+          <InputField label="Valor máximo" value={form.valorMax} onChangeText={(item: string) => setForm({ ...form, valorMax: item })} required />
         </View>
       </View>
 
@@ -94,6 +112,45 @@ export default function EditarEstabelecimento() {
   );
 
   const renderStep2 = () => (
+    <View style={styles.formContainer}>
+      <View style={styles.sectionHeader}>
+        <Feather name="clock" size={20} color={COLORS.textDark} />
+        <Text style={styles.sectionTitle}>Horário de funcionamento</Text>
+      </View>
+
+      {horarios.map((item, index) => (
+        <View key={item.id} style={styles.horarioRow}>
+          <Text style={styles.diaText}>{item.dia}</Text>
+          <View style={styles.horarioInputs}>
+            <TextInput
+              style={styles.timeInput}
+              value={item.abre}
+              onChangeText={(val) => handleHorarioChange(index, 'abre', val)}
+              keyboardType="numeric"
+            />
+            <Text style={styles.timeSeparator}>-</Text>
+            <TextInput
+              style={styles.timeInput}
+              value={item.fecha}
+              onChangeText={(val) => handleHorarioChange(index, 'fecha', val)}
+              keyboardType="numeric"
+            />
+          </View>
+        </View>
+      ))}
+
+      <View style={styles.footerBtns}>
+        <TouchableOpacity style={styles.btnSecondary} onPress={() => setStep(3)}>
+          <Text style={styles.btnSecondaryText}>Pular</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.btnPrimary} onPress={() => setStep(3)}>
+          <Text style={styles.btnPrimaryText}>Prosseguir</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  const renderStep3 = () => (
     <View style={styles.formContainer}>
       <View style={styles.sectionHeader}>
         <Feather name="map-pin" size={20} color={COLORS.textDark} />
@@ -116,23 +173,23 @@ export default function EditarEstabelecimento() {
 
       <View style={styles.row}>
         <View style={{ flex: 1 }}>
-          <InputField label="Porcentagem do Cupom" placeholder="%" value={form.porcentagemCupom} onChange={(item: string) => setForm({ ...form, porcentagemCupom: item })} required />
+          <InputField label="Porcentagem do Cupom" placeholder="%" value={form.porcentagemCupom} onChangeText={(item: string) => setForm({ ...form, porcentagemCupom: item })} required />
         </View>
         <View style={{ width: 15 }} />
         <View style={{ flex: 1 }}>
-          <InputField label="Usos por usuários" value={form.usosPorUsuario} onChange={(item: string) => setForm({ ...form, usosPorUsuario: item })} required />
+          <InputField label="Usos por usuários" value={form.usosPorUsuario} onChangeText={(item: string) => setForm({ ...form, usosPorUsuario: item })} required />
         </View>
       </View>
 
       <View style={[styles.sectionHeader, { marginTop: 20 }]}>
-        <Feather name="map-pin" size={20} color={COLORS.textDark} />
+        <Feather name="share-2" size={20} color={COLORS.textDark} />
         <Text style={styles.sectionTitle}>Redes sociais</Text>
       </View>
 
-      <InputField label="Instagram" value={form.instagram} onChange={(item: string) => setForm({ ...form, instagram: item })} required />
-      <InputField label="Facebook" value={form.facebook} onChange={(item: string) => setForm({ ...form, facebook: item })} required />
-      <InputField label="Youtube" value={form.youtube} onChange={(item: string) => setForm({ ...form, youtube: item })} required />
-      <InputField label="Linkedin" value={form.linkedin} onChange={(item: string) => setForm({ ...form, linkedin: item })} required />
+      <InputField label="Instagram" value={form.instagram} onChangeText={(item: string) => setForm({ ...form, instagram: item })} required />
+      <InputField label="Facebook" value={form.facebook} onChangeText={(item: string) => setForm({ ...form, facebook: item })} required />
+      <InputField label="Youtube" value={form.youtube} onChangeText={(item: string) => setForm({ ...form, youtube: item })} required />
+      <InputField label="Linkedin" value={form.linkedin} onChangeText={(item: string) => setForm({ ...form, linkedin: item })} required />
 
       <TouchableOpacity style={[styles.btnPrimary, { width: '100%', marginTop: 20 }]} onPress={handleSave}>
         <Text style={styles.btnPrimaryText}>Salvar alterações</Text>
@@ -143,7 +200,13 @@ export default function EditarEstabelecimento() {
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => step === 1 ? router.back() : setStep(1)} style={styles.backBtn}>
+        <TouchableOpacity
+          onPress={() => {
+            if (step === 1) router.back();
+            else setStep(step - 1);
+          }}
+          style={styles.backBtn}
+        >
           <Ionicons name="arrow-back-outline" size={24} color={COLORS.primary} />
           <Text style={styles.backBtnText}>Voltar</Text>
         </TouchableOpacity>
@@ -151,21 +214,23 @@ export default function EditarEstabelecimento() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {step === 1 ? renderStep1() : renderStep2()}
+        {step === 1 && renderStep1()}
+        {step === 2 && renderStep2()}
+        {step === 3 && renderStep3()}
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
 
 // Componente auxiliar de Input
-const InputField = ({ label, required, ...props }: any) => (
-  <View style={styles.inputGroup}>
-    <Text style={styles.label}>
-      {required && <Text style={{ color: 'red' }}>*</Text>} {label}
-    </Text>
-    <TextInput style={styles.input} placeholderTextColor={COLORS.placeholder} {...props} />
-  </View>
-);
+// export const InputField = ({ label, required, ...props }: any) => (
+//   <View style={styles.inputGroup}>
+//     <Text style={styles.label}>
+//       {required && <Text style={{ color: 'red' }}>*</Text>} {label}
+//     </Text>
+//     <TextInput style={styles.input} placeholderTextColor={COLORS.placeholder} {...props} />
+//   </View>
+// );
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.white },
@@ -185,17 +250,17 @@ const styles = StyleSheet.create({
   sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 15 },
   sectionTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.textDark },
 
-  inputGroup: { marginBottom: 15 },
+  // inputGroup: { marginBottom: 15 },
   label: { fontSize: 14, fontWeight: 'bold', color: COLORS.textDark, marginBottom: 8 },
-  input: {
-    height: 55,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    fontSize: 16,
-    color: COLORS.textLight
-  },
+  // input: {
+  //   height: 55,
+  //   borderWidth: 1,
+  //   borderColor: COLORS.border,
+  //   borderRadius: 10,
+  //   paddingHorizontal: 15,
+  //   fontSize: 16,
+  //   color: COLORS.textLight
+  // },
 
   uploadBtn: {
     height: 55,
@@ -212,6 +277,40 @@ const styles = StyleSheet.create({
   uploadText: { color: COLORS.textLight, fontSize: 14 },
 
   row: { flexDirection: 'row', justifyContent: 'space-between' },
+
+  // Estilos específicos para o Step 2 (Horários)
+  horarioRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 15,
+  },
+  diaText: {
+    fontSize: 16,
+    color: COLORS.textDark,
+    fontWeight: '500',
+    flex: 1,
+  },
+  horarioInputs: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  timeInput: {
+    width: 80,
+    height: 45,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    textAlign: 'center',
+    fontSize: 16,
+    color: COLORS.textDark,
+  },
+  timeSeparator: {
+    fontSize: 16,
+    color: COLORS.textDark,
+    fontWeight: 'bold',
+  },
 
   checkboxContainer: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 20, marginTop: 5 },
   checkbox: { width: 24, height: 24, borderRadius: 4, borderWidth: 2, borderColor: COLORS.primary, justifyContent: 'center', alignItems: 'center' },
