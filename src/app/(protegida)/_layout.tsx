@@ -3,7 +3,7 @@ import { MockTabBar } from '@/components/MockTabBar';
 import { useAuth } from '@/context/AuthContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Redirect, Slot } from 'expo-router';
-import * as SecureStore from 'expo-secure-store';
+import { storage } from '@/utils/storage';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,10 +21,10 @@ export default function ProtegidaLayout() {
     const checkOnboarding = async () => {
       if (!user) return;
       if (user.user_type === 'common') {
-        const hasSeen = await SecureStore.getItem(`onboarding_${user.id}`);
+        const hasSeen = await storage.getItem(`onboarding_${user.id}`);
         if (!hasSeen) {
           setShowOnboarding(true);
-          await SecureStore.setItem(`onboarding_${user.id}`, 'true');
+          await storage.setItem(`onboarding_${user.id}`, 'true');
         } else {
           setShowOnboarding(false);
         }
