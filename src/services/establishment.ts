@@ -18,7 +18,10 @@ export const establishmentService = {
   updateDish: (data: Dish) => api.put<Dish>('/establishments/dish', data),
 
   // POST /establishments/dish
-  createDish: (data: Omit<Dish, 'id'>) => api.post<Dish>('/establishments/dish', data),
+  createDish: (formData: FormData) =>
+    api.post<Dish>('/establishments/dish', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
 
   // DELETE /establishments/dish/{dish_id}
   deleteDish: (dishId: string) => api.delete<void>(`/establishments/dish/${dishId}`),

@@ -1,4 +1,5 @@
 import ImageUploadField from '@/components/ImageUploadField';
+import { useCreateDish } from '@/hooks/useEstablishment';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
@@ -8,54 +9,104 @@ import { FlatList, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TextIn
 // Keep COLORS same as step 1
 const COLORS = { primary: '#34523B', white: '#FFFFFF', textDark: '#333333', textLight: '#666666', border: '#CCCCCC', danger: '#D32F2F', uploadBg: '#FAFAFA', placeholder: '#888888', };
 
-const PRATOS_VERBETES = [
-  'Abará',
-  'Acaçá',
-  'Acarajé',
-  'Arroz de hauçá',
-  'Mocotó',
-  'Passarinha',
-  'Vatapá',
-  'Caruru',
-  'Frigideira',
-  'Feijão de Azeite',
-  'Maniçoba',
-  'Moqueca',
-  'Mungunzá',
-  'Sarapatel',
-  'Xinxim',
-  'Bolinho de estudante / "punheta"',
-  'Cocada',
-  'Efó',
-  'Feijão de Leite',
-  'Feijoada',
-  'Galinha de molho pardo',
-  'Bala Baiana ou Bala de Vidro',
-  'Cozido',
-  'Dobradinha',
-  'Meninico de Carneiro',
-  'Quiabada',
-  'Rabada',
-  'Bobó de Camarão',
-  'Cuscuz',
-  'Carne de Fumeiro',
-  'Malassado'
-];
+
 type MenuItem = {
   id: number;
   nome: string;
   ingrediente: string | null;
   imageUri: string | null;
 };
-
+type Verbete = {
+  id: string;
+  name: string;
+};
+const PRATOS_VERBETES: Verbete[] = [
+  { id: 'abara', name: 'Abará' },
+  { id: 'acaca', name: 'Acaçá' },
+  { id: 'acaraje', name: 'Acarajé' },
+  { id: 'arrozDeHauca', name: 'Arroz de hauçá' },
+  { id: 'mocoto', name: 'Mocotó' },
+  { id: 'passarinha', name: 'Passarinha' },
+  { id: 'vatapa', name: 'Vatapá' },
+  { id: 'caruru', name: 'Caruru' },
+  { id: 'frigideira', name: 'Frigideira' },
+  { id: 'feijaoDeAzeite', name: 'Feijão de Azeite' },
+  { id: 'manicoba', name: 'Maniçoba' },
+  { id: 'moqueca', name: 'Moqueca' },
+  { id: 'mugunza', name: 'Mungunzá' },
+  { id: 'sarapatel', name: 'Sarapatel' },
+  { id: 'xinxin', name: 'Xinxim' },
+  { id: 'punheta', name: 'Bolinho de estudante / "punheta"' },
+  { id: 'cocada', name: 'Cocada' },
+  { id: 'efo', name: 'Efó' },
+  { id: 'feijaoDeLeite', name: 'Feijão de Leite' },
+  { id: 'feijoada', name: 'Feijoada' },
+  { id: 'galinhaMolhoPardo', name: 'Galinha de molho pardo' },
+  { id: 'balaDeVidro', name: 'Bala Baiana ou Bala de Vidro' },
+  { id: 'cozido', name: 'Cozido' },
+  { id: 'dobradinha', name: 'Dobradinha' },
+  { id: 'mininicoDeCarneiro', name: 'Meninico de Carneiro' },
+  { id: 'quiabada', name: 'Quiabada' },
+  { id: 'rabada', name: 'Rabada' },
+  { id: 'boboDeCamarao', name: 'Bobó de Camarão' },
+  { id: 'cuscuze', name: 'Cuscuz' },
+  { id: 'fumeiro', name: 'Carne de Fumeiro' },
+  { id: 'malassado', name: 'Malassado' }
+];
 export default function EditarGaleria() {
   const router = useRouter();
+  const createDishMutation = useCreateDish();
   // Dynamic ingredient blocks state
   const [items, setItems] = useState<MenuItem[]>([
     { id: 1, nome: '', ingrediente: null, imageUri: null }
   ]);
   const [modalIndex, setModalIndex] = useState<number | null>(null);
   const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSave = async () => {
+    // Filtrar apenas itens com nome, ingrediente e imagem preenchidos
+    const validItems = items.filter(
+      (item): item is Required<MenuItem> =>
+        !!item.nome.trim() && !!item.ingrediente && !!item.imageUri
+    ); // Agora TypeScript sabe que ingrediente e imageUri não são null
+
+    if (validItems.length === 0) {
+      alert('Preencha pelo menos um prato com nome, verbete e imagem.');
+      return;
+    }
+
+    setLoading(true);
+    let success = true;
+    for (const item of validItems) {
+      const formData = new FormData();
+      formData.append('name', item.nome);
+      formData.append('associated_entry', item.ingrediente!);
+      const filename = item.imageUri!.split('/').pop() ?? `image-${Date.now()}.jpg`;
+      const match = /\.(\w+)$/.exec(filename ?? '');
+      const type = match ? `image/${match[1]}` : 'image/jpeg';
+      formData.append('dish_image_path', {
+        uri: item.imageUri,
+        name: filename || 'image.jpg',
+        type,
+      } as unknown as Blob);
+
+      try {
+        await createDishMutation.mutateAsync(formData);
+      } catch (err) {
+        console.error(err);
+        success = false;
+        alert(`Erro ao salvar "${item.nome}". Tente novamente.`);
+        break;
+      }
+    }
+
+    setLoading(false);
+    if (success) {
+      alert('Prato(s) cadastrado(s) com sucesso!');
+      router.back();
+    }
+  };
 
   const addItem = () => {
     setItems((prev) => [
@@ -74,18 +125,18 @@ export default function EditarGaleria() {
     setItems(updated);
   };
 
-  const selectIngredient = (index: number, name: string) => {
-    updateItem(index, 'ingrediente', name);
+  const selectVerbete = (index: number, selectedId: string) => {
+    updateItem(index, 'ingrediente', selectedId);
     setModalIndex(null);
     setSearch('');
   };
 
-  const normalize = (str: string) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const normalize = (str: string): string =>
+    str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
   const filteredPratosVerbetes = PRATOS_VERBETES.filter((item) =>
-    normalize(item).includes(normalize(search))
+    normalize(item.name).includes(normalize(search))
   );
-
   const pickImage = async (index: number) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: 'images',
@@ -121,79 +172,83 @@ export default function EditarGaleria() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 
 
-        {items.map((item, index) => (
-          <View key={item.id} style={styles.dynamicBlock}>
+        {
+          items.map((item, index) => {
+            const selectedVerbeteName =
+              PRATOS_VERBETES.find(v => v.id === item.ingrediente)?.name || 'Selecionar';
+            return (
 
-            {/* HEADER */}
-            <View style={styles.blockHeader}>
-              <View style={styles.blockTitleContainer}>
-                <Image source={require('@/assets/images/icones/plate.png')} style={{ width: 24, height: 24 }} />
-                <Text style={styles.blockTitle}>Prato da galeria</Text>
-              </View>
+              <View key={item.id} style={styles.dynamicBlock}>
 
-              {items.length > 1 && (
-                <TouchableOpacity onPress={() => removeItem(index)}>
-                  <Feather name="trash-2" size={18} color={COLORS.danger} />
-                </TouchableOpacity>
-              )}
-            </View>
+                {/* HEADER */}
+                <View style={styles.blockHeader}>
+                  <View style={styles.blockTitleContainer}>
+                    <Image source={require('@/assets/images/icones/plate.png')} style={{ width: 24, height: 24 }} />
+                    <Text style={styles.blockTitle}>Prato da galeria</Text>
+                  </View>
 
-            {/* INPUTS */}
-            <View style={styles.row}>
-              <View style={styles.half}>
-                <Text style={styles.label}>
-                  <Text style={styles.required}>*</Text> Nome do prato
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Ex: Quiabada"
-                  value={item.nome}
-                  onChangeText={(text) => updateItem(index, 'nome', text)}
-                />
-              </View>
+                  {items.length > 1 && (
+                    <TouchableOpacity onPress={() => removeItem(index)}>
+                      <Feather name="trash-2" size={18} color={COLORS.danger} />
+                    </TouchableOpacity>
+                  )}
+                </View>
 
-              <View style={styles.half}>
-                <Text style={styles.label}>
-                  <Text style={styles.required}>*</Text> Prato do verbete
-                </Text>
-                <TouchableOpacity
-                  style={styles.selectInput}
-                  onPress={() => setModalIndex(index)}
-                >
-                  <Text style={[styles.selectText, item.ingrediente && { color: COLORS.textDark }]}>
-                    {item.ingrediente || 'Selecionar'}
+                {/* INPUTS */}
+                <View style={styles.row}>
+                  <View style={styles.half}>
+                    <Text style={styles.label}>
+                      <Text style={styles.required}>*</Text> Nome do prato
+                    </Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Ex: Quiabada"
+                      value={item.nome}
+                      onChangeText={(text) => updateItem(index, 'nome', text)}
+                    />
+                  </View>
+
+                  <View style={styles.half}>
+                    <Text style={styles.label}>
+                      <Text style={styles.required}>*</Text> Prato do verbete
+                    </Text>
+                    <TouchableOpacity style={styles.selectInput} onPress={() => setModalIndex(index)}>
+                      <Text style={[styles.selectText, item.ingrediente && { color: COLORS.textDark }]}>
+                        {selectedVerbeteName}
+                      </Text>
+                      <Feather name="chevron-down" size={20} color={COLORS.textLight} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                {/* IMAGEM */}
+                <View style={styles.inputGroup}>
+                  <Text style={styles.label}>
+                    <Text style={styles.required}>*</Text> Foto representativa
                   </Text>
-                  <Feather name="chevron-down" size={20} color={COLORS.textLight} />
+
+                  <ImageUploadField
+                    imageUri={item.imageUri}
+                    onPickImage={() => pickImage(index)}
+                    onRemoveImage={() => removeImage(index)}
+                  />
+                </View>
+
+                {/* ADD NOVO */}
+                <TouchableOpacity style={styles.addBtn} onPress={addItem}>
+                  <Feather name="plus" size={18} color={COLORS.primary} />
+                  <Text style={styles.addBtnText}>Adicionar novo</Text>
                 </TouchableOpacity>
+
+                {/* DIVIDER */}
+                {index !== items.length - 1 && (
+                  <View style={styles.divider} />
+                )}
+
               </View>
-            </View>
-
-            {/* IMAGEM */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>
-                <Text style={styles.required}>*</Text> Foto representativa
-              </Text>
-
-              <ImageUploadField
-                imageUri={item.imageUri}
-                onPickImage={() => pickImage(index)}
-                onRemoveImage={() => removeImage(index)}
-              />
-            </View>
-
-            {/* ADD NOVO */}
-            <TouchableOpacity style={styles.addBtn} onPress={addItem}>
-              <Feather name="plus" size={18} color={COLORS.primary} />
-              <Text style={styles.addBtnText}>Adicionar novo</Text>
-            </TouchableOpacity>
-
-            {/* DIVIDER */}
-            {index !== items.length - 1 && (
-              <View style={styles.divider} />
-            )}
-
-          </View>
-        ))}
+            )
+          })
+        }
 
 
 
@@ -202,8 +257,8 @@ export default function EditarGaleria() {
           {/* <TouchableOpacity style={styles.btnOutline} onPress={() => router.push('/configuracoes/adicionarVerbetePasso3')}>
             <Text style={styles.btnOutlineText}>Pular</Text>
           </TouchableOpacity> */}
-          <TouchableOpacity style={styles.btnSolid} onPress={() => router.push('/configuracoes')}>
-            <Text style={styles.btnSolidText}>Salvar alterações</Text>
+          <TouchableOpacity style={styles.btnSolid} onPress={handleSave} disabled={loading}>
+            <Text style={styles.btnSolidText}>{loading ? 'Salvando...' : 'Salvar alterações'}</Text>
           </TouchableOpacity>
         </View>
 
@@ -224,32 +279,15 @@ export default function EditarGaleria() {
             />
             <FlatList
               data={filteredPratosVerbetes}
-              keyExtractor={(item) => item}
-              style={styles.modalList}
+              keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.modalOption}
-                  onPress={() => modalIndex !== null && selectIngredient(modalIndex, item)}
+                  onPress={() => modalIndex !== null && selectVerbete(modalIndex, item.id)}
                 >
-                  <Text style={styles.modalOptionText}>{item}</Text>
+                  <Text style={styles.modalOptionText}>{item.name}</Text>
                 </TouchableOpacity>
               )}
-              ListEmptyComponent={
-                <View style={styles.modalEmpty}>
-                  <Text style={styles.modalEmptyText}>Nenhum ingrediente encontrado</Text>
-                  <TouchableOpacity
-                    style={styles.modalAddBtn}
-                    onPress={() => {
-                      if (search.trim() && modalIndex !== null) {
-                        selectIngredient(modalIndex, search.trim());
-                      }
-                    }}
-                  >
-                    <Feather name="plus" size={18} color={COLORS.white} />
-                    <Text style={styles.modalAddBtnText}>Adicionar "{search.trim()}"</Text>
-                  </TouchableOpacity>
-                </View>
-              }
             />
           </View>
         </View>

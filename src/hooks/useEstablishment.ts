@@ -18,8 +18,9 @@ export const useSelfPostedDishes = () => {
 export const useCreateDish = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: establishmentService.createDish,
+    mutationFn: (formData: FormData) => establishmentService.createDish(formData),
     onSuccess: () => {
+      // Invalida as queries de pratos do estabelecimento para atualizar a lista
       queryClient.invalidateQueries({ queryKey: ['selfPostedDishes'] });
     },
   });

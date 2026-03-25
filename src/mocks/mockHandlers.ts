@@ -361,10 +361,48 @@ if (USE_MOCKS) {
 
       // POST /establishments/dish
       if (config.url === '/establishments/dish' && config.method === 'post') {
-        const newDish = config.data as Omit<Dish, 'id'>;
-        const dish: Dish = { ...newDish, id: `dish-${Date.now()}`, establishment_id: user?.id };
-        mockDishes.push(dish);
-        return Promise.resolve({ data: dish, status: 201 });
+        const user = getUserFromToken(config);
+        if (!user) return Promise.reject({ response: { status: 401 } });
+        if (user.user_type !== 'establishment') {
+          return Promise.reject({ response: { status: 403 } });
+        }
+
+        let name = '', associated_entry = '', dish_image_path = '';
+        if (config.data instanceof FormData) {
+          for (const [key, value] of (config.data as any)._parts) {
+            if (key === 'name') name = value;
+            if (key === 'associated_entry') associated_entry = value;
+            if (key === 'dish_image_path') dish_image_path = value;
+          }
+        } else {
+          const data = typeof config.data === 'string' ? JSON.parse(config.data) : config.data;
+          name = data.name;
+          associated_entry = data.associated_entry;
+          dish_image_path = data.dish_image_path;
+        }
+
+        // Verifica se associated_entry é um ID (ex: 'passarinha') ou nome (ex: 'Passarinha')
+        let entryId = associated_entry;
+        const entryExists = mockEntries.find(e => e.id === associated_entry);
+        if (!entryExists) {
+          // Tenta encontrar pelo nome (normalizado)
+          const normalized = associated_entry.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+          const foundEntry = mockEntries.find(e =>
+            e.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() === normalized
+          );
+          if (foundEntry) entryId = foundEntry.id;
+        }
+
+        const newDish: Dish = {
+          id: `dish-${Date.now()}`,
+          name,
+          dish_image_path,
+          associated_entry: entryId,
+          establishment_id: user.id,
+        };
+        mockDishes.push(newDish);
+        await saveMockData(); // salva mockDishes
+        return Promise.resolve({ data: newDish, status: 201 });
       }
 
       // Se não mapeado, rejeita
