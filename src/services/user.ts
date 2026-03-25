@@ -2,19 +2,18 @@ import { User, UserCreate } from '../interfaces';
 import { api } from './apiTeste';
 
 export const userService = {
-  // GET /users/me (usuário autenticado)
-  getCurrentUser: () => api.get<User>('/users/me'),
-  // PUT /users/me
+  // GET /users/common
+  getCurrentUser: () => api.get<User>('/users/common'),
+
+  // PUT /users/common
   updateCurrentUser: (data: FormData) =>
-    api.put<User>('/users/me', data, {
+    api.put<User>('/users/common', data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
 
-  // POST /users (registro de novo usuário comum)
-  createUser: (data: UserCreate) => { api.post<User>('/users', data, { headers: { 'Content-Type': 'application/json' } }); return api.post<User>('/users', data); },
+  // POST /users/common
+  createUser: (data: UserCreate) => api.post<User>('/users/common', data),
 
-  // GET /users/{user_id}
-  getUserById: (userId: string) => api.get<User>(`/users/${userId}`),
-
-
+  // GET /staff/user/{user_id}
+  getUserById: (userId: string) => api.get<User>(`/staff/user/${userId}`),
 };
