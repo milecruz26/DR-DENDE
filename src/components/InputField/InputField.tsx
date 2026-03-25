@@ -21,7 +21,7 @@ export const InputField = ({ label, required, ...props }: any) => (
 
 const styles = StyleSheet.create({
   inputGroup: { marginBottom: 15 },
-  label: { fontSize: 14, fontWeight: 'bold', color: COLORS.textDark, marginBottom: 8 },
+  label: { fontSize: 12, fontWeight: 'bold', color: COLORS.textDark, marginBottom: 8 },
   input: {
     height: 55,
     borderWidth: 1,

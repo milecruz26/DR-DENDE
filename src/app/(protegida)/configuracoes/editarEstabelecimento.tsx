@@ -2,6 +2,7 @@ import ImageUploadField from '@/components/ImageUploadField';
 import { InputField } from '@/components/InputField/InputField';
 import { useEstablishmentUser, useUpdateEstablishmentUser } from '@/hooks/useEstablishment';
 import { Feather, Ionicons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -12,9 +13,8 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 
 const COLORS = {
@@ -52,6 +52,10 @@ export default function EditarEstabelecimento() {
     linkedin: '',
   });
   const [horarios, setHorarios] = useState<any[]>([]);
+  const [showPicker, setShowPicker] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const [currentField, setCurrentField] = useState<'abre' | 'fecha' | null>(null);
+  const [tempDate, setTempDate] = useState(new Date());
 
   useEffect(() => {
     if (establishment) {
@@ -76,21 +80,65 @@ export default function EditarEstabelecimento() {
       // Garante que opening_hours seja um array
       const hours = Array.isArray(establishment.opening_hours) ? establishment.opening_hours : [];
       setHorarios(hours.length ? hours : [
-        { id: '1', dia: 'Domingo', abre: '00:00', fecha: '00:00' },
-        { id: '2', dia: 'Segunda', abre: '00:00', fecha: '00:00' },
-        { id: '3', dia: 'Terça', abre: '00:00', fecha: '00:00' },
-        { id: '4', dia: 'Quarta', abre: '00:00', fecha: '00:00' },
-        { id: '5', dia: 'Quinta', abre: '00:00', fecha: '00:00' },
-        { id: '6', dia: 'Sexta', abre: '00:00', fecha: '00:00' },
-        { id: '7', dia: 'Sábado', abre: '00:00', fecha: '00:00' },
+        { id: '1', dia: 'Dom', abre: '00:00', fecha: '00:00' },
+        { id: '2', dia: 'Seg', abre: '00:00', fecha: '00:00' },
+        { id: '3', dia: 'Ter', abre: '00:00', fecha: '00:00' },
+        { id: '4', dia: 'Qua', abre: '00:00', fecha: '00:00' },
+        { id: '5', dia: 'Qui', abre: '00:00', fecha: '00:00' },
+        { id: '6', dia: 'Sex', abre: '00:00', fecha: '00:00' },
+        { id: '7', dia: 'Sáb', abre: '00:00', fecha: '00:00' },
       ]);
     }
   }, [establishment]);
+
+  const openTimePicker = (index: number, field: 'abre' | 'fecha') => {
+    const currentTime = horarios[index][field];
+
+    setTempDate(parseTimeToDate(currentTime));
+    setCurrentIndex(index);
+    setCurrentField(field);
+    setShowPicker(true);
+  };
+
+  const parseTimeToDate = (time: string) => {
+    const [hours, minutes] = time.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours || 0);
+    date.setMinutes(minutes || 0);
+    date.setSeconds(0);
+    return date;
+  };
 
   const handleHorarioChange = (index: number, campo: 'abre' | 'fecha', valor: string) => {
     const novosHorarios = [...horarios];
     novosHorarios[index][campo] = valor;
     setHorarios(novosHorarios);
+  };
+  const handleTimeChange = (_: any, selectedDate?: Date) => {
+    if (!selectedDate) return;
+
+    setTempDate(selectedDate);
+
+    if (Platform.OS === 'android') {
+      setShowPicker(false);
+    }
+
+    if (currentIndex === null || !currentField) return;
+
+    const hours = String(selectedDate.getHours()).padStart(2, '0');
+    const minutes = String(selectedDate.getMinutes()).padStart(2, '0');
+
+    handleHorarioChange(currentIndex, currentField, `${hours}:${minutes}`);
+  };
+  const confirmIOSPicker = () => {
+    if (currentIndex === null || !currentField) return;
+
+    const hours = String(tempDate.getHours()).padStart(2, '0');
+    const minutes = String(tempDate.getMinutes()).padStart(2, '0');
+
+    handleHorarioChange(currentIndex, currentField, `${hours}:${minutes}`);
+
+    setShowPicker(false);
   };
 
   const pickImage = async (field: 'logoImage' | 'coverImage') => {
@@ -172,14 +220,6 @@ export default function EditarEstabelecimento() {
   }
 
 
-  if (loadingEstablishment) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
-      </View>
-    );
-  }
-
   const renderStep1 = () => (
     <View style={styles.formContainer}>
       <View style={styles.sectionHeader}>
@@ -231,30 +271,77 @@ export default function EditarEstabelecimento() {
     <View style={styles.formContainer}>
       <View style={styles.sectionHeader}>
         <Feather name="clock" size={20} color={COLORS.textDark} />
-        <Text style={styles.sectionTitle}>Horário de funcionamento</Text>
+        <Text style={styles.sectionTitle}>Funcionamento</Text>
       </View>
+      <Text style={styles.subTitle}>Horário de funcionamento:</Text>
 
-      {Array.isArray(horarios) && horarios.map((item, index) => (
-        <View key={item.id} style={styles.horarioRow}>
-          <Text style={styles.diaText}>{item.dia}</Text>
-          <View style={styles.horarioInputs}>
-            <TextInput
-              style={styles.timeInput}
-              value={item.abre}
-              onChangeText={(val) => handleHorarioChange(index, 'abre', val)}
-              keyboardType="numeric"
-            />
-            <Text style={styles.timeSeparator}>-</Text>
-            <TextInput
-              style={styles.timeInput}
-              value={item.fecha}
-              onChangeText={(val) => handleHorarioChange(index, 'fecha', val)}
-              keyboardType="numeric"
-            />
+      <View>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ width: 40, }} />
+          <View style={{ flexDirection: "row", width: "100%", gap: 25 }}>
+            <Text style={styles.textHorario}>* Horário</Text>
+            <Text style={styles.textHorario}>* Horário</Text>
           </View>
         </View>
-      ))}
 
+        {Array.isArray(horarios) && horarios.map((item, index) => (
+          <View key={item.id} style={styles.horarioRow}>
+            <View style={{ width: 40 }}>
+              <Text style={styles.diaText}>{item.dia}</Text>
+            </View>
+
+
+            <View style={styles.horarioInputs}>
+              <TouchableOpacity
+                style={styles.timeInput}
+                onPress={() => openTimePicker(index, 'abre')}
+              >
+                <Text style={styles.timeText}>{item.abre}</Text>
+              </TouchableOpacity>
+
+              <Text style={styles.timeSeparator}>-</Text>
+
+              <TouchableOpacity
+                style={styles.timeInput}
+                onPress={() => openTimePicker(index, 'fecha')}
+              >
+                <Text style={styles.timeText}>{item.fecha}</Text>
+              </TouchableOpacity>
+            </View>
+
+          </View>
+        ))}
+      </View>
+
+      {showPicker && Platform.OS === 'ios' && (
+        <View style={styles.pickerContainer}>
+          <View style={styles.pickerHeader}>
+            <TouchableOpacity onPress={() => setShowPicker(false)}>
+              <Text style={styles.pickerCancel}>Cancelar</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={confirmIOSPicker}>
+              <Text style={styles.pickerConfirm}>Confirmar</Text>
+            </TouchableOpacity>
+          </View>
+
+          <DateTimePicker
+            value={tempDate}
+            mode="time"
+            display="spinner"
+            is24Hour
+            onChange={handleTimeChange}
+          />
+        </View>
+      )}
+      {showPicker && Platform.OS === 'android' && (
+        <DateTimePicker
+          value={tempDate}
+          mode="time"
+          is24Hour
+          onChange={handleTimeChange}
+        />
+      )}
       <View style={styles.footerBtns}>
         <TouchableOpacity style={styles.btnSecondary} onPress={() => setStep(3)}>
           <Text style={styles.btnSecondaryText}>Pular</Text>
@@ -291,7 +378,6 @@ export default function EditarEstabelecimento() {
         <View style={{ flex: 1 }}>
           <InputField label="Porcentagem do Cupom" placeholder="%" value={form.porcentagemCupom} onChangeText={(item: string) => setForm({ ...form, porcentagemCupom: item })} required={form.habilitarCupom} />
         </View>
-        <View style={{ width: 15 }} />
         <View style={{ flex: 1 }}>
           <InputField label="Usos por usuários" value={form.usosPorUsuario} onChangeText={(item: string) => setForm({ ...form, usosPorUsuario: item })} required={form.habilitarCupom} />
         </View>
@@ -338,15 +424,6 @@ export default function EditarEstabelecimento() {
   );
 }
 
-// Componente auxiliar de Input
-// export const InputField = ({ label, required, ...props }: any) => (
-//   <View style={styles.inputGroup}>
-//     <Text style={styles.label}>
-//       {required && <Text style={{ color: 'red' }}>*</Text>} {label}
-//     </Text>
-//     <TextInput style={styles.input} placeholderTextColor={COLORS.placeholder} {...props} />
-//   </View>
-// );
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.white },
@@ -365,9 +442,10 @@ const styles = StyleSheet.create({
   formContainer: { marginTop: 10 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 15 },
   sectionTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.textDark },
+  subTitle: { fontSize: 16, color: COLORS.textDark, marginBottom: 16 },
 
   // inputGroup: { marginBottom: 15 },
-  label: { fontSize: 14, fontWeight: 'bold', color: COLORS.textDark, marginBottom: 8 },
+  label: { fontSize: 12, fontWeight: 'bold', color: COLORS.textDark, marginBottom: 8 },
   // input: {
   //   height: 55,
   //   borderWidth: 1,
@@ -392,28 +470,40 @@ const styles = StyleSheet.create({
   },
   uploadText: { color: COLORS.textLight, fontSize: 14 },
 
-  row: { flexDirection: 'row', justifyContent: 'space-between' },
+  row: { flexDirection: 'row', justifyContent: 'space-between', gap: 13 },
 
   // Estilos específicos para o Step 2 (Horários)
+  textHorario: {
+    fontSize: 12,
+    fontWeight: "bold",
+    minWidth: 148,
+    marginBottom: 8
+  },
   horarioRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    // gap: 10,
     marginBottom: 15,
+    width: "auto",
+
   },
   diaText: {
     fontSize: 16,
     color: COLORS.textDark,
     fontWeight: '500',
-    flex: 1,
+    // flex: 1
+
   },
   horarioInputs: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+    justifyContent: "center",
+    alignContent: "center",
   },
   timeInput: {
-    width: 80,
+    minWidth: 148,
     height: 45,
     borderWidth: 1,
     borderColor: COLORS.border,
@@ -421,10 +511,51 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     color: COLORS.textDark,
+    alignItems: "center",
+    justifyContent: "center",
+
   },
   timeSeparator: {
     fontSize: 16,
     color: COLORS.textDark,
+    fontWeight: 'bold',
+  },
+  timeLabel: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+    marginBottom: 6,
+  },
+
+  timeText: {
+    fontSize: 16,
+    color: COLORS.textDark,
+  },
+
+  pickerContainer: {
+    backgroundColor: '#FFF',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingBottom: 20,
+  },
+
+  pickerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
+  },
+
+  pickerCancel: {
+    color: '#999',
+    fontSize: 16,
+  },
+
+  pickerConfirm: {
+    color: COLORS.primary,
+    fontSize: 16,
     fontWeight: 'bold',
   },
 

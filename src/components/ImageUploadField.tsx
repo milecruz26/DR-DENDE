@@ -46,7 +46,7 @@ export default function ImageUploadField({ imageUri, onPickImage, onRemoveImage 
 }
 
 const styles = StyleSheet.create({
-  container: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  container: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 24 },
   uploadArea: {
     flex: 1,
     height: 55,
