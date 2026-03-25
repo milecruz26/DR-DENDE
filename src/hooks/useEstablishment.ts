@@ -8,6 +8,17 @@ export const useEstablishmentUser = () => {
   });
 };
 
+export const useUpdateEstablishmentUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (formData: FormData) => establishmentService.updateEstablishmentUser(formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['establishmentUser'] });
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+    },
+  });
+};
+
 export const useSelfPostedDishes = () => {
   return useQuery({
     queryKey: ['selfPostedDishes'],

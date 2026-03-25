@@ -1,8 +1,12 @@
+import ImageUploadField from '@/components/ImageUploadField';
 import { InputField } from '@/components/InputField/InputField';
+import { useEstablishmentUser, useUpdateEstablishmentUser } from '@/hooks/useEstablishment';
 import { Feather, Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -26,34 +30,62 @@ const COLORS = {
 export default function EditarEstabelecimento() {
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const { data: establishment, isLoading: loadingEstablishment } = useEstablishmentUser();
+  const updateMutation = useUpdateEstablishmentUser();
 
   // Estados do formulário - Step 1 & 3
-  const [form, setForm] = useState({
-    nome: 'Usuário',
-    email: 'user@email.com.br',
-    telefone: '(71) 00000-0000',
-    cnpj: '(71) 00000-0000',
-    valorMin: 'R$ 00,00',
-    valorMax: 'R$ 00,00',
-    habilitarCupom: true,
+  const [form, setForm] = useState<any>({
+    nome: '',
+    email: '',
+    telefone: '',
+    cnpj: '',
+    logoImage: null as string | null,
+    coverImage: null as string | null,
+    valorMin: '',
+    valorMax: '',
+    habilitarCupom: false,
     porcentagemCupom: '',
-    usosPorUsuario: '01',
-    instagram: 'instagram.com.br/exemplo',
-    facebook: 'instagram.com.br/exemplo',
-    youtube: 'instagram.com.br/exemplo',
-    linkedin: 'instagram.com.br/exemplo',
+    usosPorUsuario: '',
+    instagram: '',
+    facebook: '',
+    youtube: '',
+    linkedin: '',
   });
+  const [horarios, setHorarios] = useState<any[]>([]);
 
-  // Estados do formulário - Step 2 (Horários)
-  const [horarios, setHorarios] = useState([
-    { id: '1', dia: 'Domingo', abre: '00:00', fecha: '00:00' },
-    { id: '2', dia: 'Segunda', abre: '00:00', fecha: '00:00' },
-    { id: '3', dia: 'Terça', abre: '00:00', fecha: '00:00' },
-    { id: '4', dia: 'Quarta', abre: '00:00', fecha: '00:00' },
-    { id: '5', dia: 'Quinta', abre: '00:00', fecha: '00:00' },
-    { id: '6', dia: 'Sexta', abre: '00:00', fecha: '00:00' },
-    { id: '7', dia: 'Sábado', abre: '00:00', fecha: '00:00' },
-  ]);
+  useEffect(() => {
+    if (establishment) {
+      setForm({
+        nome: establishment.username || '',
+        email: establishment.email || '',
+        telefone: establishment.phone || '',
+        cnpj: establishment.cnpj || '',
+        logoImage: establishment.logo_image || null,
+        coverImage: establishment.cover_image || null,
+        valorMin: establishment.min_price?.toString() || '',
+        valorMax: establishment.max_price?.toString() || '',
+        habilitarCupom: establishment.coupon_enabled || false,
+        porcentagemCupom: establishment.coupon_percentage?.toString() || '',
+        usosPorUsuario: establishment.coupon_uses_per_user?.toString() || '1',
+        instagram: establishment.social?.instagram || '',
+        facebook: establishment.social?.facebook || '',
+        youtube: establishment.social?.youtube || '',
+        linkedin: establishment.social?.linkedin || '',
+      });
+
+      // Garante que opening_hours seja um array
+      const hours = Array.isArray(establishment.opening_hours) ? establishment.opening_hours : [];
+      setHorarios(hours.length ? hours : [
+        { id: '1', dia: 'Domingo', abre: '00:00', fecha: '00:00' },
+        { id: '2', dia: 'Segunda', abre: '00:00', fecha: '00:00' },
+        { id: '3', dia: 'Terça', abre: '00:00', fecha: '00:00' },
+        { id: '4', dia: 'Quarta', abre: '00:00', fecha: '00:00' },
+        { id: '5', dia: 'Quinta', abre: '00:00', fecha: '00:00' },
+        { id: '6', dia: 'Sexta', abre: '00:00', fecha: '00:00' },
+        { id: '7', dia: 'Sábado', abre: '00:00', fecha: '00:00' },
+      ]);
+    }
+  }, [establishment]);
 
   const handleHorarioChange = (index: number, campo: 'abre' | 'fecha', valor: string) => {
     const novosHorarios = [...horarios];
@@ -61,10 +93,92 @@ export default function EditarEstabelecimento() {
     setHorarios(novosHorarios);
   };
 
-  const handleSave = () => {
-    // Lógica para salvar os dados
-    router.back();
+  const pickImage = async (field: 'logoImage' | 'coverImage') => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Precisamos de permissão para acessar suas fotos!');
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: 'images',
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+    if (!result.canceled) {
+      setForm((prev: any) => ({ ...prev, [field]: result.assets[0].uri }));
+    }
   };
+  const handleSave = async () => {
+    // Prepara os dados para envio (usaremos FormData para incluir imagens)
+    const formData = new FormData();
+
+    formData.append('username', form.nome);
+    formData.append('email', form.email);
+    formData.append('phone', form.telefone);
+    formData.append('cnpj', form.cnpj);
+    formData.append('min_price', form.valorMin.replace('R$ ', '').replace(',', '.'));
+    formData.append('max_price', form.valorMax.replace('R$ ', '').replace(',', '.'));
+    formData.append('coupon_enabled', String(form.habilitarCupom));
+    if (form.habilitarCupom) {
+      formData.append('coupon_percentage', form.porcentagemCupom);
+      formData.append('coupon_uses_per_user', form.usosPorUsuario);
+    }
+    formData.append('social', JSON.stringify({
+      instagram: form.instagram,
+      facebook: form.facebook,
+      youtube: form.youtube,
+      linkedin: form.linkedin,
+    }));
+    formData.append('opening_hours', JSON.stringify(horarios.map(h => ({ day: h.dia, open: h.abre, close: h.fecha }))));
+
+    // Adicionar imagens se houver
+    if (form.logoImage && form.logoImage !== establishment?.logo_image) {
+      const filename = form.logoImage.split('/').pop();
+      const match = /\.(\w+)$/.exec(filename ?? '');
+      const type = match ? `image/${match[1]}` : 'image/jpeg';
+      formData.append('logo_image', {
+        uri: form.logoImage,
+        name: filename,
+        type,
+      } as any);
+    }
+    if (form.coverImage && form.coverImage !== establishment?.cover_image) {
+      const filename = form.coverImage.split('/').pop();
+      const match = /\.(\w+)$/.exec(filename ?? '');
+      const type = match ? `image/${match[1]}` : 'image/jpeg';
+      formData.append('cover_image', {
+        uri: form.coverImage,
+        name: filename,
+        type,
+      } as any);
+    }
+
+    try {
+      await updateMutation.mutateAsync(formData);
+      router.back();
+    } catch (error) {
+      console.error(error);
+      alert('Erro ao salvar alterações');
+    }
+  };
+
+  if (loadingEstablishment) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
+
+
+  if (loadingEstablishment) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
 
   const renderStep1 = () => (
     <View style={styles.formContainer}>
@@ -78,17 +192,19 @@ export default function EditarEstabelecimento() {
       <InputField label="Número" value={form.telefone} onChangeText={(item: string) => setForm({ ...form, telefone: item })} required keyboardType="phone-pad" />
       <InputField label="CNPJ" value={form.cnpj} onChangeText={(item: string) => setForm({ ...form, cnpj: item })} required />
 
-      <Text style={styles.label}><Text style={{ color: 'red' }}>*</Text> Foto do estabelecimento</Text>
-      <TouchableOpacity style={styles.uploadBtn}>
-        <Feather name="upload" size={20} color={COLORS.textLight} />
-        <Text style={styles.uploadText}>Clique para selecionar uma imagem</Text>
-      </TouchableOpacity>
+      <Text style={styles.label}><Text style={{ color: 'red' }}>*</Text> Foto do estabelecimento (capa)</Text>
+      <ImageUploadField
+        imageUri={form.coverImage}
+        onPickImage={() => pickImage('coverImage')}
+        onRemoveImage={() => setForm({ ...form, coverImage: null })}
+      />
 
-      <Text style={styles.label}><Text style={{ color: 'red' }}>*</Text> Marca do estabelecimento</Text>
-      <TouchableOpacity style={styles.uploadBtn}>
-        <Feather name="upload" size={20} color={COLORS.textLight} />
-        <Text style={styles.uploadText}>Clique para selecionar uma imagem</Text>
-      </TouchableOpacity>
+      <Text style={styles.label}><Text style={{ color: 'red' }}>*</Text> Marca do estabelecimento (logo)</Text>
+      <ImageUploadField
+        imageUri={form.logoImage}
+        onPickImage={() => pickImage('logoImage')}
+        onRemoveImage={() => setForm({ ...form, logoImage: null })}
+      />
 
       <View style={styles.row}>
         <View style={{ flex: 1 }}>
@@ -118,7 +234,7 @@ export default function EditarEstabelecimento() {
         <Text style={styles.sectionTitle}>Horário de funcionamento</Text>
       </View>
 
-      {horarios.map((item, index) => (
+      {Array.isArray(horarios) && horarios.map((item, index) => (
         <View key={item.id} style={styles.horarioRow}>
           <Text style={styles.diaText}>{item.dia}</Text>
           <View style={styles.horarioInputs}>
@@ -148,7 +264,7 @@ export default function EditarEstabelecimento() {
         </TouchableOpacity>
       </View>
     </View>
-  );
+  )
 
   const renderStep3 = () => (
     <View style={styles.formContainer}>
@@ -173,11 +289,11 @@ export default function EditarEstabelecimento() {
 
       <View style={styles.row}>
         <View style={{ flex: 1 }}>
-          <InputField label="Porcentagem do Cupom" placeholder="%" value={form.porcentagemCupom} onChangeText={(item: string) => setForm({ ...form, porcentagemCupom: item })} required />
+          <InputField label="Porcentagem do Cupom" placeholder="%" value={form.porcentagemCupom} onChangeText={(item: string) => setForm({ ...form, porcentagemCupom: item })} required={form.habilitarCupom} />
         </View>
         <View style={{ width: 15 }} />
         <View style={{ flex: 1 }}>
-          <InputField label="Usos por usuários" value={form.usosPorUsuario} onChangeText={(item: string) => setForm({ ...form, usosPorUsuario: item })} required />
+          <InputField label="Usos por usuários" value={form.usosPorUsuario} onChangeText={(item: string) => setForm({ ...form, usosPorUsuario: item })} required={form.habilitarCupom} />
         </View>
       </View>
 
@@ -186,10 +302,10 @@ export default function EditarEstabelecimento() {
         <Text style={styles.sectionTitle}>Redes sociais</Text>
       </View>
 
-      <InputField label="Instagram" value={form.instagram} onChangeText={(item: string) => setForm({ ...form, instagram: item })} required />
-      <InputField label="Facebook" value={form.facebook} onChangeText={(item: string) => setForm({ ...form, facebook: item })} required />
-      <InputField label="Youtube" value={form.youtube} onChangeText={(item: string) => setForm({ ...form, youtube: item })} required />
-      <InputField label="Linkedin" value={form.linkedin} onChangeText={(item: string) => setForm({ ...form, linkedin: item })} required />
+      <InputField label="Instagram" value={form.instagram} onChangeText={(item: string) => setForm({ ...form, instagram: item })} />
+      <InputField label="Facebook" value={form.facebook} onChangeText={(item: string) => setForm({ ...form, facebook: item })} />
+      <InputField label="Youtube" value={form.youtube} onChangeText={(item: string) => setForm({ ...form, youtube: item })} />
+      <InputField label="Linkedin" value={form.linkedin} onChangeText={(item: string) => setForm({ ...form, linkedin: item })} />
 
       <TouchableOpacity style={[styles.btnPrimary, { width: '100%', marginTop: 20 }]} onPress={handleSave}>
         <Text style={styles.btnPrimaryText}>Salvar alterações</Text>

@@ -414,6 +414,43 @@ if (USE_MOCKS) {
         return Promise.resolve({ data: newDish, status: 201 });
       }
 
+      // PUT /establishments
+      if (config.url === '/establishments' && config.method === 'put') {
+        const user = getUserFromToken(config);
+        if (!user) return Promise.reject({ response: { status: 401 } });
+        if (user.user_type !== 'establishment') {
+          return Promise.reject({ response: { status: 403 } });
+        }
+
+        const updated: any = {};
+
+        if (config.data instanceof FormData) {
+          // Extrai os campos do FormData
+          for (const [key, value] of (config.data as any)._parts) {
+            if (key === 'cover_image') {
+              // Se for um arquivo, armazenamos a URI (simulação)
+              updated.cover_image = value.uri || value;
+            } else if (key === 'logo_image') {
+              updated.logo_image = value.uri || value;
+            } else {
+              updated[key] = value;
+            }
+          }
+        } else {
+          // Se for JSON (fallback)
+          let requestData = config.data;
+          if (typeof requestData === 'string') requestData = JSON.parse(requestData);
+          Object.assign(updated, requestData);
+        }
+
+        // Atualiza o objeto do usuário com os novos campos
+        Object.assign(user, updated);
+        await saveMockData();
+
+        const { password: _, ...userWithoutPassword } = user;
+        return Promise.resolve({ data: userWithoutPassword, status: 200 });
+      }
+
       // Se não mapeado, rejeita
       return Promise.reject(error);
     }

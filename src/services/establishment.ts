@@ -6,7 +6,10 @@ export const establishmentService = {
   getEstablishmentUser: () => api.get<User>('/establishments'),
 
   // PUT /establishments
-  updateEstablishmentUser: (data: Partial<User>) => api.put<User>('/establishments', data),
+  updateEstablishmentUser: (formData: FormData) =>
+    api.put<User>('/establishments', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
 
   // POST /establishments
   createEstablishmentUser: (data: User) => api.post<User>('/establishments', data),

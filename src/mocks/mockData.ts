@@ -12,8 +12,6 @@ export const mockUsers: User[] = [
     password: '123',
     avatar: undefined,
     phone: '(71) 99999-1111',
-    city: 'Salvador - BA',
-    zip_code: '40000-000',
   },
   {
     id: '22222222-2222-2222-2222-222222222222',
@@ -25,8 +23,7 @@ export const mockUsers: User[] = [
     password: '123',
     avatar: undefined,
     phone: '(71) 88888-2222',
-    city: 'Salvador - BA',
-    zip_code: '40000-000',
+
   },
   {
     id: '33333333-3333-3333-3333-333333333333',
@@ -35,7 +32,31 @@ export const mockUsers: User[] = [
     user_type: 'establishment',
     address: 'Av. Principal, 456',
     role: 'owner',
-    password: '123',
+    confirmed: true,
+    phone: '(71) 99999-1234',
+    cnpj: '12.345.678/0001-90',
+    min_price: 20,
+    max_price: 100,
+    coupon_enabled: true,
+    coupon_percentage: 10,
+    coupon_uses_per_user: 1,
+    social: {
+      instagram: 'restaurante_insta',
+      facebook: 'restaurante_fb',
+      youtube: 'restaurante_yt',
+      linkedin: 'restaurante_li',
+    },
+    opening_hours: [
+      { day: 'Domingo', open: '00:00', close: '00:00' },
+      { day: 'Segunda', open: '09:00', close: '18:00' },
+      { day: 'Terça', open: '09:00', close: '18:00' },
+      { day: 'Quarta', open: '09:00', close: '18:00' },
+      { day: 'Quinta', open: '09:00', close: '18:00' },
+      { day: 'Sexta', open: '09:00', close: '18:00' },
+      { day: 'Sábado', open: '09:00', close: '14:00' },
+    ],
+    cover_image: 'https://exemplo.com/capa.jpg',
+    logo_image: 'https://exemplo.com/logo.png',
   },
   {
     id: '44444444-4444-4444-4444-444444444444',
@@ -119,60 +140,38 @@ export const mockEvents: Event[] = [
     name: 'Festival Gastronômico',
     event_date: '2026-03-26T19:00:00', // data + hora
     description: 'Degustação de pratos típicos',
-    address: {
-      city: 'São Paulo',
-      street: 'Av. Paulista, 1000',
-      neighborhood: 'Bela Vista',
-      zip_code: '01310-100',
-    },
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
   },
   {
     id: 'event-2',
     name: 'Workshop de Culinária',
     event_date: '2026-03-25T14:30:00',
     description: 'Aprenda a cozinhar pratos italianos',
-    address: {
-      city: 'Rio de Janeiro',
-      street: 'Rua do Ouvidor, 50',
-      neighborhood: 'Centro',
-      zip_code: '20040-030',
-    },
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
+
   },
   {
     id: 'event-3',
     name: 'Teste culinário',
     event_date: '2026-03-24T14:30:00',
     description: 'Aprenda a cozinhar pratos italianos',
-    address: {
-      city: 'Rio de Janeiro',
-      street: 'Rua do Ouvidor, 50',
-      neighborhood: 'Centro',
-      zip_code: '20040-030',
-    },
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
   },
   {
     id: 'event-4',
     name: 'Bota pra quebrar',
     event_date: '2026-03-23T12:30:00',
     description: 'Aprenda a cozinhar pratos italianos',
-    address: {
-      city: 'Rio de Janeiro',
-      street: 'Rua do Ouvidor, 50',
-      neighborhood: 'Centro',
-      zip_code: '20040-030',
-    },
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
+
   },
   {
     id: 'event-5',
     name: 'Ebaa',
     event_date: '2026-03-23T11:30:00',
     description: 'Aprenda a cozinhar pratos italianos',
-    address: {
-      city: 'Rio de Janeiro',
-      street: 'Rua do Ouvidor, 50',
-      neighborhood: 'Centro',
-      zip_code: '20040-030',
-    },
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
+
   },
 ];
 

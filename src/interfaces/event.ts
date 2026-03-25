@@ -6,9 +6,9 @@ export interface Event {
   event_date: string;            // formato ISO (YYYY-MM-DD)
   description: string;
   address: string;
-  latitude: number | null;
-  longitude: number | null;
-  images: string[];
+  latitude?: number | null;
+  longitude?: number | null;
+  images?: string[];
 }
 
 export interface EventCreate {
