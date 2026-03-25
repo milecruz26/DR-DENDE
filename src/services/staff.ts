@@ -1,4 +1,4 @@
-import { Complaint, ComplaintValidation, Entry, Event, User } from '../interfaces';
+import { Complaint, ComplaintValidation, Entry, Event, EventCreate, User } from '../interfaces';
 import { api } from './apiTeste';
 
 export const staffService = {
@@ -11,8 +11,8 @@ export const staffService = {
   // GET /staff/complaints/{user_id}
   getComplaintsByUser: (userId: string) => api.get<Complaint[]>(`/staff/complaints/${userId}`),
 
-  // POST /staff/complaints (validação)
-  validateComplaint: (data: ComplaintValidation) => api.post<void>('/staff/complaints', data),
+  // POST /staff/complaints/validate
+  validateComplaint: (data: ComplaintValidation) => api.post<void>('/staff/complaints/validate', data),
 
   // DELETE /staff/complaints/{complaint_id}
   deleteComplaint: (complaintId: string) => api.delete<void>(`/staff/complaints/${complaintId}`),
@@ -23,24 +23,25 @@ export const staffService = {
   // DELETE /staff/entry/{entry_id}
   deleteEntry: (entryId: string) => api.delete<void>(`/staff/entry/${entryId}`),
 
-  // PUT /staff/entry
-  updateEntry: (data: Entry) => api.put<Entry>('/staff/entry', data),
+  // PUT /staff/entry/{entry_id}
+  updateEntry: (data: Entry) => api.put<Entry>(`/staff/entry/${data.id}`, data),
 
   // POST /staff/entry
   createEntry: (data: Omit<Entry, 'id'>) => api.post<Entry>('/staff/entry', data),
 
-  // GET /staff/event/all
-  getAllEvents: () => api.get<Event[]>('/staff/event/all'),
+  // GET /staff/events/all
+  getAllEvents: (offset = 0, limit = 50) =>
+    api.get<Event[]>('/staff/events/all', { params: { offset, limit } }),
 
-  // GET /staff/event/{event_id}
-  getEvent: (eventId: string) => api.get<Event>(`/staff/event/${eventId}`),
+  // GET /events/{event_id}
+  getEvent: (eventId: string) => api.get<Event>(`/events/${eventId}`),
 
   // DELETE /staff/event/{event_id}
   deleteEvent: (eventId: string) => api.delete<void>(`/staff/event/${eventId}`),
 
-  // PUT /staff/event
-  updateEvent: (data: Event) => api.put<Event>('/staff/event', data),
+  // PUT /staff/event/{event_id}
+  updateEvent: (eventId: string, data: EventCreate) => api.put<Event>(`/staff/event/${eventId}`, data),
 
   // POST /staff/event
-  createEvent: (data: Omit<Event, 'id'>) => api.post<Event>('/staff/event', data),
+  createEvent: (data: EventCreate) => api.post<Event>('/staff/event', data),
 };

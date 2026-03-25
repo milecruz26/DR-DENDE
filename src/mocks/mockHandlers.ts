@@ -96,7 +96,7 @@ if (USE_MOCKS) {
       }
 
       // Simula login (rota pública)
-      if (config.url === '/token' && config.method === 'post') {
+      if (config.url === '/login' && config.method === 'post') {
         const params = new URLSearchParams(config.data);
         const username = params.get('username');
         const password = params.get('password');
@@ -118,17 +118,17 @@ if (USE_MOCKS) {
 
       // Verifica autenticação para rotas protegidas
       const user = getUserFromToken(config);
-      if (!user && config.url !== '/token') {
+      if (!user && config.url !== '/login') {
         return Promise.reject({ response: { status: 401, data: { detail: 'Not authenticated' } } });
       }
 
-      // GET /users/me
-      if (config.url === '/users/me' && config.method === 'get') {
+      // GET /users/common
+      if (config.url === '/users/common' && config.method === 'get') {
         return Promise.resolve({ data: user, status: 200 });
       }
 
-      // GET /users/{user_id}
-      const userMatch = config.url?.match(/^\/users\/(.+)$/);
+      // GET /staff/user/{user_id}
+      const userMatch = config.url?.match(/^\/staff\/user\/([^/]+)$/);
       if (userMatch && config.method === 'get') {
         const userId = userMatch[1];
         const foundUser = mockUsers.find(u => u.id === userId);
@@ -138,8 +138,8 @@ if (USE_MOCKS) {
         return Promise.reject({ response: { status: 404, data: { detail: 'User not found' } } });
       }
 
-      // PUT /users/me
-      if (config.url === '/users/me' && config.method === 'put') {
+      // PUT /users/common
+      if (config.url === '/users/common' && config.method === 'put') {
         const user = getUserFromToken(config);
         if (!user) {
           return Promise.reject({ response: { status: 401, data: { detail: 'Not authenticated' } } });
@@ -174,8 +174,8 @@ if (USE_MOCKS) {
         return Promise.resolve({ data: userWithoutPassword, status: 200 });
       }
 
-      // POST /users
-      if (config.url === '/users' && config.method === 'post') {
+      // POST /users/common
+      if (config.url === '/users/common' && config.method === 'post') {
         const newUserData: User = JSON.parse(config.data);
         const userId = `user-${Date.now()}`;
         const token = `confirm-${userId}`;
@@ -297,8 +297,8 @@ if (USE_MOCKS) {
         return Promise.resolve({ data: complaints, status: 200 });
       }
 
-      // POST /staff/complaints (validação)
-      if (config.url === '/staff/complaints' && config.method === 'post') {
+      // POST /staff/complaints/validate
+      if (config.url === '/staff/complaints/validate' && config.method === 'post') {
         const validation = config.data as ComplaintValidation;
         const complaint = mockComplaints.find(c => c.id === validation.complaint_id);
         if (complaint) {
@@ -308,14 +308,13 @@ if (USE_MOCKS) {
         return Promise.resolve({ status: 200, data: null });
       }
 
-      // GET /entries
-      if (config.url === '/entries' && config.method === 'get') {
-        // Retorna todos os entries (mockEntries do mockData)
+      // GET /staff/entry/all
+      if (config.url?.startsWith('/staff/entry/all') && config.method === 'get') {
         return Promise.resolve({ data: mockEntries, status: 200 });
       }
 
-      // GET /entries/{id}
-      const entryMatch = config.url?.match(/^\/entries\/(.+)$/);
+      // GET /staff/entry/{entry_id}
+      const entryMatch = config.url?.match(/^\/staff\/entry\/([^/]+)$/);
       if (entryMatch && config.method === 'get') {
         const entryId = entryMatch[1];
         const entry = mockEntries.find(e => e.id === entryId);
@@ -323,17 +322,27 @@ if (USE_MOCKS) {
         return Promise.reject({ response: { status: 404 } });
       }
 
-      // GET /staff/event/all
-      if (config.url === '/staff/event/all' && config.method === 'get') {
+      // GET /staff/events/all
+      if (config.url?.startsWith('/staff/events/all') && config.method === 'get') {
         return Promise.resolve({ data: mockEvents, status: 200 });
       }
 
-      // GET /staff/event/{event_id}
-      const eventMatch = config.url?.match(/^\/staff\/event\/(.+)$/);
+      // GET /events/{event_id}
+      const eventMatch = config.url?.match(/^\/events\/([^/]+)$/);
       if (eventMatch && config.method === 'get') {
         const event = mockEvents.find(e => e.id === eventMatch[1]);
         if (event) return Promise.resolve({ data: event, status: 200 });
         return Promise.reject({ response: { status: 404 } });
+      }
+
+      // GET /events/ongoing/all
+      if (config.url?.startsWith('/events/ongoing/all') && config.method === 'get') {
+        return Promise.resolve({ data: mockEvents, status: 200 });
+      }
+
+      // GET /events/nearby
+      if (config.url?.startsWith('/events/nearby') && config.method === 'get') {
+        return Promise.resolve({ data: mockEvents, status: 200 });
       }
 
       // POST /staff/event
@@ -345,16 +354,16 @@ if (USE_MOCKS) {
       }
 
       // ESTABLISHMENT endpoints
-      // GET /establishments/me
-      if (config.url === '/establishments/me' && config.method === 'get') {
+      // GET /establishments
+      if (config.url === '/establishments' && config.method === 'get') {
         if (user?.user_type === 'establishment') {
           return Promise.resolve({ data: user, status: 200 });
         }
         return Promise.reject({ response: { status: 403, data: { detail: 'Not an establishment' } } });
       }
 
-      // GET /establishments/dishes/me
-      if (config.url === '/establishments/dishes/me' && config.method === 'get') {
+      // GET /establishments/dish
+      if (config.url === '/establishments/dish' && config.method === 'get') {
         const dishes = mockDishes.filter(d => d.establishment_id === user?.id);
         return Promise.resolve({ data: dishes, status: 200 });
       }

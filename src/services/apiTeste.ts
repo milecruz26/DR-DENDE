@@ -1,8 +1,7 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
-// const BASE_URL = 'https://34.231.84.142:8367/'
-const BASE_URL = 'https://sua-api.com';
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:8367';
 const TOKEN_KEY = 'auth_token'
 
 export const api = axios.create({

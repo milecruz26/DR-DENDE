@@ -16,7 +16,7 @@ interface LoginResponse {
 }
 
 export const authService = {
-  // POST /token (OAuth2)
+  // POST /login (OAuth2)
   login: (credentials: LoginCredentials) => {
     const params = new URLSearchParams();
 
@@ -26,11 +26,11 @@ export const authService = {
       }
     });
 
-    return api.post<LoginResponse>('/token', params, {
+    return api.post<LoginResponse>('/login', params, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
   },
 
-  // GET /users/me
-  getCurrentUser: () => api.get<User>('/users/me'),
+  // GET /users/common
+  getCurrentUser: () => api.get<User>('/users/common'),
 };

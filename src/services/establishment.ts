@@ -2,20 +2,20 @@ import { Dish, User } from '../interfaces';
 import { api } from './apiTeste';
 
 export const establishmentService = {
-  // GET /establishments/me
-  getEstablishmentUser: () => api.get<User>('/establishments/me'),
+  // GET /establishments
+  getEstablishmentUser: () => api.get<User>('/establishments'),
 
-  // PUT /establishments/user
-  updateEstablishmentUser: (data: Partial<User>) => api.put<User>('/establishments/user', data),
+  // PUT /establishments
+  updateEstablishmentUser: (data: Partial<User>) => api.put<User>('/establishments', data),
 
-  // POST /establishments/user
-  createEstablishmentUser: (data: User) => api.post<User>('/establishments/user', data),
+  // POST /establishments
+  createEstablishmentUser: (data: User) => api.post<User>('/establishments', data),
 
-  // GET /establishments/dishes/me
-  getSelfPostedDishes: () => api.get<Dish[]>('/establishments/dishes/me'),
+  // GET /establishments/dish
+  getSelfPostedDishes: () => api.get<Dish[]>('/establishments/dish'),
 
-  // PUT /establishments/dish
-  updateDish: (data: Dish) => api.put<Dish>('/establishments/dish', data),
+  // PUT /establishments/dish/{dish_id}
+  updateDish: (data: Dish) => api.put<Dish>(`/establishments/dish/${data.id}`, data),
 
   // POST /establishments/dish
   createDish: (formData: FormData) =>
