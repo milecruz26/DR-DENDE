@@ -1,15 +1,22 @@
+import cover1 from '@/assets/images/mock/capa-1.png';
+import cover2 from '@/assets/images/mock/capa-2.jpg';
+import cover3 from '@/assets/images/mock/capa-3.jpg';
+import logo1 from '@/assets/images/mock/logo-1.png';
+import logo2 from '@/assets/images/mock/logo-2.png';
+import logo3 from '@/assets/images/mock/logo-3.jpg';
 import { useAuth } from '@/context/AuthContext';
 import Colors from "@/theme/Colors";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Image, ImageSourcePropType, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 export interface RestaurantCardProps {
   item: {
     id: number;
-    name: string;
-    image: ImageSourcePropType;
-    logo: ImageSourcePropType;
+    username: string;       // nome do estabelecimento
+    cover_image?: string | null;
+    logo_image?: string | null;
+    coupon_enabled?: boolean;
 
   },
   onDeletePress?: () => void,
@@ -17,6 +24,21 @@ export interface RestaurantCardProps {
 }
 
 const { NEUTRAL, primary } = Colors
+
+const coverMap: Record<string, any> = {
+  '33333333-3333-3333-3333-333333333333': cover1,
+  '44444444-4444-4444-4444-444444444444': cover2,
+  '55555555-5555-5555-5555-555555555555': cover3,
+};
+
+const logoMap: Record<string, any> = {
+  '33333333-3333-3333-3333-333333333333': logo1,
+  '44444444-4444-4444-4444-444444444444': logo2,
+  '55555555-5555-5555-5555-555555555555': logo3,
+};
+
+const defaultCover = 'Cover'; // ou alguma imagem padrão
+const defaultLogo = 'Logo';
 
 
 export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: RestaurantCardProps) => {
@@ -48,7 +70,7 @@ export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: 
 
       <Pressable style={[styles.restCard, { zIndex: showMenu ? 10 : 1 }]} onPress={moreDetailsPress}>
         {/* Imagem de Fundo (Capa) */}
-        <Image source={item.image} style={styles.restCover} />
+        <Image source={coverMap[item.id] || defaultCover} style={styles.restCover} />
 
         {/* Overlay gradiente ou escuro se quiser */}
         <View style={styles.restOverlay} />
@@ -121,15 +143,14 @@ export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: 
           // style={styles.logoCircle}
           >
 
-            {item.logo ?
-              <Image source={item.logo}
-                style={styles.logoContainer}
-              /> :
+            {item.logo_image ? (
+              <Image source={logoMap[item.id] || defaultLogo} style={styles.logoContainer} />
+            ) : (
               <Text style={{ fontSize: 8, textAlign: 'center', fontWeight: 'bold' }}>LOGO</Text>
-            }
+            )}
 
           </View>
-          <Text style={styles.restName}>{item.name}</Text>
+          <Text style={styles.restName}>{item.username}</Text>
         </View>
       </Pressable>
 

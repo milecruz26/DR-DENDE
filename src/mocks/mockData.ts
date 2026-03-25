@@ -1,5 +1,16 @@
 import { Complaint, Dish, Entry, Event, User } from '../interfaces';
 
+const coverMap = {
+  '33333333-3333-3333-3333-333333333333': '@/assets/images/mock/capa-1.png',
+  '44444444-4444-4444-4444-444444444444': '@/assets/images/mock/capa-2.jpg',
+  '55555555-5555-5555-5555-555555555555': '@/assets/images/mock/capa-3.jpg'
+};
+const logoMap = {
+  '33333333-3333-3333-3333-333333333333': '@/assets/images/mock/logo-1.png',
+  '44444444-4444-4444-4444-444444444444': '@/assets/images/mock/logo-2.jpg',
+  '55555555-5555-5555-5555-555555555555': '@/assets/images/mock/logo-3.jpg'
+};
+
 export const mockUsers: User[] = [
   {
     id: '11111111-1111-1111-1111-111111111111',
@@ -25,39 +36,105 @@ export const mockUsers: User[] = [
     phone: '(71) 88888-2222',
 
   },
+  // ESTABELECIMENTOS
   {
     id: '33333333-3333-3333-3333-333333333333',
-    username: 'restaurante_estab',
+    username: 'Restaurante da Orla',
     email: 'contato@restaurante.com',
+    password: '123',
     user_type: 'establishment',
-    address: 'Av. Principal, 456',
+    address: 'Av. Oceânica, 1234',
     role: 'owner',
     confirmed: true,
     phone: '(71) 99999-1234',
     cnpj: '12.345.678/0001-90',
-    min_price: 20,
-    max_price: 100,
+    min_price: 50,
+    max_price: 120,
     coupon_enabled: true,
     coupon_percentage: 10,
     coupon_uses_per_user: 1,
     social: {
-      instagram: 'restaurante_insta',
-      facebook: 'restaurante_fb',
-      youtube: 'restaurante_yt',
-      linkedin: 'restaurante_li',
+      instagram: 'orla_rest',
+      facebook: 'orla_rest',
+      youtube: '',
+      linkedin: '',
     },
     opening_hours: [
-      { day: 'Domingo', open: '00:00', close: '00:00' },
-      { day: 'Segunda', open: '09:00', close: '18:00' },
-      { day: 'Terça', open: '09:00', close: '18:00' },
-      { day: 'Quarta', open: '09:00', close: '18:00' },
-      { day: 'Quinta', open: '09:00', close: '18:00' },
-      { day: 'Sexta', open: '09:00', close: '18:00' },
-      { day: 'Sábado', open: '09:00', close: '14:00' },
+      { day: 'Segunda', open: '11:00', close: '22:00' },
+      { day: 'Terça', open: '11:00', close: '22:00' },
+      { day: 'Quarta', open: '11:00', close: '22:00' },
+      { day: 'Quinta', open: '11:00', close: '22:00' },
+      { day: 'Sexta', open: '11:00', close: '23:00' },
+      { day: 'Sábado', open: '11:00', close: '23:00' },
+      { day: 'Domingo', open: '11:00', close: '22:00' },
     ],
-    cover_image: 'https://exemplo.com/capa.jpg',
-    logo_image: 'https://exemplo.com/logo.png',
+    cover_image: coverMap['33333333-3333-3333-3333-333333333333'], // ou use require local
+    logo_image: logoMap['33333333-3333-3333-3333-333333333333'],
   },
+  {
+    id: '44444444-4444-4444-4444-444444444444',
+    username: 'Bom Baiano',
+    email: 'contato@bombaiano.com',
+    password: '123',
+    user_type: 'establishment',
+    address: 'Rua das Laranjeiras, 45',
+    role: 'owner',
+    confirmed: true,
+    phone: '(71) 98888-1234',
+    cnpj: '98.765.432/0001-11',
+    min_price: 30,
+    max_price: 80,
+    coupon_enabled: false,
+    coupon_percentage: 0,
+    coupon_uses_per_user: 0,
+    social: {
+      instagram: 'bombaiano',
+      facebook: 'bombaiano',
+      youtube: '',
+      linkedin: '',
+    },
+    opening_hours: [
+      { day: 'Segunda', open: '11:00', close: '21:00' },
+      // ... repetir para os dias
+    ],
+    cover_image: coverMap['44444444-4444-4444-4444-444444444444'], // ou use require local
+    logo_image: logoMap['44444444-4444-4444-4444-444444444444'],
+  },
+  {
+    id: '55555555-5555-5555-5555-555555555555',
+    username: 'Sabores do Dendê',
+    email: 'contato@saboresdende.com',
+    password: '123',
+    user_type: 'establishment',
+    address: 'Largo do Pelourinho, 10',
+    role: 'owner',
+    confirmed: true,
+    phone: '(71) 97777-1234',
+    cnpj: '11.111.111/0001-22',
+    min_price: 40,
+    max_price: 90,
+    coupon_enabled: true,
+    coupon_percentage: 15,
+    coupon_uses_per_user: 2,
+    social: {
+      instagram: 'saboresdende',
+      facebook: 'saboresdende',
+      youtube: '',
+      linkedin: '',
+    },
+    opening_hours: [
+      { day: 'Segunda', open: '11:00', close: '22:00' },
+      { day: 'Terça', open: '11:00', close: '22:00' },
+      { day: 'Quarta', open: '11:00', close: '22:00' },
+      { day: 'Quinta', open: '11:00', close: '22:00' },
+      { day: 'Sexta', open: '11:00', close: '23:00' },
+      { day: 'Sábado', open: '11:00', close: '23:00' },
+      { day: 'Domingo', open: '11:00', close: '22:00' },
+    ],
+    cover_image: coverMap['55555555-5555-5555-5555-555555555555'], // ou use require local
+    logo_image: logoMap['55555555-5555-5555-5555-555555555555'],
+  },
+
   {
     id: '44444444-4444-4444-4444-444444444444',
     username: 'novo_usuario',

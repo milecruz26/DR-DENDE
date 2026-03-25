@@ -3,6 +3,8 @@ import { EstabelecimentoDetalhes } from "@/components/Modal/EstabelecimentoDetal
 import VerbetesExcludConfirm from "@/components/Modal/ExcludConfirm/VerbetesExcludConfirm";
 import { ReadMoreModal } from "@/components/Modal/ModalVerbete";
 import { RestaurantCardSearch } from "@/components/Restaurante/RestauranteCardSearch";
+import { useEstablishments } from '@/hooks/useEstablishment';
+import { User } from "@/interfaces";
 import Colors from "@/theme/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
@@ -64,10 +66,17 @@ export default function Estabelecimentos() {
   const [isSaved, setIsSaved] = useState(false);
   const [showMenu, setShowMenu] = useState(false)
   const [modalVisivel, setModalVisivel] = useState(false);
-  const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState(null);
+  const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState<User>();
   const [subTab, setSubTab] = useState<'todos' | 'cupom'>('todos');
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>(null);
+
+  const { data: establishments = [] } = useEstablishments();
+
+  const filteredEstablishments = establishments.filter((est) => {
+    if (subTab === 'cupom') return est.coupon_enabled === true;
+    return true;
+  });
 
   const openDeleteModal = (item: any) => {
     setSelectedItem(item);
@@ -107,7 +116,7 @@ export default function Estabelecimentos() {
           </View>
 
           <FlatList
-            data={MOCK_RESTAURANTES}
+            data={filteredEstablishments}
             keyExtractor={(item) => item.id}
             contentContainerStyle={{ paddingBottom: 120 }}
             showsVerticalScrollIndicator={false}
@@ -143,7 +152,7 @@ export default function Estabelecimentos() {
           type="full"
         >
           {/* O novo componente entra como 'children' mágico aqui dentro! */}
-          <EstabelecimentoDetalhes />
+          <EstabelecimentoDetalhes establishment={estabelecimentoSelecionado as User} />
         </ReadMoreModal>
 
       </View>

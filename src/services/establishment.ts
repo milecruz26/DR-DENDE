@@ -5,6 +5,8 @@ export const establishmentService = {
   // GET /establishments
   getEstablishmentUser: () => api.get<User>('/establishments'),
 
+  getAllEstablishments: () => api.get<User[]>('/establishments/all'),
+
   // PUT /establishments
   updateEstablishmentUser: (formData: FormData) =>
     api.put<User>('/establishments', formData, {

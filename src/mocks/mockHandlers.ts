@@ -30,6 +30,13 @@ function getUserFromToken(config: any): User | null {
 }
 
 // Carrega todos os dados (usuários, tokens, likes)
+const resetMocks = async () => {
+  await SecureStore.deleteItemAsync('mock_users');
+  await SecureStore.deleteItemAsync('mock_confirm_tokens');
+  await SecureStore.deleteItemAsync('mock_liked_dishes');
+  // Recarregar o app ou reiniciar
+};
+
 const loadMockData = async () => {
   try {
     const storedUsers = await SecureStore.getItemAsync(MOCK_USERS_KEY);
@@ -83,6 +90,7 @@ const saveLikedDishes = async () => {
 // await loadLikedDishes();
 
 // Inicia o carregamento
+loadPromise = resetMocks();
 loadPromise = loadMockData();
 
 if (USE_MOCKS) {
@@ -360,6 +368,14 @@ if (USE_MOCKS) {
           return Promise.resolve({ data: user, status: 200 });
         }
         return Promise.reject({ response: { status: 403, data: { detail: 'Not an establishment' } } });
+      }
+
+      // GET /establishments/all – retorna todos os estabelecimentos
+      if (config.url === '/establishments/all' && config.method === 'get') {
+        const establishments = mockUsers.filter(u => u.user_type === 'establishment');
+        // Remove o campo password e outros dados sensíveis
+        const sanitized = establishments.map(({ password, ...rest }) => rest);
+        return Promise.resolve({ data: sanitized, status: 200 });
       }
 
       // GET /establishments/dish
