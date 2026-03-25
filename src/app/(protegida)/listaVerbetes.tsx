@@ -57,7 +57,7 @@ export default function ListaVerbertes() {
         <Header />
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, }}>
           <Text style={styles.pageTitle}>Verbetes</Text>
-          {user?.user_type !== 'common' && (
+          {user?.user_type === 'staff' && (
             <SecondaryButton
               onPress={() => router.push('/configuracoes/adicionarVerbetePasso1')}
               title='+ Criar Novo'
@@ -77,7 +77,8 @@ export default function ListaVerbertes() {
               index={index}
               isLiked={likedIds.includes(item.id)}
               onToggleLike={handleToggleLike}
-              favoritosPage={false} // ou omitir
+              favoritosPage={false}
+              showBookmark={user?.user_type === 'common'}
             />
           )}
           style={{ marginTop: 16 }}

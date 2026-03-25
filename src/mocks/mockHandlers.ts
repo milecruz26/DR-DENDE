@@ -3,7 +3,7 @@ import { Complaint, ComplaintValidation, Dish, Event, User } from '../interfaces
 import { api } from '../services/apiTeste';
 import { mockUsers as initialMockUsers, mockComplaints, mockDishes, mockEntries, mockEvents } from './mockData';
 
-const USE_MOCKS = true;
+const USE_MOCKS = false;
 const MOCK_USERS_KEY = 'mock_users';
 const CONFIRM_TOKENS_KEY = 'mock_confirm_tokens';
 const LIKED_DISHES_KEY = 'mock_liked_dishes'; // Chave para os likes
