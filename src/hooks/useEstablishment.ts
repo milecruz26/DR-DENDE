@@ -53,13 +53,25 @@ export const useSelfPostedDishes = () => {
   });
 };
 
+export const useEstablishmentDishes = (establishmentId: string) => {
+  return useQuery({
+    queryKey: ['establishmentDishes', establishmentId],
+    queryFn: () => establishmentService.getEstablishmentDishes(establishmentId).then(res => res.data),
+    enabled: !!establishmentId,
+  });
+};
+
 export const useCreateDish = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   return useMutation({
     mutationFn: (formData: FormData) => establishmentService.createDish(formData),
     onSuccess: () => {
       // Invalida as queries de pratos do estabelecimento para atualizar a lista
       queryClient.invalidateQueries({ queryKey: ['selfPostedDishes'] });
+      if (user?.user_type === 'establishment') {
+        queryClient.invalidateQueries({ queryKey: ['establishmentDishes', user.id] });
+      }
     },
   });
 };

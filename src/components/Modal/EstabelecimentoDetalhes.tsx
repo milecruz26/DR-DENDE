@@ -1,8 +1,11 @@
 import { coverImageMap, defaultCover, defaultLogo, logoImageMap } from '@/constants/imgMaps';
+import { useEstablishmentDishes } from '@/hooks/useEstablishment';
 import { User } from '@/interfaces';
 import { Feather } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
 
 
 interface EstabelecimentoDetalhesProps {
@@ -10,9 +13,10 @@ interface EstabelecimentoDetalhesProps {
 }
 
 export function EstabelecimentoDetalhes({ establishment }: EstabelecimentoDetalhesProps) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'info' | 'pratos'>('info');
   const [activeCategory, setActiveCategory] = useState('Todos');
-
+  const { data: dishes = [], isLoading } = useEstablishmentDishes(establishment.id);
 
   const categorias = ['Todos', 'Almoços', 'Tira-gostos', 'Petiscos'];
 
@@ -28,6 +32,10 @@ export function EstabelecimentoDetalhes({ establishment }: EstabelecimentoDetalh
     { id: '5', nome: 'Nome do prato', hasVerbete: false },
     { id: '6', nome: 'Nome do prato', hasVerbete: false },
   ];
+
+  // const filteredDishes = activeCategory === 'Todos'
+  //   ? dishes
+  //   : dishes.filter(dish => dish.category === activeCategory); // Assumindo que Dish tenha campo `category`
 
   return (
     <View style={styles.container}>
@@ -143,19 +151,30 @@ export function EstabelecimentoDetalhes({ establishment }: EstabelecimentoDetalh
           </ScrollView>
 
           <View style={styles.gridContainer}>
-            {pratos.map((prato) => (
-              <View key={prato.id} style={styles.dishCard}>
+            {dishes.map((dish) => (
+              <View key={dish.id} style={styles.dishCard}>
                 <View style={styles.dishImageBg}>
+                  <Image
+                    source={{ uri: dish.dish_image_path }}
+                    style={styles.dishImage}
+                    resizeMode="cover"
+                  />
                   <TouchableOpacity style={styles.dishMenuBtn}>
                     <Feather name="more-vertical" size={16} color="#FFF" />
                   </TouchableOpacity>
-                  <Text style={styles.dishTitle}>{prato.nome}</Text>
+                  <Text style={styles.dishTitle}>{dish.name}</Text>
                 </View>
                 <TouchableOpacity
-                  style={[styles.btnVerbete, prato.hasVerbete ? styles.btnVerbeteActive : styles.btnVerbeteInactive]}
+                  style={[styles.btnVerbete, dish.associated_entry ? styles.btnVerbeteActive : styles.btnVerbeteInactive]}
+                  onPress={() => {
+                    if (dish.associated_entry) {
+                      router.push(`/verbete?id=${dish.associated_entry}`);
+                    }
+                  }}
+                  disabled={!dish.associated_entry}
                 >
-                  <Feather name="book-open" size={14} color={prato.hasVerbete ? '#FFF' : '#A8A8A8'} />
-                  <Text style={[styles.verbeteText, !prato.hasVerbete && styles.verbeteTextInactive]}>
+                  <Feather name="book-open" size={14} color={dish.associated_entry ? '#FFF' : '#A8A8A8'} />
+                  <Text style={[styles.verbeteText, !dish.associated_entry && styles.verbeteTextInactive]}>
                     Ver verbete
                   </Text>
                 </TouchableOpacity>
@@ -258,9 +277,16 @@ const styles = StyleSheet.create({
   dishCard: { width: '48%', marginBottom: 8 },
   dishImageBg: {
     height: 120, backgroundColor: '#333', borderTopLeftRadius: 12, borderTopRightRadius: 12,
-    padding: 8, justifyContent: 'space-between'
+    padding: 8, justifyContent: 'space-between', overflow: 'hidden',
   },
   dishMenuBtn: { alignSelf: 'flex-end', backgroundColor: 'rgba(52, 82, 59, 0.8)', padding: 4, borderRadius: 6 },
+  dishImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
   dishTitle: { color: '#FFF', fontWeight: 'bold', fontSize: 14 },
   btnVerbete: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 8, borderBottomLeftRadius: 12, borderBottomRightRadius: 12, gap: 6 },
   btnVerbeteActive: { backgroundColor: '#34523B' },

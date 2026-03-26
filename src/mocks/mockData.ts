@@ -166,8 +166,8 @@ export const mockDishes: Dish[] = [
 
 export const mockEntries: Entry[] = [
   {
-    id: 'entry-1',
-    name: 'Entrada 1',
+    id: 'feijoada',
+    name: 'feijoada',
     picture: 'feijoada',
     audio: 'https://example.com/audio1.mp3',
     entry_text: 'Descrição da entrada 1',
@@ -177,8 +177,8 @@ export const mockEntries: Entry[] = [
     ingredients: [{ name: 'linguica' }, { name: 'sal' }, { name: 'coco' }, { name: 'pimentão' }, { name: 'ovo' }],
   },
   {
-    id: 'entry-2',
-    name: 'Entrada 2',
+    id: 'cozido',
+    name: 'cozido',
     picture: 'cozido',
     audio: 'https://example.com/audio2.mp3',
     entry_text: 'Descrição da entrada 2',
@@ -188,8 +188,8 @@ export const mockEntries: Entry[] = [
     ingredients: [{ name: 'pão' }, { name: 'manteiga' }, { name: 'mandioca' }, { name: 'milho-branco' }, { name: 'frango' }],
   },
   {
-    id: 'entry-3',
-    name: 'Entrada 3',
+    id: 'cuscuz',
+    name: 'cuscuz',
     picture: 'cuscuz',
     audio: 'https://example.com/audio2.mp3',
     entry_text: 'Descrição da entrada 3',
@@ -199,8 +199,8 @@ export const mockEntries: Entry[] = [
     ingredients: [{ name: 'aipim' }, { name: 'sal' }, { name: 'bucho' }, { name: 'milho-branco' }, { name: 'açúcar' }],
   },
   {
-    id: 'entry-4',
-    name: 'Entrada 4',
+    id: 'acarajé',
+    name: 'acarajé',
     picture: 'acarajé',
     audio: 'https://example.com/audio2.mp3',
     entry_text: 'Descrição da entrada 4',

@@ -79,15 +79,25 @@ export default function EditarEstabelecimento() {
 
       // Garante que opening_hours seja um array
       const hours = Array.isArray(establishment.opening_hours) ? establishment.opening_hours : [];
-      setHorarios(hours.length ? hours : [
-        { id: '1', dia: 'Dom', abre: '00:00', fecha: '00:00' },
-        { id: '2', dia: 'Seg', abre: '00:00', fecha: '00:00' },
-        { id: '3', dia: 'Ter', abre: '00:00', fecha: '00:00' },
-        { id: '4', dia: 'Qua', abre: '00:00', fecha: '00:00' },
-        { id: '5', dia: 'Qui', abre: '00:00', fecha: '00:00' },
-        { id: '6', dia: 'Sex', abre: '00:00', fecha: '00:00' },
-        { id: '7', dia: 'Sáb', abre: '00:00', fecha: '00:00' },
-      ]);
+      const formatDay = (day: string) => day.slice(0, 3);
+      setHorarios(
+        hours.length
+          ? hours.map((h: any, index: number) => ({
+            id: String(index),
+            dia: formatDay(h.day),
+            abre: h.open,
+            fecha: h.close,
+          }))
+          : [
+            { id: '1', dia: 'Dom', abre: '00:00', fecha: '00:00' },
+            { id: '2', dia: 'Seg', abre: '00:00', fecha: '00:00' },
+            { id: '3', dia: 'Ter', abre: '00:00', fecha: '00:00' },
+            { id: '4', dia: 'Qua', abre: '00:00', fecha: '00:00' },
+            { id: '5', dia: 'Qui', abre: '00:00', fecha: '00:00' },
+            { id: '6', dia: 'Sex', abre: '00:00', fecha: '00:00' },
+            { id: '7', dia: 'Sáb', abre: '00:00', fecha: '00:00' },
+          ]
+      );
     }
   }, [establishment]);
 
@@ -285,7 +295,7 @@ export default function EditarEstabelecimento() {
         </View>
 
         {Array.isArray(horarios) && horarios.map((item, index) => (
-          <View key={item.id} style={styles.horarioRow}>
+          <View key={item.id ?? index} style={styles.horarioRow}>
             <View style={{ width: 40 }}>
               <Text style={styles.diaText}>{item.dia}</Text>
             </View>

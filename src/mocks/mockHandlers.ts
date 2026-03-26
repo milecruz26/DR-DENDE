@@ -90,7 +90,7 @@ const saveLikedDishes = async () => {
 // await loadLikedDishes();
 
 // Inicia o carregamento
-loadPromise = resetMocks();
+// loadPromise = resetMocks();
 loadPromise = loadMockData();
 
 if (USE_MOCKS) {
@@ -378,6 +378,14 @@ if (USE_MOCKS) {
         return Promise.resolve({ data: sanitized, status: 200 });
       }
 
+      // GET /establishments/{establishment_id}/dishes
+      const establishmentDishesMatch = config.url?.match(/^\/establishments\/([^/]+)\/dishes$/);
+      if (establishmentDishesMatch && config.method === 'get') {
+        const establishmentId = establishmentDishesMatch[1];
+        const dishes = mockDishes.filter(d => d.establishment_id === establishmentId);
+        return Promise.resolve({ data: dishes, status: 200 });
+      }
+
       // GET /establishments/dish
       if (config.url === '/establishments/dish' && config.method === 'get') {
         const dishes = mockDishes.filter(d => d.establishment_id === user?.id);
@@ -397,7 +405,9 @@ if (USE_MOCKS) {
           for (const [key, value] of (config.data as any)._parts) {
             if (key === 'name') name = value;
             if (key === 'associated_entry') associated_entry = value;
-            if (key === 'dish_image_path') dish_image_path = value;
+            if (key === 'dish_image_path') {
+              dish_image_path = value.uri || value; // guarda apenas a URI
+            }
           }
         } else {
           const data = typeof config.data === 'string' ? JSON.parse(config.data) : config.data;
@@ -421,7 +431,7 @@ if (USE_MOCKS) {
         const newDish: Dish = {
           id: `dish-${Date.now()}`,
           name,
-          dish_image_path,
+          dish_image_path, // agora é uma string (URI)
           associated_entry: entryId,
           establishment_id: user.id,
         };

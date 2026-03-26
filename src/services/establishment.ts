@@ -19,6 +19,8 @@ export const establishmentService = {
   // GET /establishments/dish
   getSelfPostedDishes: () => api.get<Dish[]>('/establishments/dish'),
 
+  getEstablishmentDishes: (establishmentId: string) => api.get<Dish[]>(`/establishments/${establishmentId}/dishes`),
+
   // PUT /establishments/dish/{dish_id}
   updateDish: (data: Dish) => api.put<Dish>(`/establishments/dish/${data.id}`, data),
 

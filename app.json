@@ -13,7 +13,7 @@
     },
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/stick-logo-letra-c.png",
+      "image": "./assets/images/adaptive-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -26,7 +26,12 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ],
+      "package": "com.milecruz26.DRDENDE"
     },
     "web": {
       "bundler": "metro",
@@ -178,6 +183,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "24638d58-bbe8-4265-8e71-b4e63b3aba28"
+      }
     }
   }
 }
