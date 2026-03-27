@@ -34,3 +34,9 @@ export interface User {
   cover_image?: string;
   logo_image?: string;
 }
+
+export interface UserCreate {
+  username: string;
+  email: string;
+  password: string;
+}

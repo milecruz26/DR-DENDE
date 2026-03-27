@@ -1,10 +1,10 @@
-// hooks/useLogin.ts
-import { authService } from "@/services/auth";
+import { authService, UserInfo } from "@/services/auth";
 import { userService } from "@/services/user";
 import { storage } from "@/utils/storage";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { mapEstablishmentToUser } from "@/mappers/establishmentToUser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-const TOKEN_KEY = "auth_token";
+import { User } from "@/interfaces";
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
@@ -17,7 +17,6 @@ export const useLogin = () => {
       email: string;
       password: string;
     }) => {
-      // 1. Login
       const loginResponse = await authService.login({
         username: email,
         password,
@@ -26,19 +25,43 @@ export const useLogin = () => {
         client_id: "",
         client_secret: "",
       });
-      const { access_token } = loginResponse.data;
+      const { access_token, user_info } = loginResponse.data;
 
-      // 2. Armazenar token
-      await storage.setItem(TOKEN_KEY, access_token);
+      await storage.setItem(STORAGE_KEYS.TOKEN, access_token);
+      await storage.setItem(STORAGE_KEYS.USER_TYPE, user_info.user_type);
 
-      // 3. Buscar dados do usuário
-      const userResponse = await userService.getCurrentUser();
-      return userResponse.data;
+      const user = await fetchUserByType(user_info);
+
+      if (user_info.user_type === "staff") {
+        await storage.setItem(STORAGE_KEYS.STAFF_USER, JSON.stringify(user));
+      }
+
+      return user;
     },
     onSuccess: (user) => {
-      // Armazenar no cache do Query como "currentUser"
       queryClient.setQueryData(["currentUser"], user);
-      // Opcional: invalidar outras queries que dependam do usuário
     },
   });
 };
+
+async function fetchUserByType(userInfo: UserInfo): Promise<User> {
+  switch (userInfo.user_type) {
+    case "common": {
+      const { data } = await userService.getCurrentUser();
+      return data;
+    }
+    case "establishment": {
+      const { data } = await userService.getCurrentEstablishment();
+      return mapEstablishmentToUser(data);
+    }
+    case "staff":
+      return {
+        id: userInfo.profile_id,
+        username: userInfo.username,
+        email: "",
+        user_type: "staff",
+        address: null,
+        role: userInfo.role,
+      };
+  }
+}

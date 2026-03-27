@@ -1,4 +1,4 @@
-import { User } from '../interfaces';
+import { UserType } from '../interfaces';
 import { api } from './apiTeste';
 
 interface LoginCredentials {
@@ -10,9 +10,17 @@ interface LoginCredentials {
   client_secret?: string;
 }
 
+export interface UserInfo {
+  username: string;
+  user_type: UserType;
+  role: string | null;
+  profile_id: string;
+}
+
 interface LoginResponse {
   access_token: string;
   token_type: string;
+  user_info: UserInfo;
 }
 
 const login = (credentials: LoginCredentials) => {
@@ -26,6 +34,4 @@ const login = (credentials: LoginCredentials) => {
   });
 };
 
-const getCurrentUser = () => api.get<User>('/users/common');
-
-export const authService = { login, getCurrentUser };
+export const authService = { login };
