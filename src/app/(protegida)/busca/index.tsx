@@ -1,3 +1,4 @@
+import { useAuth } from '@/context/AuthContext';
 import { Header } from '@/components/Header';
 import { EstabelecimentoDetalhes } from '@/components/Modal/EstabelecimentoDetalhes';
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
@@ -61,6 +62,7 @@ const MOCK_RESTAURANTES = [
 // ==========================================
 
 export default function BuscaScreen() {
+  const { user } = useAuth();
   const { tab } = useLocalSearchParams<{ tab?: string }>();
   const [activeTab, setActiveTab] = useState<CategoryType>(tab === 'restaurantes' ? 'restaurantes' : 'verbetes');
   const [subTab, setSubTab] = useState<'todos' | 'cupom'>('todos');
@@ -190,7 +192,8 @@ export default function BuscaScreen() {
                 index={index}
                 isLiked={likedIds.includes(item.id)}
                 onToggleLike={handleToggleLike}
-                favoritosPage={false} // ou omitir
+                favoritosPage={false}
+                showBookmark={user?.user_type === 'common'}
               />
               : <RestaurantCardSearch
                 item={item} moreDetailsPress={() => abrirDetalhes(item)} />

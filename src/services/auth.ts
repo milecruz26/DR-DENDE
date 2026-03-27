@@ -15,22 +15,17 @@ interface LoginResponse {
   token_type: string;
 }
 
-export const authService = {
-  // POST /login (OAuth2)
-  login: (credentials: LoginCredentials) => {
-    const params = new URLSearchParams();
+const login = (credentials: LoginCredentials) => {
+  const params = new URLSearchParams();
+  Object.entries(credentials).forEach(([key, value]) => {
+    if (value) params.append(key, value);
+  });
 
-    Object.entries(credentials).forEach(([key, value]) => {
-      if (value) {
-        params.append(key, value);
-      }
-    });
-
-    return api.post<LoginResponse>('/login', params, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    });
-  },
-
-  // GET /users/common
-  getCurrentUser: () => api.get<User>('/users/common'),
+  return api.post<LoginResponse>('/login', params, {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  });
 };
+
+const getCurrentUser = () => api.get<User>('/users/common');
+
+export const authService = { login, getCurrentUser };

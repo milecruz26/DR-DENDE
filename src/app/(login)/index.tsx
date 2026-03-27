@@ -8,36 +8,31 @@ import Colors from '@/theme/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import { Link, router } from 'expo-router'
 import React, { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Abertura from '../(protegida)/abertura'
 const { NEUTRAL } = Colors;
 
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [erroSenha, setErroSenha] = useState<string | null>(null);
-  const [mostrarSenha, setMostrarSenha] = useState(false);
-  const { signIn, isLoading } = useAuth(); // loading vem da mutation
+  const [showPassword, setShowPassword] = useState(false);
+  const [showAbertura, setShowAbertura] = useState(false);
+  const { signIn, isLoading } = useAuth();
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      setErroSenha('Preencha e‑mail e senha');
-      return;
-    }
-    try {
-      await signIn(email, password);
-      // Se chegou aqui, login bem sucedido
-      router.replace('/(protegida)');
-    } catch (error) {
-      // erro tratado pela mutation
-      console.log('Login falhou:', error);
-      alert('E‑mail ou senha inválidos');
-    }
+  const { control, handleSubmit, setError, formState: { errors } } = useForm<LoginFormData>({
+    defaultValues: { email: '', password: '' },
+  });
+
+  const onSubmit = (data: LoginFormData) => {
+    signIn(data.email, data.password, {
+      onSuccess: () => setShowAbertura(true),
+      onError: () => setError('root', { message: 'E-mail ou senha incorretos' }),
+    });
   };
-
-  const [showAbertura, setShowAbertura] = useState(false); // Novo estado
-
-
 
   return (
     <>
@@ -49,43 +44,65 @@ export default function Login() {
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Ex: seunome@gmail.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={email}
-              onChangeText={setEmail}
+            <Controller
+              control={control}
+              name="email"
+              rules={{ required: 'E-mail é obrigatório' }}
+              render={({ field: { onChange, value }, fieldState: { error } }) => (
+                <>
+                  <TextInput
+                    style={[styles.input, error && styles.inputError]}
+                    placeholder="Ex: seunome@gmail.com"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    value={value}
+                    onChangeText={onChange}
+                  />
+                  {error
+                    ? <Text style={styles.errorText}>{error.message}</Text>
+                    : <Text style={styles.helperText}>ⓘ Insira o email cadastrado</Text>
+                  }
+                </>
+              )}
             />
-            <Text style={styles.helperText}>ⓘ Insira o email cadastrado</Text>
           </View>
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Senha</Text>
             <View style={styles.passwordContainer}>
-              <TextInput
-                style={[styles.inputPassword, erroSenha && styles.inputError]}
-                placeholder="********"
-                secureTextEntry={!mostrarSenha} // Inverte com base no estado
-                value={password}
-                onChangeText={setPassword}
+              <Controller
+                control={control}
+                name="password"
+                rules={{ required: 'Senha é obrigatória' }}
+                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                  <>
+                    <TextInput
+                      style={[styles.inputPassword, (error || errors.root) && styles.inputError]}
+                      placeholder="********"
+                      secureTextEntry={!showPassword}
+                      value={value}
+                      onChangeText={onChange}
+                    />
+                    <TouchableOpacity
+                      style={styles.eyeIcon}
+                      onPress={() => setShowPassword(!showPassword)}
+                    >
+                      <Ionicons
+                        name={showPassword ? "eye-off-outline" : "eye-outline"}
+                        size={20}
+                        color="#888"
+                      />
+                    </TouchableOpacity>
+                  </>
+                )}
               />
-              <TouchableOpacity
-                style={styles.eyeIcon}
-                onPress={() => setMostrarSenha(!mostrarSenha)}
-              >
-                <Ionicons
-                  name={mostrarSenha ? "eye-off-outline" : "eye-outline"}
-                  size={20}
-                  color="#888"
-                />
-              </TouchableOpacity>
             </View>
-            {erroSenha && <Text style={styles.errorText}>{erroSenha}</Text>}
+            {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
+            {errors.root && <Text style={styles.errorText}>{errors.root.message}</Text>}
           </View>
 
           <View style={{ gap: 8 }}>
-            <PrimaryButton title='Entrar' onPress={handleLogin} />
+            <PrimaryButton title='Entrar' onPress={handleSubmit(onSubmit)} />
 
             <Link href="/(login)/(cadastro)/perfil" asChild>
               <SecondaryButton title='Criar conta' onPress={() => { }} />

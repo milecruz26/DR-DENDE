@@ -215,14 +215,14 @@ export const mockEvents: Event[] = [
   {
     id: 'event-1',
     name: 'Festival Gastronômico',
-    event_date: '2026-03-26T19:00:00', // data + hora
+    event_date: '2026-03-26',
     description: 'Degustação de pratos típicos',
     address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
   },
   {
     id: 'event-2',
     name: 'Workshop de Culinária',
-    event_date: '2026-03-25T14:30:00',
+    event_date: '2026-03-25',
     description: 'Aprenda a cozinhar pratos italianos',
     address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
 
@@ -230,14 +230,14 @@ export const mockEvents: Event[] = [
   {
     id: 'event-3',
     name: 'Teste culinário',
-    event_date: '2026-03-24T14:30:00',
+    event_date: '2026-03-24',
     description: 'Aprenda a cozinhar pratos italianos',
     address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
   },
   {
     id: 'event-4',
     name: 'Bota pra quebrar',
-    event_date: '2026-03-23T12:30:00',
+    event_date: '2026-03-23',
     description: 'Aprenda a cozinhar pratos italianos',
     address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
 
@@ -245,7 +245,7 @@ export const mockEvents: Event[] = [
   {
     id: 'event-5',
     name: 'Ebaa',
-    event_date: '2026-03-23T11:30:00',
+    event_date: '2026-03-23',
     description: 'Aprenda a cozinhar pratos italianos',
     address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
 
