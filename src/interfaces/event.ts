@@ -5,10 +5,10 @@ export interface Event {
   name: string;
   event_date: string;            // formato ISO (YYYY-MM-DD)
   description: string;
-  address: Address;
-  latitude: number | null;
-  longitude: number | null;
-  images: string[];
+  address: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  images?: string[];
 }
 
 export interface EventCreate {

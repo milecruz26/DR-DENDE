@@ -1,5 +1,16 @@
 import { Complaint, Dish, Entry, Event, User } from '../interfaces';
 
+const coverMap = {
+  '33333333-3333-3333-3333-333333333333': '@/assets/images/mock/capa-1.png',
+  '44444444-4444-4444-4444-444444444444': '@/assets/images/mock/capa-2.jpg',
+  '55555555-5555-5555-5555-555555555555': '@/assets/images/mock/capa-3.jpg'
+};
+const logoMap = {
+  '33333333-3333-3333-3333-333333333333': '@/assets/images/mock/logo-1.png',
+  '44444444-4444-4444-4444-444444444444': '@/assets/images/mock/logo-2.jpg',
+  '55555555-5555-5555-5555-555555555555': '@/assets/images/mock/logo-3.jpg'
+};
+
 export const mockUsers: User[] = [
   {
     id: '11111111-1111-1111-1111-111111111111',
@@ -12,8 +23,6 @@ export const mockUsers: User[] = [
     password: '123',
     avatar: undefined,
     phone: '(71) 99999-1111',
-    city: 'Salvador - BA',
-    zip_code: '40000-000',
   },
   {
     id: '22222222-2222-2222-2222-222222222222',
@@ -25,18 +34,107 @@ export const mockUsers: User[] = [
     password: '123',
     avatar: undefined,
     phone: '(71) 88888-2222',
-    city: 'Salvador - BA',
-    zip_code: '40000-000',
+
   },
+  // ESTABELECIMENTOS
   {
     id: '33333333-3333-3333-3333-333333333333',
-    username: 'restaurante_estab',
+    username: 'Restaurante da Orla',
     email: 'contato@restaurante.com',
-    user_type: 'establishment',
-    address: 'Av. Principal, 456',
-    role: 'owner',
     password: '123',
+    user_type: 'establishment',
+    address: 'Av. Oceânica, 1234',
+    role: 'owner',
+    confirmed: true,
+    phone: '(71) 99999-1234',
+    cnpj: '12.345.678/0001-90',
+    min_price: 50,
+    max_price: 120,
+    coupon_enabled: true,
+    coupon_percentage: 10,
+    coupon_uses_per_user: 1,
+    social: {
+      instagram: 'orla_rest',
+      facebook: 'orla_rest',
+      youtube: '',
+      linkedin: '',
+    },
+    opening_hours: [
+      { day: 'Segunda', open: '11:00', close: '22:00' },
+      { day: 'Terça', open: '11:00', close: '22:00' },
+      { day: 'Quarta', open: '11:00', close: '22:00' },
+      { day: 'Quinta', open: '11:00', close: '22:00' },
+      { day: 'Sexta', open: '11:00', close: '23:00' },
+      { day: 'Sábado', open: '11:00', close: '23:00' },
+      { day: 'Domingo', open: '11:00', close: '22:00' },
+    ],
+    cover_image: coverMap['33333333-3333-3333-3333-333333333333'], // ou use require local
+    logo_image: logoMap['33333333-3333-3333-3333-333333333333'],
   },
+  {
+    id: '44444444-4444-4444-4444-444444444444',
+    username: 'Bom Baiano',
+    email: 'contato@bombaiano.com',
+    password: '123',
+    user_type: 'establishment',
+    address: 'Rua das Laranjeiras, 45',
+    role: 'owner',
+    confirmed: true,
+    phone: '(71) 98888-1234',
+    cnpj: '98.765.432/0001-11',
+    min_price: 30,
+    max_price: 80,
+    coupon_enabled: false,
+    coupon_percentage: 0,
+    coupon_uses_per_user: 0,
+    social: {
+      instagram: 'bombaiano',
+      facebook: 'bombaiano',
+      youtube: '',
+      linkedin: '',
+    },
+    opening_hours: [
+      { day: 'Segunda', open: '11:00', close: '21:00' },
+      // ... repetir para os dias
+    ],
+    cover_image: coverMap['44444444-4444-4444-4444-444444444444'], // ou use require local
+    logo_image: logoMap['44444444-4444-4444-4444-444444444444'],
+  },
+  {
+    id: '55555555-5555-5555-5555-555555555555',
+    username: 'Sabores do Dendê',
+    email: 'contato@saboresdende.com',
+    password: '123',
+    user_type: 'establishment',
+    address: 'Largo do Pelourinho, 10',
+    role: 'owner',
+    confirmed: true,
+    phone: '(71) 97777-1234',
+    cnpj: '11.111.111/0001-22',
+    min_price: 40,
+    max_price: 90,
+    coupon_enabled: true,
+    coupon_percentage: 15,
+    coupon_uses_per_user: 2,
+    social: {
+      instagram: 'saboresdende',
+      facebook: 'saboresdende',
+      youtube: '',
+      linkedin: '',
+    },
+    opening_hours: [
+      { day: 'Segunda', open: '11:00', close: '22:00' },
+      { day: 'Terça', open: '11:00', close: '22:00' },
+      { day: 'Quarta', open: '11:00', close: '22:00' },
+      { day: 'Quinta', open: '11:00', close: '22:00' },
+      { day: 'Sexta', open: '11:00', close: '23:00' },
+      { day: 'Sábado', open: '11:00', close: '23:00' },
+      { day: 'Domingo', open: '11:00', close: '22:00' },
+    ],
+    cover_image: coverMap['55555555-5555-5555-5555-555555555555'], // ou use require local
+    logo_image: logoMap['55555555-5555-5555-5555-555555555555'],
+  },
+
   {
     id: '44444444-4444-4444-4444-444444444444',
     username: 'novo_usuario',
@@ -68,8 +166,8 @@ export const mockDishes: Dish[] = [
 
 export const mockEntries: Entry[] = [
   {
-    id: 'entry-1',
-    name: 'Entrada 1',
+    id: 'feijoada',
+    name: 'feijoada',
     picture: 'feijoada',
     audio: 'https://example.com/audio1.mp3',
     entry_text: 'Descrição da entrada 1',
@@ -79,8 +177,8 @@ export const mockEntries: Entry[] = [
     ingredients: [{ name: 'linguica' }, { name: 'sal' }, { name: 'coco' }, { name: 'pimentão' }, { name: 'ovo' }],
   },
   {
-    id: 'entry-2',
-    name: 'Entrada 2',
+    id: 'cozido',
+    name: 'cozido',
     picture: 'cozido',
     audio: 'https://example.com/audio2.mp3',
     entry_text: 'Descrição da entrada 2',
@@ -90,8 +188,8 @@ export const mockEntries: Entry[] = [
     ingredients: [{ name: 'pão' }, { name: 'manteiga' }, { name: 'mandioca' }, { name: 'milho-branco' }, { name: 'frango' }],
   },
   {
-    id: 'entry-3',
-    name: 'Entrada 3',
+    id: 'cuscuz',
+    name: 'cuscuz',
     picture: 'cuscuz',
     audio: 'https://example.com/audio2.mp3',
     entry_text: 'Descrição da entrada 3',
@@ -101,8 +199,8 @@ export const mockEntries: Entry[] = [
     ingredients: [{ name: 'aipim' }, { name: 'sal' }, { name: 'bucho' }, { name: 'milho-branco' }, { name: 'açúcar' }],
   },
   {
-    id: 'entry-4',
-    name: 'Entrada 4',
+    id: 'acarajé',
+    name: 'acarajé',
     picture: 'acarajé',
     audio: 'https://example.com/audio2.mp3',
     entry_text: 'Descrição da entrada 4',
@@ -119,50 +217,38 @@ export const mockEvents: Event[] = [
     name: 'Festival Gastronômico',
     event_date: '2026-03-26',
     description: 'Degustação de pratos típicos',
-    address: { city: 'São Paulo', street: 'Av. Paulista, 1000', neighborhood: 'Bela Vista', zip_code: '01310-100' },
-    latitude: -23.5614,
-    longitude: -46.6558,
-    images: [],
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
   },
   {
     id: 'event-2',
     name: 'Workshop de Culinária',
     event_date: '2026-03-25',
     description: 'Aprenda a cozinhar pratos italianos',
-    address: { city: 'Rio de Janeiro', street: 'Rua do Ouvidor, 50', neighborhood: 'Centro', zip_code: '20040-030' },
-    latitude: -22.9035,
-    longitude: -43.1823,
-    images: [],
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
+
   },
   {
     id: 'event-3',
     name: 'Teste culinário',
     event_date: '2026-03-24',
     description: 'Aprenda a cozinhar pratos italianos',
-    address: { city: 'Rio de Janeiro', street: 'Rua do Ouvidor, 50', neighborhood: 'Centro', zip_code: '20040-030' },
-    latitude: -22.9035,
-    longitude: -43.1823,
-    images: [],
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
   },
   {
     id: 'event-4',
     name: 'Bota pra quebrar',
     event_date: '2026-03-23',
     description: 'Aprenda a cozinhar pratos italianos',
-    address: { city: 'Rio de Janeiro', street: 'Rua do Ouvidor, 50', neighborhood: 'Centro', zip_code: '20040-030' },
-    latitude: -22.9035,
-    longitude: -43.1823,
-    images: [],
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
+
   },
   {
     id: 'event-5',
     name: 'Ebaa',
     event_date: '2026-03-23',
     description: 'Aprenda a cozinhar pratos italianos',
-    address: { city: 'Rio de Janeiro', street: 'Rua do Ouvidor, 50', neighborhood: 'Centro', zip_code: '20040-030' },
-    latitude: -22.9035,
-    longitude: -43.1823,
-    images: [],
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
+
   },
 ];
 

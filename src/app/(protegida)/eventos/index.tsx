@@ -9,7 +9,7 @@ import { formatDateTime } from '@/utils/formatDateTime';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Eventos() {
@@ -18,23 +18,27 @@ export default function Eventos() {
 
   return (
     <LinearGradient colors={['#FFF', '#FFF0C8']} style={styles.container}>
-      <Header />
-      <SafeAreaView style={styles.scrollContent}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={styles.textPage}>Eventos</Text>
+      <SafeAreaView style={styles.contentContainer}>
+        <StatusBar backgroundColor={'#FFFBE6'} />
+        <Header />
+        <View style={styles.scrollContent}>
 
-          {user?.user_type === 'staff' && (
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text style={styles.textPage}>Eventos</Text>
 
-            <SecondaryButton
-              title="+ Criar Evento"
-              onPress={() => router.push('/(protegida)/configuracoes/adicionarEvento')}
-              size='small'
-            />)
-          }
+            {user?.user_type === 'staff' && (
+
+              <SecondaryButton
+                title="+ Criar Evento"
+                onPress={() => router.push('/(protegida)/configuracoes/adicionarEvento')}
+                size='small'
+              />)
+            }
+          </View>
+
+          {/* O COMPONENTE REUTILIZÁVEL AQUI */}
+          <EventCalendarList onSelectEvent={setSelectedEvent} />
         </View>
-
-        {/* O COMPONENTE REUTILIZÁVEL AQUI */}
-        <EventCalendarList onSelectEvent={setSelectedEvent} />
 
       </SafeAreaView>
       <ReadMoreModal
@@ -45,7 +49,7 @@ export default function Eventos() {
       >
         {selectedEvent && (
           <EventsInfo
-            location={`${selectedEvent.address.street}, ${selectedEvent.address.neighborhood} - ${selectedEvent.address.city}`}
+            location={`${selectedEvent.address}`}
             date={formatDateTime(selectedEvent.event_date)}
             description={selectedEvent.description}
           />

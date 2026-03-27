@@ -1,6 +1,6 @@
-import { images } from '@/assets/images/pratos';
 import savedFilledWhite from '@/assets/images/icones/saved-filled-line-white.png';
 import savedWhite from '@/assets/images/icones/saved-line-white.png';
+import { images } from '@/assets/images/pratos';
 import defaultDishImage from '@/assets/images/pratos/VATAPÁ.png';
 import { useRouter } from 'expo-router';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';

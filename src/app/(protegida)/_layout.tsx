@@ -51,7 +51,7 @@ export default function ProtegidaLayout() {
         </LinearGradient>
 
         {/* O seu Menu fica fixo aqui embaixo, fora do Slot */}
-        <View style={[styles.tabBarContainer, { paddingBottom: insets.bottom > 0 ? insets.bottom : 20 }]}>
+        <View style={styles.tabBarContainer}>
           <MockTabBar />
         </View>
       </View>
@@ -63,16 +63,14 @@ export default function ProtegidaLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFBE6', // Cor de fundo global
+    // backgroundColor: '#FFFBE6', // Cor de fundo global
   },
   content: {
     flex: 1, // Faz o conteúdo ocupar todo o espaço acima da TabBar
   },
   tabBarContainer: {
-    // Garante que a TabBar tenha uma altura definida ou se ajuste ao conteúdo
-    // e fique sempre no rodapé
-    backgroundColor: 'transparent',
-    zIndex: 999,
+    //  backgroundColor: 'transparent',
+    // zIndex: 999,
 
   },
 });

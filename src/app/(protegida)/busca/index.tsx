@@ -6,6 +6,8 @@ import { RestaurantCardSearch } from '@/components/Restaurante/RestauranteCardSe
 import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';
 import { useDislikeDish, useLikedDishes, useLikeDish } from '@/hooks/useDish';
 import { useAllEntries } from '@/hooks/useEntries';
+import { useEstablishments } from '@/hooks/useEstablishment';
+import { User } from '@/interfaces';
 import Colors from '@/theme/Colors';
 import { Feather } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
@@ -30,12 +32,6 @@ const COLORS = Colors;
 const { NEUTRAL, primary, SECONDARY } = COLORS
 
 type CategoryType = 'verbetes' | 'restaurantes';
-
-// Mock Verbetes
-// const MOCK_VERBETES = [
-//   { id: 1, title: 'PASSARINHA', desc: 'A passarinha, apesar de como é chamada, nada tem a ver...', bg: '#E0F0E2', img: require(`@/assets/images/pratos/FEIJOADA.png`) },
-//   { id: 2, title: 'FEIJOADA', desc: 'A feijoada é um prato muito popular em todo o Brasil.', bg: '#FFC84A', img: require(`@/assets/images/pratos/ABARÁ.png`) },
-// ];
 
 // Mock Restaurantes
 const MOCK_RESTAURANTES = [
@@ -71,15 +67,23 @@ export default function BuscaScreen() {
   const [activeTab, setActiveTab] = useState<CategoryType>(tab === 'restaurantes' ? 'restaurantes' : 'verbetes');
   const [subTab, setSubTab] = useState<'todos' | 'cupom'>('todos');
   const [searchText, setSearchText] = useState('');
-  const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState(null);
+  const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState<User>();
   const [modalVisivel, setModalVisivel] = useState(false);
   const { data: verbetes } = useAllEntries();
   const { data: likedDishes } = useLikedDishes();
   const { mutate: like } = useLikeDish();
   const { mutate: dislike } = useDislikeDish();
+  const { data: establishments = [] } = useEstablishments();
+
+  const filteredEstablishments = establishments.filter(est => {
+    if (subTab === 'cupom') {
+      return est.coupon_enabled === true;
+    }
+    return true;
+  });
 
 
-  const abrirDetalhes = (item: any) => {
+  const abrirDetalhes = (item: User) => {
     setEstabelecimentoSelecionado(item);
     setModalVisivel(true);
   };
@@ -174,7 +178,7 @@ export default function BuscaScreen() {
         {/* Lista de Conteúdo */}
         <FlatList
           // data={MOCK_RESTAURANTES}
-          data={(activeTab === 'verbetes' ? verbetes : MOCK_RESTAURANTES) as any[]}
+          data={(activeTab === 'verbetes' ? verbetes : filteredEstablishments) as any[]}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
@@ -192,7 +196,7 @@ export default function BuscaScreen() {
                 showBookmark={user?.user_type === 'common'}
               />
               : <RestaurantCardSearch
-                item={item as any} moreDetailsPress={() => abrirDetalhes(item)} />
+                item={item} moreDetailsPress={() => abrirDetalhes(item)} />
           )}
           // Espaço extra embaixo para o menu não cobrir o último item
           ListFooterComponent={<View style={{ height: 100 }} />}
@@ -202,11 +206,11 @@ export default function BuscaScreen() {
       <ReadMoreModal
         visible={modalVisivel}
         onClose={() => setModalVisivel(false)}
-        title="Estabelecimento ipsum"
+        title={estabelecimentoSelecionado?.username}
         type="full"
       >
         {/* O novo componente entra como 'children' mágico aqui dentro! */}
-        <EstabelecimentoDetalhes />
+        <EstabelecimentoDetalhes establishment={estabelecimentoSelecionado as User} />
       </ReadMoreModal>
     </View>
   );

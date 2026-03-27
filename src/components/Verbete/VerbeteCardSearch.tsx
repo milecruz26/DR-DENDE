@@ -1,7 +1,4 @@
 import { images } from '@/assets/images/pratos';
-import savedFilledNeutral from '@/assets/images/icones/saved-filled-line-neutral.png';
-import savedNeutral from '@/assets/images/icones/saved-line-neutral.png';
-import tresPontosBlack from '@/assets/images/icones/tres-pontos-line-black.png';
 import defaultDishImage from '@/assets/images/pratos/VATAPÁ.png';
 import Colors from "@/theme/Colors";
 import { useRouter } from 'expo-router';
@@ -57,18 +54,20 @@ export const VerbeteCardSearch = ({
       </View>
 
       <View style={{ alignItems: 'center' }}>
-        {showBookmark && (
-          <Pressable style={styles.bookmarkIcon} onPress={handleToggle}>
-            <Image
-              source={isLiked ? savedFilledNeutral : savedNeutral}
-              style={{ width: 32, height: 32 }}
-            />
-          </Pressable>
-        )}
+        <Pressable style={styles.bookmarkIcon} onPress={handleToggle}>
+          <Image
+            source={
+              isLiked
+                ? require('../../../assets/images/icones/saved-filled-line-neutral.png')
+                : require('../../../assets/images/icones/saved-line-neutral.png')
+            }
+            style={{ width: 32, height: 32 }}
+          />
+        </Pressable>
         {favoritosPage && (
           <Pressable>
             <Image
-              source={tresPontosBlack}
+              source={require('../../../assets/images/icones/tres-pontos-line-black.png')}
               style={{ width: 32, height: 32 }}
             />
           </Pressable>

@@ -3,6 +3,8 @@ import { EstabelecimentoDetalhes } from "@/components/Modal/EstabelecimentoDetal
 import VerbetesExcludConfirm from "@/components/Modal/ExcludConfirm/VerbetesExcludConfirm";
 import { ReadMoreModal } from "@/components/Modal/ModalVerbete";
 import { RestaurantCardSearch } from "@/components/Restaurante/RestauranteCardSearch";
+import { useEstablishments } from '@/hooks/useEstablishment';
+import { User } from "@/interfaces";
 import Colors from "@/theme/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
@@ -64,10 +66,17 @@ export default function Estabelecimentos() {
   const [isSaved, setIsSaved] = useState(false);
   const [showMenu, setShowMenu] = useState(false)
   const [modalVisivel, setModalVisivel] = useState(false);
-  const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState(null);
+  const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState<User>();
   const [subTab, setSubTab] = useState<'todos' | 'cupom'>('todos');
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>(null);
+
+  const { data: establishments = [] } = useEstablishments();
+
+  const filteredEstablishments = establishments.filter((est) => {
+    if (subTab === 'cupom') return est.coupon_enabled === true;
+    return true;
+  });
 
   const openDeleteModal = (item: any) => {
     setSelectedItem(item);
@@ -86,10 +95,10 @@ export default function Estabelecimentos() {
       end={{ x: 0, y: 0.8 }}
       style={styles.container}
     >
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <StatusBar barStyle="dark-content" backgroundColor={'#FFFBE6'} />
         <Header />
-        <SafeAreaView style={styles.scrollContent}>
+        <View style={styles.scrollContent}>
 
 
           <View>
@@ -107,7 +116,7 @@ export default function Estabelecimentos() {
           </View>
 
           <FlatList
-            data={MOCK_RESTAURANTES}
+            data={filteredEstablishments}
             keyExtractor={(item) => item.id}
             contentContainerStyle={{ paddingBottom: 120 }}
             showsVerticalScrollIndicator={false}
@@ -118,35 +127,35 @@ export default function Estabelecimentos() {
             ListFooterComponent={<View style={{ height: 100 }} />}
           />
 
-        </SafeAreaView>
-        {/* MODAL DE CONFIRMAÇÃO DE EXCLUSÃO */}
-        <ReadMoreModal
-          visible={deleteModalVisible}
-          onClose={() => setDeleteModalVisible(false)}
-          title="Confirmar Exclusão"
-          type="small"
-        >
-          <VerbetesExcludConfirm
-            onCancel={() => setDeleteModalVisible(false)}
-            onConfirm={() => {
-              console.log("Excluindo:", selectedItem?.id);
-              setDeleteModalVisible(false);
-            }}
-          />
-        </ReadMoreModal>
+        </View>
+      </SafeAreaView>
 
-        {/* O SEU MODAL SENDO USADO AQUI */}
-        <ReadMoreModal
-          visible={modalVisivel}
-          onClose={() => setModalVisivel(false)}
-          title="Estabelecimento ipsum"
-          type="full"
-        >
-          {/* O novo componente entra como 'children' mágico aqui dentro! */}
-          <EstabelecimentoDetalhes />
-        </ReadMoreModal>
+      {/* MODAL DE CONFIRMAÇÃO DE EXCLUSÃO */}
+      <ReadMoreModal
+        visible={deleteModalVisible}
+        onClose={() => setDeleteModalVisible(false)}
+        title="Confirmar Exclusão"
+        type="small"
+      >
+        <VerbetesExcludConfirm
+          onCancel={() => setDeleteModalVisible(false)}
+          onConfirm={() => {
+            console.log("Excluindo:", selectedItem?.id);
+            setDeleteModalVisible(false);
+          }}
+        />
+      </ReadMoreModal>
 
-      </View>
+      {/* O SEU MODAL SENDO USADO AQUI */}
+      <ReadMoreModal
+        visible={modalVisivel}
+        onClose={() => setModalVisivel(false)}
+        title="Estabelecimento ipsum"
+        type="full"
+      >
+        {/* O novo componente entra como 'children' mágico aqui dentro! */}
+        <EstabelecimentoDetalhes establishment={estabelecimentoSelecionado as User} />
+      </ReadMoreModal>
     </LinearGradient>
   );
 };
@@ -156,6 +165,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     // backgroundColor: '#FFFBE6',
+  },
+  contentContainer: {
+    flex: 1,
+    position: 'relative',
   },
   scrollContent: {
     paddingHorizontal: 20,

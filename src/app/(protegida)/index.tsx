@@ -53,7 +53,10 @@ export default function HomeScreen() {
       style={styles.container}
     >
       <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor={'#FFFBE6'} />
+        <StatusBar
+          backgroundColor={'#FFFBE6'}
+          barStyle={'dark-content'}
+        />
 
         <View style={styles.contentContainer}>
           {/* Header Fixo */}
@@ -133,7 +136,7 @@ export default function HomeScreen() {
       >
         {selectedEvent && (
           <EventsInfo
-            location={`${selectedEvent.address.street}, ${selectedEvent.address.neighborhood} - ${selectedEvent.address.city}`}
+            location={`${selectedEvent.address}`}
             date={formatDateTime(selectedEvent.event_date)}
             description={selectedEvent.description}
           />

@@ -1,13 +1,28 @@
+import { coverImageMap, defaultCover, defaultLogo, logoImageMap } from '@/constants/imgMaps';
+import { useEstablishmentDishes } from '@/hooks/useEstablishment';
+import { User } from '@/interfaces';
 import { Feather } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export function EstabelecimentoDetalhes() {
+
+
+interface EstabelecimentoDetalhesProps {
+  establishment: User; // ou um tipo específico para estabelecimento
+}
+
+export function EstabelecimentoDetalhes({ establishment }: EstabelecimentoDetalhesProps) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'info' | 'pratos'>('info');
   const [activeCategory, setActiveCategory] = useState('Todos');
+  const { data: dishes = [], isLoading } = useEstablishmentDishes(establishment.id);
 
   const categorias = ['Todos', 'Almoços', 'Tira-gostos', 'Petiscos'];
 
+  const { username, cover_image, logo_image, opening_hours, min_price, max_price, coupon_enabled, coupon_percentage, social, address } = establishment;
+  const coverSource = coverImageMap[establishment.id as keyof typeof coverImageMap] || defaultCover;
+  const logoSrc = logoImageMap[establishment.id as keyof typeof logoImageMap] || defaultLogo;
   // Mock de dados para os pratos baseado na imagem
   const pratos = [
     { id: '1', nome: 'Nome do prato', hasVerbete: true },
@@ -18,17 +33,24 @@ export function EstabelecimentoDetalhes() {
     { id: '6', nome: 'Nome do prato', hasVerbete: false },
   ];
 
+  // const filteredDishes = activeCategory === 'Todos'
+  //   ? dishes
+  //   : dishes.filter(dish => dish.category === activeCategory); // Assumindo que Dish tenha campo `category`
+
   return (
     <View style={styles.container}>
       {/* 1. Capa e Avatar */}
       <View style={styles.heroSection}>
-        <View style={styles.coverImagePlaceholder}>
-          {/* Substituir por <Image source={...} style={styles.coverImage} /> */}
-        </View>
+
+        {/* <View > */}
+        <Image source={coverSource} style={styles.coverImagePlaceholder} />
+        {/* Substituir por <Image source={...} style={styles.coverImage} /> */}
+        {/* </View> */}
         <View style={styles.avatarWrapper}>
-          <View style={styles.avatarPlaceholder}>
+          <Image source={logoSrc} style={styles.avatarPlaceholder} />
+          {/* <View style={styles.avatarPlaceholder}>
             <Text style={{ fontSize: 10, textAlign: 'center' }}>Logo</Text>
-          </View>
+          </View> */}
         </View>
       </View>
 
@@ -55,10 +77,10 @@ export function EstabelecimentoDetalhes() {
       {activeTab === 'info' && (
         <View style={styles.contentSection}>
           <Text style={styles.sectionTitle}>Horário de funcionamento:</Text>
-          {['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'].map((dia) => (
-            <View key={dia} style={styles.row}>
-              <Text style={styles.textLabel}>{dia}:</Text>
-              <Text style={styles.textValue}>08h00 – 18h00</Text>
+          {(Array.isArray(opening_hours) ? opening_hours : []).map((h) => (
+            <View key={h.day} style={styles.row}>
+              <Text style={styles.textLabel}>{h.day}:</Text>
+              <Text style={styles.textValue}>{h.open} – {h.close}</Text>
             </View>
           ))}
 
@@ -74,7 +96,7 @@ export function EstabelecimentoDetalhes() {
           <Text style={[styles.sectionTitle, { marginTop: 24 }]}>Valores</Text>
           <View style={styles.row}>
             <Text style={styles.textLabel}>Preço médio:</Text>
-            <Text style={[styles.textValue, { textDecorationLine: 'underline' }]}>R$ 50,00 - 120,00</Text>
+            <Text style={[styles.textValue, { textDecorationLine: 'underline' }]}>R$ {min_price} – R$ {max_price}</Text>
           </View>
 
           {/* Cupom */}
@@ -83,9 +105,11 @@ export function EstabelecimentoDetalhes() {
               <Feather name="tag" size={24} color="#555" />
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={styles.couponTitle}>Cupom de desconto</Text>
-                <TouchableOpacity style={styles.btnSolidGreen}>
-                  <Text style={styles.btnSolidGreenText}>Solicitar desconto</Text>
-                </TouchableOpacity>
+                {coupon_enabled && (
+                  <TouchableOpacity style={styles.btnSolidGreen}>
+                    <Text style={styles.btnSolidGreenText}>Solicitar desconto</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
             <Text style={styles.couponDisclaimer}>
@@ -96,7 +120,7 @@ export function EstabelecimentoDetalhes() {
           <Text style={[styles.sectionTitle, { marginTop: 24 }]}>Localização</Text>
           <View style={styles.mapPlaceholder} />
           <Text style={styles.addressText}>
-            Rua das Mangueiras, nº 1287 — Bairro Rio Vermelho, Salvador — BA, CEP 00000-000
+            {address}
           </Text>
 
           {/* Redes Sociais */}
@@ -127,19 +151,30 @@ export function EstabelecimentoDetalhes() {
           </ScrollView>
 
           <View style={styles.gridContainer}>
-            {pratos.map((prato) => (
-              <View key={prato.id} style={styles.dishCard}>
+            {dishes.map((dish) => (
+              <View key={dish.id} style={styles.dishCard}>
                 <View style={styles.dishImageBg}>
+                  <Image
+                    source={{ uri: dish.dish_image_path }}
+                    style={styles.dishImage}
+                    resizeMode="cover"
+                  />
                   <TouchableOpacity style={styles.dishMenuBtn}>
                     <Feather name="more-vertical" size={16} color="#FFF" />
                   </TouchableOpacity>
-                  <Text style={styles.dishTitle}>{prato.nome}</Text>
+                  <Text style={styles.dishTitle}>{dish.name}</Text>
                 </View>
                 <TouchableOpacity
-                  style={[styles.btnVerbete, prato.hasVerbete ? styles.btnVerbeteActive : styles.btnVerbeteInactive]}
+                  style={[styles.btnVerbete, dish.associated_entry ? styles.btnVerbeteActive : styles.btnVerbeteInactive]}
+                  onPress={() => {
+                    if (dish.associated_entry) {
+                      router.push(`/verbete?id=${dish.associated_entry}`);
+                    }
+                  }}
+                  disabled={!dish.associated_entry}
                 >
-                  <Feather name="book-open" size={14} color={prato.hasVerbete ? '#FFF' : '#A8A8A8'} />
-                  <Text style={[styles.verbeteText, !prato.hasVerbete && styles.verbeteTextInactive]}>
+                  <Feather name="book-open" size={14} color={dish.associated_entry ? '#FFF' : '#A8A8A8'} />
+                  <Text style={[styles.verbeteText, !dish.associated_entry && styles.verbeteTextInactive]}>
                     Ver verbete
                   </Text>
                 </TouchableOpacity>
@@ -154,7 +189,7 @@ export function EstabelecimentoDetalhes() {
 
 const styles = StyleSheet.create({
   // Usei paddingBottom para compensar o scroll do modal pai
-  container: { paddingBottom: 40, gap: 20 },
+  container: { paddingBottom: 40, gap: 20, paddingHorizontal: 16 },
 
   // Hero Section
   heroSection: { position: 'relative', marginBottom: 20 },
@@ -162,6 +197,7 @@ const styles = StyleSheet.create({
     height: 140,
     backgroundColor: '#D1A25B', // Cor de teste, troque pela imagem
     borderRadius: 16,
+    width: "100%"
   },
   avatarWrapper: {
     position: 'absolute',
@@ -241,9 +277,16 @@ const styles = StyleSheet.create({
   dishCard: { width: '48%', marginBottom: 8 },
   dishImageBg: {
     height: 120, backgroundColor: '#333', borderTopLeftRadius: 12, borderTopRightRadius: 12,
-    padding: 8, justifyContent: 'space-between'
+    padding: 8, justifyContent: 'space-between', overflow: 'hidden',
   },
   dishMenuBtn: { alignSelf: 'flex-end', backgroundColor: 'rgba(52, 82, 59, 0.8)', padding: 4, borderRadius: 6 },
+  dishImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
   dishTitle: { color: '#FFF', fontWeight: 'bold', fontSize: 14 },
   btnVerbete: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 8, borderBottomLeftRadius: 12, borderBottomRightRadius: 12, gap: 6 },
   btnVerbeteActive: { backgroundColor: '#34523B' },

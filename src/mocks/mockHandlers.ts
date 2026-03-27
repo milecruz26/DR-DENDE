@@ -30,6 +30,13 @@ function getUserFromToken(config: any): User | null {
 }
 
 // Carrega todos os dados (usuários, tokens, likes)
+const resetMocks = async () => {
+  await SecureStore.deleteItemAsync('mock_users');
+  await SecureStore.deleteItemAsync('mock_confirm_tokens');
+  await SecureStore.deleteItemAsync('mock_liked_dishes');
+  // Recarregar o app ou reiniciar
+};
+
 const loadMockData = async () => {
   try {
     const storedUsers = await SecureStore.getItemAsync(MOCK_USERS_KEY);
@@ -83,6 +90,7 @@ const saveLikedDishes = async () => {
 // await loadLikedDishes();
 
 // Inicia o carregamento
+// loadPromise = resetMocks();
 loadPromise = loadMockData();
 
 if (USE_MOCKS) {
@@ -362,6 +370,22 @@ if (USE_MOCKS) {
         return Promise.reject({ response: { status: 403, data: { detail: 'Not an establishment' } } });
       }
 
+      // GET /establishments/all – retorna todos os estabelecimentos
+      if (config.url === '/establishments/all' && config.method === 'get') {
+        const establishments = mockUsers.filter(u => u.user_type === 'establishment');
+        // Remove o campo password e outros dados sensíveis
+        const sanitized = establishments.map(({ password, ...rest }) => rest);
+        return Promise.resolve({ data: sanitized, status: 200 });
+      }
+
+      // GET /establishments/{establishment_id}/dishes
+      const establishmentDishesMatch = config.url?.match(/^\/establishments\/([^/]+)\/dishes$/);
+      if (establishmentDishesMatch && config.method === 'get') {
+        const establishmentId = establishmentDishesMatch[1];
+        const dishes = mockDishes.filter(d => d.establishment_id === establishmentId);
+        return Promise.resolve({ data: dishes, status: 200 });
+      }
+
       // GET /establishments/dish
       if (config.url === '/establishments/dish' && config.method === 'get') {
         const dishes = mockDishes.filter(d => d.establishment_id === user?.id);
@@ -370,10 +394,87 @@ if (USE_MOCKS) {
 
       // POST /establishments/dish
       if (config.url === '/establishments/dish' && config.method === 'post') {
-        const newDish = config.data as Omit<Dish, 'id'>;
-        const dish: Dish = { ...newDish, id: `dish-${Date.now()}`, establishment_id: user?.id };
-        mockDishes.push(dish);
-        return Promise.resolve({ data: dish, status: 201 });
+        const user = getUserFromToken(config);
+        if (!user) return Promise.reject({ response: { status: 401 } });
+        if (user.user_type !== 'establishment') {
+          return Promise.reject({ response: { status: 403 } });
+        }
+
+        let name = '', associated_entry = '', dish_image_path = '';
+        if (config.data instanceof FormData) {
+          for (const [key, value] of (config.data as any)._parts) {
+            if (key === 'name') name = value;
+            if (key === 'associated_entry') associated_entry = value;
+            if (key === 'dish_image_path') {
+              dish_image_path = value.uri || value; // guarda apenas a URI
+            }
+          }
+        } else {
+          const data = typeof config.data === 'string' ? JSON.parse(config.data) : config.data;
+          name = data.name;
+          associated_entry = data.associated_entry;
+          dish_image_path = data.dish_image_path;
+        }
+
+        // Verifica se associated_entry é um ID (ex: 'passarinha') ou nome (ex: 'Passarinha')
+        let entryId = associated_entry;
+        const entryExists = mockEntries.find(e => e.id === associated_entry);
+        if (!entryExists) {
+          // Tenta encontrar pelo nome (normalizado)
+          const normalized = associated_entry.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+          const foundEntry = mockEntries.find(e =>
+            e.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() === normalized
+          );
+          if (foundEntry) entryId = foundEntry.id;
+        }
+
+        const newDish: Dish = {
+          id: `dish-${Date.now()}`,
+          name,
+          dish_image_path, // agora é uma string (URI)
+          associated_entry: entryId,
+          establishment_id: user.id,
+        };
+        mockDishes.push(newDish);
+        await saveMockData(); // salva mockDishes
+        return Promise.resolve({ data: newDish, status: 201 });
+      }
+
+      // PUT /establishments
+      if (config.url === '/establishments' && config.method === 'put') {
+        const user = getUserFromToken(config);
+        if (!user) return Promise.reject({ response: { status: 401 } });
+        if (user.user_type !== 'establishment') {
+          return Promise.reject({ response: { status: 403 } });
+        }
+
+        const updated: any = {};
+
+        if (config.data instanceof FormData) {
+          // Extrai os campos do FormData
+          for (const [key, value] of (config.data as any)._parts) {
+            if (key === 'cover_image') {
+              // Se for um arquivo, armazenamos a URI (simulação)
+              updated.cover_image = value.uri || value;
+            } else if (key === 'logo_image') {
+              updated.logo_image = value.uri || value;
+            } else {
+              updated[key] = value;
+            }
+          }
+        } else {
+          // Se for JSON (fallback)
+          let requestData = config.data;
+          if (typeof requestData === 'string') requestData = JSON.parse(requestData);
+          Object.assign(updated, requestData);
+        }
+
+        // Atualiza o objeto do usuário com os novos campos
+        Object.assign(user, updated);
+        await saveMockData();
+
+        const { password: _, ...userWithoutPassword } = user;
+        return Promise.resolve({ data: userWithoutPassword, status: 200 });
       }
 
       // Se não mapeado, rejeita
