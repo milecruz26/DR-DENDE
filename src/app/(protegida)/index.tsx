@@ -3,7 +3,7 @@ import { Header } from '@/components/Header';
 import { HighlightCard } from '@/components/HighlightCard';
 import { SectionTitle } from '@/components/SectionTitle';
 import { VerbeteCard } from '@/components/VerbeteCard';
-// import { apiGetVerbetes, Verbete } from '@/data/mockVerbetes';
+import { useAuth } from '@/context/AuthContext';
 import EventCalendarList from '@/components/Eventos/ListaEventos';
 import EventsInfo from '@/components/Modal/Info/EventsInfo';
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
@@ -25,6 +25,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function HomeScreen() {
+  const { user } = useAuth();
   const { data: verbetes, } = useAllEntries();
   const { data: likedDishes } = useLikedDishes();
   const { mutate: like } = useLikeDish();
@@ -90,6 +91,7 @@ export default function HomeScreen() {
                   imagem={verbete.picture}
                   isLiked={likedIds.includes(verbete.id)}
                   onToggleLike={handleToggleLike}
+                  showBookmark={user?.user_type === 'common'}
                 />
               ))}
               {/* NÃO É PRA DELETAR ATÉ SER APLICADO */}

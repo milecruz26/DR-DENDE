@@ -23,7 +23,7 @@ export default function Eventos() {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Text style={styles.textPage}>Eventos</Text>
 
-          {user?.user_type !== 'common' && (
+          {user?.user_type === 'staff' && (
 
             <SecondaryButton
               title="+ Criar Evento"

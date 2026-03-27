@@ -1,3 +1,8 @@
+import savedFilledWhite from '@/assets/images/icones/saved-filled-line-white.png';
+import savedWhite from '@/assets/images/icones/saved-line-white.png';
+import tresPontosWhite from '@/assets/images/icones/tres-pontos-line-white.png';
+import megaphoneNeutral from '@/assets/images/icones/megaphone-line-neutral.png';
+import trashRed from '@/assets/images/icones/trash-line-red.png';
 import { useAuth } from '@/context/AuthContext';
 import Colors from "@/theme/Colors";
 import { router } from "expo-router";
@@ -55,18 +60,16 @@ export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: 
 
         {/* Botoes flutuantes (Bookmark e Menu) */}
         <View style={styles.restActions}>
-          <Pressable style={styles.iconBtn} onPress={toggleSave}>
-            <Image source={
-              isSaved
-                ? require('../../../assets/images/icones/saved-filled-line-white.png')
-                : require('../../../assets/images/icones/saved-line-white.png')
-            } style={{ width: 24, height: 24 }} />
-          </Pressable>
+          {user?.user_type === 'common' && (
+            <Pressable style={styles.iconBtn} onPress={toggleSave}>
+              <Image source={isSaved ? savedFilledWhite : savedWhite} style={{ width: 24, height: 24 }} />
+            </Pressable>
+          )}
 
           {/* 3. Container relativo para ancorar o menu absoluto */}
           <View style={{ position: 'relative' }}>
             <Pressable style={styles.iconBtn} onPress={toggleMenu}>
-              <Image source={require('../../../assets/images/icones/tres-pontos-line-white.png')} style={{ width: 24, height: 24 }} />
+              <Image source={tresPontosWhite} style={{ width: 24, height: 24 }} />
             </Pressable>
 
             {/* 4. O Menu Flutuante */}
@@ -81,16 +84,16 @@ export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: 
                 }}>
                   <View style={[styles.menuItem, styles.menuItemHighlight]}>
                     <Text style={styles.menuItemText}>Denunciar</Text>
-                    <Image source={require('../../../assets/images/icones/megaphone-line-neutral.png')} style={{ width: 16, height: 16 }} />
+                    <Image source={megaphoneNeutral} style={{ width: 16, height: 16 }} />
                   </View>
                 </Pressable>
 
                 <View style={styles.menuDivider} />
-                {user?.user_type !== 'common' && (
+                {user?.user_type === 'staff' && (
                   <Pressable onPress={onDeletePress}>
                     <View style={styles.menuItem}>
                       <Text style={styles.menuItemTextRed}>Excluir</Text>
-                      <Image source={require('../../../assets/images/icones/trash-line-red.png')} style={{ width: 16, height: 16 }} />
+                      <Image source={trashRed} style={{ width: 16, height: 16 }} />
                     </View>
                   </Pressable>)
                 }

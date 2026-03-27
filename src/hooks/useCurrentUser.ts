@@ -1,16 +1,15 @@
-// hooks/useCurrentUser.ts
-import { userService } from '@/services/user';
-import { useQuery } from '@tanstack/react-query';
-import * as SecureStore from 'expo-secure-store';
+import { userService } from "@/services/user";
+import { storage } from "@/utils/storage";
+import { useQuery } from "@tanstack/react-query";
 
-const TOKEN_KEY = 'auth_token';
+const TOKEN_KEY = "auth_token";
 
 export const useCurrentUser = () => {
   return useQuery({
-    queryKey: ['currentUser'],
+    queryKey: ["currentUser"],
     queryFn: async () => {
-      const token = await SecureStore.getItemAsync(TOKEN_KEY);
-      if (!token) throw new Error('No token');
+      const token = await storage.getItem(TOKEN_KEY);
+      if (!token) throw new Error("No token");
       const { data } = await userService.getCurrentUser();
       return data;
     },

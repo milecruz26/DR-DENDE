@@ -1,4 +1,7 @@
 import { images } from '@/assets/images/pratos';
+import savedFilledWhite from '@/assets/images/icones/saved-filled-line-white.png';
+import savedWhite from '@/assets/images/icones/saved-line-white.png';
+import defaultDishImage from '@/assets/images/pratos/VATAPÁ.png';
 import { useRouter } from 'expo-router';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -9,13 +12,14 @@ interface VerbeteCardProps {
   imagem: string;
   isLiked?: boolean;
   onToggleLike?: (id: string) => void;
+  showBookmark?: boolean;
 }
 
-export const VerbeteCard = ({ id, title, description, imagem, isLiked = false, onToggleLike }: VerbeteCardProps) => {
+export const VerbeteCard = ({ id, title, description, imagem, isLiked = false, onToggleLike, showBookmark = true }: VerbeteCardProps) => {
   const router = useRouter();
   const imageKey = imagem.toLowerCase().replace(/\.png$/, '');
   const imageSource = images[imageKey];
-  const defaultImage = require('@/assets/images/pratos/VATAPÁ.png');
+  const defaultImage = defaultDishImage;
 
   const handleToggle = () => {
     onToggleLike?.(id);
@@ -34,16 +38,14 @@ export const VerbeteCard = ({ id, title, description, imagem, isLiked = false, o
       <View style={styles.verbeteContent}>
         <View style={styles.verbeteHeaderRow}>
           <Text style={styles.verbeteTitle}>{title}</Text>
-          <Pressable onPress={handleToggle}>
-            <Image
-              source={
-                isLiked
-                  ? require('../../assets/images/icones/saved-filled-line-white.png')
-                  : require('../../assets/images/icones/saved-line-white.png')
-              }
-              style={{ width: 32, height: 32 }}
-            />
-          </Pressable>
+          {showBookmark && (
+            <Pressable onPress={handleToggle}>
+              <Image
+                source={isLiked ? savedFilledWhite : savedWhite}
+                style={{ width: 32, height: 32 }}
+              />
+            </Pressable>
+          )}
         </View>
         <Text style={styles.verbeteDesc} numberOfLines={4}>
           {description}

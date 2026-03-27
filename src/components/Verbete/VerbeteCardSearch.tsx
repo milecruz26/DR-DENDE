@@ -1,4 +1,8 @@
 import { images } from '@/assets/images/pratos';
+import savedFilledNeutral from '@/assets/images/icones/saved-filled-line-neutral.png';
+import savedNeutral from '@/assets/images/icones/saved-line-neutral.png';
+import tresPontosBlack from '@/assets/images/icones/tres-pontos-line-black.png';
+import defaultDishImage from '@/assets/images/pratos/VATAPÁ.png';
 import Colors from "@/theme/Colors";
 import { useRouter } from 'expo-router';
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
@@ -12,6 +16,7 @@ export interface VerbeteCardProps {
   favoritosPage?: boolean;
   isLiked?: boolean;
   onToggleLike?: (id: string) => void;
+  showBookmark?: boolean;
 }
 const { SECONDARY, TERTIARY } = Colors
 
@@ -26,6 +31,7 @@ export const VerbeteCardSearch = ({
   favoritosPage,
   isLiked = false,
   onToggleLike,
+  showBookmark = true,
 }: VerbeteCardProps) => {
   const router = useRouter();
   const backgroundColor = index % 2 === 0 ? TERTIARY.light : SECONDARY.light;
@@ -33,7 +39,7 @@ export const VerbeteCardSearch = ({
 
   const imageKey = img.toLowerCase().replace(/\.png$/, '');
   const imageSource = images[imageKey];
-  const defaultImage = require('@/assets/images/pratos/VATAPÁ.png');
+  const defaultImage = defaultDishImage;
 
   const handleToggle = () => {
     onToggleLike?.(id);
@@ -51,20 +57,18 @@ export const VerbeteCardSearch = ({
       </View>
 
       <View style={{ alignItems: 'center' }}>
-        <Pressable style={styles.bookmarkIcon} onPress={handleToggle}>
-          <Image
-            source={
-              isLiked
-                ? require('../../../assets/images/icones/saved-filled-line-neutral.png')
-                : require('../../../assets/images/icones/saved-line-neutral.png')
-            }
-            style={{ width: 32, height: 32 }}
-          />
-        </Pressable>
+        {showBookmark && (
+          <Pressable style={styles.bookmarkIcon} onPress={handleToggle}>
+            <Image
+              source={isLiked ? savedFilledNeutral : savedNeutral}
+              style={{ width: 32, height: 32 }}
+            />
+          </Pressable>
+        )}
         {favoritosPage && (
           <Pressable>
             <Image
-              source={require('../../../assets/images/icones/tres-pontos-line-black.png')}
+              source={tresPontosBlack}
               style={{ width: 32, height: 32 }}
             />
           </Pressable>
