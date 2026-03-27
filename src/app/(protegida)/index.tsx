@@ -52,7 +52,10 @@ export default function HomeScreen() {
       style={styles.container}
     >
       <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor={'#FFFBE6'} />
+        <StatusBar
+          backgroundColor={'#FFFBE6'}
+          barStyle={'dark-content'}
+        />
 
         <View style={styles.contentContainer}>
           {/* Header Fixo */}

@@ -5,11 +5,13 @@ import {
   StyleSheet,
   View
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 
 export const MockTabBar = () => {
   const pathname = usePathname();
+  const insets = useSafeAreaInsets();
   const isSearch = pathname.startsWith('/busca');
   const isEvents = pathname.startsWith('/eventos');
   const isDinner = pathname.startsWith('/estabelecimentos');
@@ -18,10 +20,14 @@ export const MockTabBar = () => {
 
   return (
 
-    <View style={[
-      styles.tabBar,
-      // { paddingBottom: insets.bottom > 0 ? insets.bottom : 20 } // Se houver barra de sistema, ele usa o tamanho dela + um respiro
-    ]}>
+    <View
+      style={[
+        styles.tabBar,
+        {
+          paddingBottom: Math.max(insets.bottom, 12),
+          height: 48 + Math.max(insets.bottom, 12), // 👈 IMPORTANTE
+        },
+      ]}>
       <Link href="/(protegida)" asChild>
         <Pressable>
           <Image
@@ -75,16 +81,19 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 48,
+    // height: 48,
     backgroundColor: '#2F4F2F',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingVertical: 8,
+    // paddingVertical: 8,
     paddingHorizontal: 47, // Para safe area no iPhone X+
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
-    boxShadow: '0 -4px -4.6px -2px rgba(25, 25, 28, 0.17)', // Sombra para dar profundidade
+    elevation: 10, // Android
+    shadowColor: '#000', // iOS
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.2,
   },
   searchButtonContainer: {
     // top: -20, // Efeito flutuante
@@ -94,7 +103,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 8,
-    // padding: 16,
+    padding: 16,
     justifyContent: 'center',
     alignItems: 'center',
 
