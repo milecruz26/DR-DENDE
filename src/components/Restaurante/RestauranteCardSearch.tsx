@@ -1,14 +1,14 @@
+import megaphoneNeutral from '@/assets/images/icones/megaphone-line-neutral.png';
+import savedFilledWhite from '@/assets/images/icones/saved-filled-line-white.png';
+import savedWhite from '@/assets/images/icones/saved-line-white.png';
+import trashRed from '@/assets/images/icones/trash-line-red.png';
+import tresPontosWhite from '@/assets/images/icones/tres-pontos-line-white.png';
 import cover1 from '@/assets/images/mock/capa-1.png';
 import cover2 from '@/assets/images/mock/capa-2.jpg';
 import cover3 from '@/assets/images/mock/capa-3.jpg';
 import logo1 from '@/assets/images/mock/logo-1.png';
 import logo2 from '@/assets/images/mock/logo-2.png';
 import logo3 from '@/assets/images/mock/logo-3.jpg';
-import savedFilledWhite from '@/assets/images/icones/saved-filled-line-white.png';
-import savedWhite from '@/assets/images/icones/saved-line-white.png';
-import tresPontosWhite from '@/assets/images/icones/tres-pontos-line-white.png';
-import megaphoneNeutral from '@/assets/images/icones/megaphone-line-neutral.png';
-import trashRed from '@/assets/images/icones/trash-line-red.png';
 import { useAuth } from '@/context/AuthContext';
 import Colors from "@/theme/Colors";
 import { router } from "expo-router";
@@ -98,18 +98,18 @@ export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: 
             {showMenu && (
               <View style={styles.dropdownMenu}>
 
-                {user?.user_type === "common" &&
-
-                <Pressable onPress={() => {
-                  setShowMenu(false);
-                  // Navega para a tela de denúncia passando o ID do estabelecimento
-                  router.push(`/configuracoes/denunciar?establishment_id=${item.id}`);
-                }}>
-                  <View style={[styles.menuItem, styles.menuItemHighlight]}>
-                    <Text style={styles.menuItemText}>Denunciar</Text>
-                    <Image source={megaphoneNeutral} style={{ width: 16, height: 16 }} />
-                  </View>
-                </Pressable>
+                {user?.user_type === "common" && (
+                  <Pressable onPress={() => {
+                    setShowMenu(false);
+                    // Navega para a tela de denúncia passando o ID do estabelecimento
+                    router.push(`/configuracoes/denunciar?establishment_id=${item.id}`);
+                  }}>
+                    <View style={[styles.menuItem, styles.menuItemHighlight]}>
+                      <Text style={styles.menuItemText}>Denunciar</Text>
+                      <Image source={megaphoneNeutral} style={{ width: 16, height: 16 }} />
+                    </View>
+                  </Pressable>
+                )}
 
                 <View style={styles.menuDivider} />
                 {user?.user_type === 'staff' && (
@@ -118,15 +118,15 @@ export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: 
                       <Text style={styles.menuItemTextRed}>Excluir</Text>
                       <Image source={trashRed} style={{ width: 16, height: 16 }} />
                     </View>
-                  </Pressable>)
-                }
+                  </Pressable>
+                )}
 
 
 
               </View>
             )}
           </View>
-          }
+
         </View>
 
 
