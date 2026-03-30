@@ -3,7 +3,7 @@ import { Complaint, ComplaintValidation, Dish, Event, User } from '../interfaces
 import { api } from '../services/apiTeste';
 import { mockUsers as initialMockUsers, mockComplaints, mockDishes, mockEntries, mockEvents } from './mockData';
 
-const USE_MOCKS = false;
+const USE_MOCKS = true;
 const MOCK_USERS_KEY = 'mock_users';
 const CONFIRM_TOKENS_KEY = 'mock_confirm_tokens';
 const LIKED_DISHES_KEY = 'mock_liked_dishes'; // Chave para os likes
@@ -13,7 +13,7 @@ let mockUsers: User[] = [];
 let confirmationTokens: Record<string, string> = {};
 let likedDishesMap: Record<string, string[]> = {}; // userId -> array de entryIds
 
-let dataLoaded = false;
+let dataLoaded = true;
 let loadPromise: Promise<void> | null = null;
 
 // Função auxiliar para obter usuário a partir do token no header
