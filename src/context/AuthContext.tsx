@@ -1,10 +1,9 @@
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useLogin } from '@/hooks/useLogin';
 import { storage } from '@/utils/storage';
+import { STORAGE_KEYS } from '@/constants/storageKeys';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { createContext, useContext } from 'react';
-
-const TOKEN_KEY = 'auth_token';
 
 interface SignInOptions {
   onSuccess?: () => void;
@@ -36,11 +35,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
-    // Remove o token
-    await storage.deleteItem(TOKEN_KEY);
-    // Invalida a query do usuário para que ela seja recarregada (e falhe)
+    await storage.deleteItem(STORAGE_KEYS.TOKEN);
+    await storage.deleteItem(STORAGE_KEYS.USER_TYPE);
+    await storage.deleteItem(STORAGE_KEYS.STAFF_USER);
     await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-    // Remove os dados do cache para garantir que não haja resquícios
     queryClient.removeQueries({ queryKey: ['currentUser'] });
   };
 
