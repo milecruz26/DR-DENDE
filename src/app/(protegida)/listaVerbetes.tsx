@@ -1,3 +1,4 @@
+// src/app/(protegida)/listaVerbetes.tsx
 import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 import { Header } from '@/components/Header';
 import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';

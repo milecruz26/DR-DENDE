@@ -6,13 +6,14 @@ export const useAllEvents = () => {
   return useQuery({
     queryKey: ['events'],
     queryFn: () => staffService.getAllEvents().then(res => res.data),
-    staleTime: 1000 * 60 * 5, // 5 minutos sem refetch
+    staleTime: 1000 * 60 * 10, // 5 minutos sem refetch
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
 };
 
+//Criar evento
 export const useCreateEvent = () => {
   const queryClient = useQueryClient();
   return useMutation({

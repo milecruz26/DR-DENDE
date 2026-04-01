@@ -1,5 +1,5 @@
+// src/interfaces/entry.ts
 export interface Ingredient {
-  // estrutura não definida no PDF, exemplo simples
   name: string;
   quantity?: string;
 }

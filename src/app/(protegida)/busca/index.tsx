@@ -1,9 +1,10 @@
-import { useAuth } from '@/context/AuthContext';
+// src/app/(protegida)/busca/index.tsx
 import { Header } from '@/components/Header';
 import { EstabelecimentoDetalhes } from '@/components/Modal/EstabelecimentoDetalhes';
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { RestaurantCardSearch } from '@/components/Restaurante/RestauranteCardSearch';
 import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';
+import { useAuth } from '@/context/AuthContext';
 import { useDislikeDish, useLikedDishes, useLikeDish } from '@/hooks/useDish';
 import { useAllEntries } from '@/hooks/useEntries';
 import { useEstablishments } from '@/hooks/useEstablishment';

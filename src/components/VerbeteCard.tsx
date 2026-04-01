@@ -1,3 +1,4 @@
+// src/components/VerbeteCard.tsx
 import savedFilledWhite from '@/assets/images/icones/saved-filled-line-white.png';
 import savedWhite from '@/assets/images/icones/saved-line-white.png';
 import { images } from '@/assets/images/pratos';
@@ -17,7 +18,7 @@ interface VerbeteCardProps {
 
 export const VerbeteCard = ({ id, title, description, imagem, isLiked = false, onToggleLike, showBookmark = true }: VerbeteCardProps) => {
   const router = useRouter();
-  const imageKey = imagem.toLowerCase().replace(/\.png$/, '');
+  const imageKey = imagem?.toLowerCase?.().replace(/\.png$/, '');
   const imageSource = images[imageKey];
   const defaultImage = defaultDishImage;
 
