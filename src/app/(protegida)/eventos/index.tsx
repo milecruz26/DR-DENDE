@@ -4,6 +4,7 @@ import { Header } from '@/components/Header';
 import EventsInfo from '@/components/Modal/Info/EventsInfo';
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { useAuth } from '@/context/AuthContext';
+import { useEventById } from '@/hooks/useEvents';
 import { Event } from '@/interfaces/event';
 import { formatDateTime } from '@/utils/formatDateTime';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,7 +15,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Eventos() {
   const { user } = useAuth();
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedEventId, setSelectedEventId] = useState<Event['id'] | null>(null);
+  const { data: selectedEvent, isLoading } = useEventById(selectedEventId || '');
 
   return (
     <LinearGradient colors={['#FFF', '#FFF0C8']} style={styles.container}>
@@ -37,13 +39,13 @@ export default function Eventos() {
           </View>
 
           {/* O COMPONENTE REUTILIZÁVEL AQUI */}
-          <EventCalendarList onSelectEvent={setSelectedEvent} />
+          <EventCalendarList onSelectEvent={(event) => setSelectedEventId(event?.id!)} />
         </View>
 
       </SafeAreaView>
       <ReadMoreModal
         visible={!!selectedEvent}
-        onClose={() => setSelectedEvent(null)}
+        onClose={() => setSelectedEventId(null)}
         title={selectedEvent?.name || ''}
 
       >

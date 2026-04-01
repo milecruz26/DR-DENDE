@@ -10,8 +10,8 @@ import { VerbeteCard } from '@/components/VerbeteCard';
 import { useAuth } from '@/context/AuthContext';
 import { useDislikeDish, useLikedDishes, useLikeDish } from '@/hooks/useDish';
 import { useAllEntries } from '@/hooks/useEntries';
+import { useEventById } from '@/hooks/useEvents';
 import { Entry } from '@/interfaces';
-import { Event } from '@/interfaces/event';
 import { formatDateTime } from '@/utils/formatDateTime';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
@@ -32,7 +32,8 @@ export default function HomeScreen() {
   const { data: likedDishes } = useLikedDishes();
   const { mutate: like } = useLikeDish();
   const { mutate: dislike } = useDislikeDish();
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const { data: selectedEvent, isLoading } = useEventById(selectedEventId || '');
   // const [verbetes, setVerbetes] = useState<Verbete[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -120,7 +121,7 @@ export default function HomeScreen() {
 
               <SectionTitle title="Eventos" showLink />
             </Pressable>
-            <EventCalendarList onSelectEvent={setSelectedEvent} />
+            <EventCalendarList onSelectEvent={(event) => setSelectedEventId(event?.id!)} />
 
             {/* Espaço extra para não ficar atrás da TabBar */}
             <View style={{ height: 100 }} />
@@ -132,8 +133,8 @@ export default function HomeScreen() {
 
       </SafeAreaView>
       <ReadMoreModal
-        visible={!!selectedEvent}
-        onClose={() => setSelectedEvent(null)}
+        visible={!!selectedEventId}
+        onClose={() => setSelectedEventId(null)}
         title={selectedEvent?.name || ''}
       >
         {selectedEvent && (
