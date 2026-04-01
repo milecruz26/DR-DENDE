@@ -70,7 +70,13 @@ export const useAdicionarEvento = () => {
       dataFinal.setHours(horas, minutos, 0, 0);
 
       // ⚠️ IMPORTANTE: backend espera "date"
-      const formattedDate = dataFinal.toISOString().split('T')[0];
+      const year = dataFinal.getFullYear();
+      const month = String(dataFinal.getMonth() + 1).padStart(2, '0');
+      const day = String(dataFinal.getDate()).padStart(2, '0');
+
+      const formattedDate = `${year}-${month}-${day}`;
+
+      const cleanCep = cep.replace('-', '');
 
       // 🧠 3. Payload CORRETO
       const payload = {
@@ -81,7 +87,7 @@ export const useAdicionarEvento = () => {
           city: cityOnly,
           street: rua,
           neighborhood: bairro,
-          zip_code: cep,
+          zip_code: cleanCep,
         },
       };
 

@@ -1,3 +1,4 @@
+// src/hooks/useStaff.ts
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { staffService } from '../services/staff';
 
@@ -25,7 +26,7 @@ export const useCreateEvent = () => {
     },
 
     onError: (error: any) => {
-      console.log('❌ ERRO AO CRIAR EVENTO:', error.response?.data.message || error.message);
+      console.log('❌ ERRO AO CRIAR EVENTO:', error.response?.data, error.response?.status);
     },
   });
 };
