@@ -3,7 +3,7 @@ import { Complaint, ComplaintValidation, Dish, Event, User } from '../interfaces
 import { api } from '../services/apiTeste';
 import { mockUsers as initialMockUsers, mockComplaints, mockDishes, mockEntries, mockEvents } from './mockData';
 
-const USE_MOCKS = true;
+const USE_MOCKS = false;
 const MOCK_USERS_KEY = 'mock_users';
 const CONFIRM_TOKENS_KEY = 'mock_confirm_tokens';
 const LIKED_DISHES_KEY = 'mock_liked_dishes'; // Chave para os likes
@@ -13,7 +13,7 @@ let mockUsers: User[] = [];
 let confirmationTokens: Record<string, string> = {};
 let likedDishesMap: Record<string, string[]> = {}; // userId -> array de entryIds
 
-let dataLoaded = true;
+let dataLoaded = false;
 let loadPromise: Promise<void> | null = null;
 
 // Função auxiliar para obter usuário a partir do token no header
@@ -92,6 +92,54 @@ const saveLikedDishes = async () => {
 // Inicia o carregamento
 // loadPromise = resetMocks();
 loadPromise = loadMockData();
+console.log('MOCK USERS:', mockUsers)
+
+// api.interceptors.request.use(async (config) => {
+//   if (!USE_MOCKS) return config;
+
+//   if (!dataLoaded) {
+//     await loadPromise;
+//   }
+
+//   // 👇 MOCK LOGIN
+//   if (config.url === '/login' && config.method === 'post') {
+//     const params = new URLSearchParams(config.data);
+//     const username = params.get('username');
+//     const password = params.get('password');
+
+//     const user = mockUsers.find(u => u.email === username);
+
+//     if (user && user.password === password) {
+//       return Promise.reject({
+//         isMock: true,
+//         response: {
+//           data: {
+//             access_token: `fake-token-${user.id}`,
+//             token_type: 'bearer',
+//             user_info: {
+//               user_type: user.user_type,
+//               username: user.username,
+//               profile_id: user.id,
+//               role: user.role || null
+//             }
+//           },
+//           status: 200,
+//         }
+//       });
+//     }
+
+//     return Promise.reject({
+//       isMock: true,
+//       response: {
+//         status: 401,
+//         data: { detail: 'Invalid credentials' }
+//       }
+//     });
+//   }
+
+//   return config;
+// });
+
 
 if (USE_MOCKS) {
   api.interceptors.response.use(

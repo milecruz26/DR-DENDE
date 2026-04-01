@@ -6,7 +6,7 @@ import LoginLoading from '@/components/LoginLoading'
 import { useAuth } from '@/context/AuthContext'; // <-- Importando o contexto
 import Colors from '@/theme/Colors'
 import { Ionicons } from '@expo/vector-icons'
-import { Link, router } from 'expo-router'
+import { Link } from 'expo-router'
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
@@ -30,7 +30,7 @@ export default function Login() {
   const onSubmit = (data: LoginFormData) => {
     signIn(data.email, data.password, {
       onSuccess: () => setShowAbertura(true),
-      onError: () => setError('root', { message: 'E-mail ou senha incorretos' }),
+      onError: () => { setError('root', { message: 'E-mail ou senha incorretos' }) },
     });
   };
 

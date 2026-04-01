@@ -1,7 +1,7 @@
+import { STORAGE_KEYS } from '@/constants/storageKeys';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useLogin } from '@/hooks/useLogin';
 import { storage } from '@/utils/storage';
-import { STORAGE_KEYS } from '@/constants/storageKeys';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { createContext, useContext } from 'react';
 
@@ -31,6 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       options?.onSuccess?.();
     } catch (error) {
       options?.onError?.(error);
+      console.log('ERROR NO SIGN AUTH CONTEXT:', error)
     }
   };
 

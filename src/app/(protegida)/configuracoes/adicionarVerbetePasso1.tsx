@@ -1,3 +1,5 @@
+import ImageUploadField from '@/components/ImageUploadField';
+import { useEntry } from '@/context/EntryContext';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
@@ -15,8 +17,6 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import ImageUploadField from '@/components/ImageUploadField';
-
 const COLORS = {
   primary: '#34523B',
   white: '#FFFFFF',
@@ -33,6 +33,7 @@ const CATEGORIAS = ['Entrada', 'Acompanhamentos', 'Sobremesas', 'Vegetarianas', 
 
 export default function AdicionarVerbetePasso1() {
   const router = useRouter();
+  const { setData } = useEntry();
 
   // Estados do Form
   const [nome, setNome] = useState('');
@@ -76,6 +77,32 @@ export default function AdicionarVerbetePasso1() {
     if (!result.canceled) {
       setImageUri(result.assets[0].uri);
     }
+  };
+
+  const mapCategoria = (cat: string) => {
+    const map = {
+      'Entrada': 'entradas',
+      'Acompanhamentos': 'acompanhamentos',
+      'Sobremesas': 'sobremesas',
+      'Vegetarianas': 'vegetarianas',
+      'Prato Principal': 'prato_principal',
+    };
+
+    return map[cat as keyof typeof map] || 'entradas';
+  };
+
+  const handleNext = () => {
+    setData({
+      name: nome,
+      picture: imageUri,
+      audio: audioUri,
+      entry_text: textoVerbete,
+      category: mapCategoria(categoria),
+      estimated_time: tempo,
+      difficulty_level: 'facil', // temporário
+    });
+
+    router.push('/configuracoes/adicionarVerbetePasso2');
   };
 
 
@@ -288,7 +315,10 @@ export default function AdicionarVerbetePasso1() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.btnPrimary} onPress={() => router.push('/configuracoes/adicionarVerbetePasso2')}>
+        <TouchableOpacity
+          style={styles.btnPrimary}
+          onPress={handleNext}
+        >
           <Text style={styles.btnPrimaryText}>Prosseguir</Text>
         </TouchableOpacity>
 

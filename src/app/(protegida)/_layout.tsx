@@ -3,8 +3,8 @@ import { MockTabBar } from '@/components/MockTabBar';
 import { useAuth } from '@/context/AuthContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Redirect, Slot } from 'expo-router';
-import { storage } from '@/utils/storage';
-import React, { useEffect, useState } from 'react';
+// import { storage } from '@/utils/storage';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -17,23 +17,23 @@ export default function ProtegidaLayout() {
   if (!isAuthenticated) return <Redirect href="/(login)" />;
   const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    const checkOnboarding = async () => {
-      if (!user) return;
-      if (user.user_type === 'common') {
-        const hasSeen = await storage.getItem(`onboarding_${user.id}`);
-        if (!hasSeen) {
-          setShowOnboarding(true);
-          await storage.setItem(`onboarding_${user.id}`, 'true');
-        } else {
-          setShowOnboarding(false);
-        }
-      } else {
-        setShowOnboarding(false);
-      }
-    };
-    checkOnboarding();
-  }, [user]);
+  // useEffect(() => {
+  //   const checkOnboarding = async () => {
+  //     if (!user) return;
+  //     if (user.user_type === 'common') {
+  //       const hasSeen = await storage.getItem(`onboarding_${user.id}`);
+  //       if (!hasSeen) {
+  //         setShowOnboarding(true);
+  //         await storage.setItem(`onboarding_${user.id}`, 'true');
+  //       } else {
+  //         setShowOnboarding(false);
+  //       }
+  //     } else {
+  //       setShowOnboarding(false);
+  //     }
+  //   };
+  //   checkOnboarding();
+  // }, [user]);
 
   return (
     <>
