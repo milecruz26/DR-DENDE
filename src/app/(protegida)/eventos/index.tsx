@@ -49,7 +49,7 @@ export default function Eventos() {
       >
         {selectedEvent && (
           <EventsInfo
-            location={`${selectedEvent.address}`}
+            location={`${selectedEvent.address.street}, ${selectedEvent.address.neighborhood} - ${selectedEvent.address.city}`}
             date={formatDateTime(selectedEvent.event_date)}
             description={selectedEvent.description}
           />

@@ -5,7 +5,7 @@ export interface Event {
   name: string;
   event_date: string;            // formato ISO (YYYY-MM-DD)
   description: string;
-  address: string;
+  address: Address;
   latitude?: number | null;
   longitude?: number | null;
   images?: string[];

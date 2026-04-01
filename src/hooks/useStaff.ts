@@ -18,8 +18,14 @@ export const useCreateEvent = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: staffService.createEvent,
-    onSuccess: () => {
+
+    onSuccess: (data) => {
+      console.log('✅ EVENTO CRIADO:', data);
       queryClient.invalidateQueries({ queryKey: ['events'] });
+    },
+
+    onError: (error: any) => {
+      console.log('❌ ERRO AO CRIAR EVENTO:', error.response?.data.message || error.message);
     },
   });
 };
