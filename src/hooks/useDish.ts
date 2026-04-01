@@ -5,7 +5,10 @@ export const useLikedDishes = () => {
   return useQuery({
     queryKey: ['likedDishes'],
     queryFn: () => dishService.getLikedDishes().then(res => res.data),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 1000 * 60 * 5, // 5 minutos sem refetch
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 };
 

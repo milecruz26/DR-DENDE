@@ -1,4 +1,5 @@
 import { AuthProvider } from '@/context/AuthContext';
+import { EntryProvider } from '@/context/EntryContext';
 import { useDeepLink } from '@/hooks/useDeepLink';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
@@ -47,12 +48,14 @@ function RootLayoutNav() {
     <QueryClientProvider client={queryClient}>
 
       <AuthProvider>
-        <SafeAreaProvider>
-          <Stack>
-            <Stack.Screen name="(login)" options={{ headerShown: false }} />
-            <Stack.Screen name="(protegida)" options={{ headerShown: false }} />
-          </Stack>
-        </SafeAreaProvider>
+        <EntryProvider>
+          <SafeAreaProvider>
+            <Stack>
+              <Stack.Screen name="(login)" options={{ headerShown: false }} />
+              <Stack.Screen name="(protegida)" options={{ headerShown: false }} />
+            </Stack>
+          </SafeAreaProvider>
+        </EntryProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

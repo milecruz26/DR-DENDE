@@ -1,11 +1,14 @@
-import { adicionarEventoMock, Evento } from '@/data/mocksEvents';
+// src/hooks/useAddEventos.ts
+// import { adicionarEventoMock, Evento } from '@/data/mocksEvents';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { useCreateEvent } from './useStaff';
 
 // Dica técnica: Quando você mudar para o Axios, lembre-se de configurar o useEffect na sua tela de listagem para buscar os dados (GET) sempre que a tela ganhar foco, usando o hook useFocusEffect do Expo, para garantir que o novo evento apareça lá sem precisar reiniciar o app.
 
 export const useAdicionarEvento = () => {
   const router = useRouter();
+  const { mutateAsync } = useCreateEvent();
 
   // Estados
   const [nome, setNome] = useState('');
@@ -42,7 +45,8 @@ export const useAdicionarEvento = () => {
 
   // Lógica de Salvar
   const handleSalvarEvento = async () => {
-    if (!nome ||
+    if (
+      !nome ||
       !dataSelecionada ||
       !horario ||
       horario.length < 5 ||
@@ -50,40 +54,54 @@ export const useAdicionarEvento = () => {
       !cep ||
       !rua ||
       !bairro ||
-      !cidade) {
+      !cidade
+    ) {
       alert('Por favor, preencha todos os campos obrigatórios (*)');
       return;
     }
 
-    const [horas, minutos] = horario.split(':').map(Number);
-    const dataFinal = new Date(dataSelecionada);
-    dataFinal.setHours(horas, minutos, 0, 0);
-
-    const novoEvento: Evento = {
-      id: Math.random().toString(36).substr(2, 9), // Gera um ID temporário
-      nome,
-      data: dataSelecionada.toISOString().split('T')[0],
-      horario,
-      descricao,
-      cidade,
-      cep,
-      rua,
-      bairro
-    };
-
     try {
-      /* --- IMPLEMENTAÇÃO COM AXIOS (COMENTADA PARA O FUTURO) ---
-      const response = await StaffService.createEvent(payload);
-    //   console.log("Evento salvo:", response.data);
-    //   alert('Evento adicionado com sucesso!');
-      */
+      // 🧠 1. Limpar cidade (remove " - BA")
+      const cityOnly = cidade.split(' - ')[0];
 
-      // --- IMPLEMENTAÇÃO ATUAL COM MOCK --- 
-      adicionarEventoMock(novoEvento);
+      // 🧠 2. Converter data + hora
+      const [horas, minutos] = horario.split(':').map(Number);
+      const dataFinal = new Date(dataSelecionada);
+      dataFinal.setHours(horas, minutos, 0, 0);
+
+      // ⚠️ IMPORTANTE: backend espera "date"
+      const year = dataFinal.getFullYear();
+      const month = String(dataFinal.getMonth() + 1).padStart(2, '0');
+      const day = String(dataFinal.getDate()).padStart(2, '0');
+
+      const formattedDate = `${year}-${month}-${day}`;
+
+      const cleanCep = cep.replace('-', '');
+
+      // 🧠 3. Payload CORRETO
+      const payload = {
+        name: nome,
+        event_date: formattedDate,
+        description: descricao,
+        address: {
+          city: cityOnly,
+          street: rua,
+          neighborhood: bairro,
+          zip_code: cleanCep,
+        },
+      };
+
+      console.log('📤 Payload enviado:', payload);
+
+      // 🚀 4. Chamada real da API
+      await mutateAsync(payload);
 
       alert('Evento cadastrado com sucesso!');
-      router.back(); // Volta para a lista e ela já estará atualizada
-    } catch (error) {
+
+      router.back(); // volta pra lista
+
+    } catch (error: any) {
+      console.log('❌ ERRO BACKEND:', error.response?.data);
       alert('Erro ao salvar o evento');
     }
   };

@@ -1,11 +1,25 @@
-// hooks/useEntries.ts
+// src/hooks/useEntries.ts
 import { entryService } from '@/services/entry';
 import { useQuery } from '@tanstack/react-query';
 
 export const useAllEntries = () => {
   return useQuery({
     queryKey: ['entries'],
-    queryFn: () => entryService.getAllEntries().then(res => res.data),
+    queryFn: async () => {
+      try {
+        const res = await entryService.getAllEntries();
+        console.log('📦 Entries da API:', res.data);
+        return res.data;
+      } catch (error: any) {
+        console.log('❌ BACKEND ERROR:', error.response?.data);
+        throw error; // ⚠️ importante manter isso
+      }
+    },
+
+    staleTime: 1000 * 60 * 10,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 };
 

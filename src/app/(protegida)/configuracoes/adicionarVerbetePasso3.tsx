@@ -1,3 +1,4 @@
+import { useSubmitEntry } from '@/hooks/useSubmitEntry';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -8,6 +9,7 @@ const COLORS = { primary: '#34523B', white: '#FFFFFF', textDark: '#333333', text
 export default function AdicionarVerbetePasso3() {
   const router = useRouter();
   const [etapas, setEtapas] = useState([{ id: 1, descricao: '' }]);
+  const { submit, isLoading } = useSubmitEntry();
 
   const adicionarEtapa = () => {
     setEtapas([...etapas, { id: Date.now(), descricao: '' }]);
@@ -66,7 +68,7 @@ export default function AdicionarVerbetePasso3() {
           <TouchableOpacity style={styles.btnOutline} onPress={() => router.navigate('/configuracoes')}>
             <Text style={styles.btnOutlineText}>Cancelar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btnSolid} onPress={() => router.navigate('/configuracoes')}>
+          <TouchableOpacity style={styles.btnSolid} onPress={submit}>
             <Text style={styles.btnSolidText}>Concluir</Text>
           </TouchableOpacity>
         </View>

@@ -1,14 +1,16 @@
+// src/app/(protegida)/index.tsx
 import { CategoryChip } from '@/components/CategoryChip';
+import EventCalendarList from '@/components/Eventos/ListaEventos';
 import { Header } from '@/components/Header';
 import { HighlightCard } from '@/components/HighlightCard';
+import EventsInfo from '@/components/Modal/Info/EventsInfo';
+import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { SectionTitle } from '@/components/SectionTitle';
 import { VerbeteCard } from '@/components/VerbeteCard';
 import { useAuth } from '@/context/AuthContext';
-import EventCalendarList from '@/components/Eventos/ListaEventos';
-import EventsInfo from '@/components/Modal/Info/EventsInfo';
-import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { useDislikeDish, useLikedDishes, useLikeDish } from '@/hooks/useDish';
 import { useAllEntries } from '@/hooks/useEntries';
+import { Entry } from '@/interfaces';
 import { Event } from '@/interfaces/event';
 import { formatDateTime } from '@/utils/formatDateTime';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -43,7 +45,7 @@ export default function HomeScreen() {
       like(id);
     }
   };
-
+  console.log('🧠 Verbetes no front:', verbetes);
 
   return (
     <LinearGradient
@@ -85,7 +87,7 @@ export default function HomeScreen() {
 
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
 
-              {verbetes?.map((verbete) => (
+              {verbetes?.map((verbete: Entry) => (
                 <VerbeteCard
                   key={verbete.id}
                   id={verbete.id}
@@ -136,7 +138,7 @@ export default function HomeScreen() {
       >
         {selectedEvent && (
           <EventsInfo
-            location={`${selectedEvent.address}`}
+            location={`${selectedEvent.address.street}, ${selectedEvent.address.neighborhood} - ${selectedEvent.address.city}`}
             date={formatDateTime(selectedEvent.event_date)}
             description={selectedEvent.description}
           />

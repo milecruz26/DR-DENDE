@@ -1,3 +1,4 @@
+// src/components/Verbete/VerbeteCardSearch.tsx
 import { images } from '@/assets/images/pratos';
 import defaultDishImage from '@/assets/images/pratos/VATAPÁ.png';
 import Colors from "@/theme/Colors";
@@ -34,7 +35,7 @@ export const VerbeteCardSearch = ({
   const backgroundColor = index % 2 === 0 ? TERTIARY.light : SECONDARY.light;
   const borderColor = index % 2 === 0 ? TERTIARY.dark : 'transparent';
 
-  const imageKey = img.toLowerCase().replace(/\.png$/, '');
+  const imageKey = img?.toLowerCase?.().replace(/\.png$/, '');
   const imageSource = images[imageKey];
   const defaultImage = defaultDishImage;
 

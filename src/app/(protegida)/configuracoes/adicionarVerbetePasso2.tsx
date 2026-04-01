@@ -1,9 +1,10 @@
+import ImageUploadField from '@/components/ImageUploadField';
+import { useEntry } from '@/context/EntryContext';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import ImageUploadField from '@/components/ImageUploadField';
 
 // Keep COLORS same as step 1
 const COLORS = { primary: '#34523B', white: '#FFFFFF', textDark: '#333333', textLight: '#666666', border: '#CCCCCC', danger: '#D32F2F', uploadBg: '#FAFAFA', placeholder: '#888888', };
@@ -38,6 +39,18 @@ export default function AdicionarVerbetePasso2() {
 
   const addIngredient = () => {
     setIngredients([...ingredients, { id: Date.now(), name: null, imageUri: null }]);
+  };
+  const { setData } = useEntry();
+
+  const handleNext = () => {
+    setData({
+      ingredients: ingredients.map((item) => ({
+        name: item.name || '',
+        local: 'default', // obrigatório no backend
+      })),
+    });
+
+    router.push('/configuracoes/adicionarVerbetePasso3');
   };
 
   const selectIngredient = (index: number, name: string) => {
@@ -122,10 +135,10 @@ export default function AdicionarVerbetePasso2() {
 
         {/* Footer buttons */}
         <View style={styles.footerButtons}>
-          <TouchableOpacity style={styles.btnOutline} onPress={() => router.push('/configuracoes/adicionarVerbetePasso3')}>
+          <TouchableOpacity style={styles.btnOutline} onPress={handleNext}>
             <Text style={styles.btnOutlineText}>Pular</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btnSolid} onPress={() => router.push('/configuracoes/adicionarVerbetePasso3')}>
+          <TouchableOpacity style={styles.btnSolid} onPress={handleNext}>
             <Text style={styles.btnSolidText}>Prosseguir</Text>
           </TouchableOpacity>
         </View>
