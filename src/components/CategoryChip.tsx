@@ -1,11 +1,7 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Colors from '@/theme/Colors';
+
 const { ATTENTION } = Colors;
 
 interface CategoryChipProps {

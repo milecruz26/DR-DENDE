@@ -1,14 +1,7 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const COLORS = {
   primary: '#34523B',
@@ -31,13 +24,14 @@ const DADOS_INICIAIS: EstabelecimentoPendente[] = [
 export default function ModerarEstabelecimentos() {
   const router = useRouter();
   const params = useLocalSearchParams();
-  const [estabelecimentos, setEstabelecimentos] = useState<EstabelecimentoPendente[]>(DADOS_INICIAIS);
+  const [estabelecimentos, setEstabelecimentos] =
+    useState<EstabelecimentoPendente[]>(DADOS_INICIAIS);
   const [searchText, setSearchText] = useState('');
 
   // Efeito para remover o item da lista caso a tela de detalhes retorne um ID aprovado
   useEffect(() => {
     if (params.idAprovado) {
-      setEstabelecimentos(prev => prev.filter(est => est.id !== params.idAprovado));
+      setEstabelecimentos((prev) => prev.filter((est) => est.id !== params.idAprovado));
     }
   }, [params.idAprovado]);
 
@@ -45,12 +39,12 @@ export default function ModerarEstabelecimentos() {
     // Navega para a tela de detalhes passando o ID
     router.push({
       pathname: '/configuracoes/detalhesEstabelecimento',
-      params: { id }
+      params: { id },
     });
   };
 
   const handleAprovarDireto = (id: string) => {
-    setEstabelecimentos(prev => prev.filter(est => est.id !== id));
+    setEstabelecimentos((prev) => prev.filter((est) => est.id !== id));
   };
 
   const renderItem = ({ item }: { item: EstabelecimentoPendente }) => (
@@ -61,17 +55,11 @@ export default function ModerarEstabelecimentos() {
       </View>
 
       <View style={styles.actions}>
-        <TouchableOpacity
-          style={styles.btnVisualizar}
-          onPress={() => handleVisualizar(item.id)}
-        >
+        <TouchableOpacity style={styles.btnVisualizar} onPress={() => handleVisualizar(item.id)}>
           <Text style={styles.btnVisualizarText}>Visualizar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.btnAprovar}
-          onPress={() => handleAprovarDireto(item.id)}
-        >
+        <TouchableOpacity style={styles.btnAprovar} onPress={() => handleAprovarDireto(item.id)}>
           <Feather name="check" size={20} color="#FFF" />
         </TouchableOpacity>
       </View>
@@ -101,7 +89,9 @@ export default function ModerarEstabelecimentos() {
       </View>
 
       <FlatList
-        data={estabelecimentos.filter(e => e.nome.toLowerCase().includes(searchText.toLowerCase()))}
+        data={estabelecimentos.filter((e) =>
+          e.nome.toLowerCase().includes(searchText.toLowerCase()),
+        )}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
@@ -112,22 +102,70 @@ export default function ModerarEstabelecimentos() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFF' },
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 50, paddingBottom: 20 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    paddingBottom: 20,
+  },
   backBtn: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   backBtnText: { color: COLORS.primary, fontSize: 16 },
-  headerTitle: { flex: 1, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: COLORS.textDark, marginRight: 60 },
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+    marginRight: 60,
+  },
 
   searchContainer: { flexDirection: 'row', paddingHorizontal: 20, gap: 10, marginBottom: 20 },
-  searchInput: { flex: 1, height: 50, borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, paddingHorizontal: 15, backgroundColor: '#FFF' },
-  searchIconBtn: { width: 50, height: 50, backgroundColor: COLORS.primary, borderRadius: 8, justifyContent: 'center', alignItems: 'center' },
+  searchInput: {
+    flex: 1,
+    height: 50,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    backgroundColor: '#FFF',
+  },
+  searchIconBtn: {
+    width: 50,
+    height: 50,
+    backgroundColor: COLORS.primary,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
   listContent: { paddingHorizontal: 20 },
-  listItem: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: '#EEE' },
+  listItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEE',
+  },
   listItemLeft: { flexDirection: 'row', alignItems: 'center', gap: 10, flex: 1 },
   listItemText: { fontSize: 16, color: COLORS.textDark, fontWeight: '500' },
 
   actions: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  btnVisualizar: { borderWidth: 1, borderColor: COLORS.primary, borderRadius: 8, paddingHorizontal: 15, paddingVertical: 8 },
+  btnVisualizar: {
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+  },
   btnVisualizarText: { color: COLORS.primary, fontWeight: '500' },
-  btnAprovar: { backgroundColor: COLORS.primary, width: 40, height: 40, borderRadius: 8, justifyContent: 'center', alignItems: 'center' }
+  btnAprovar: {
+    backgroundColor: COLORS.primary,
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

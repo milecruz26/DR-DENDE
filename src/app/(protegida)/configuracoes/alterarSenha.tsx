@@ -1,15 +1,9 @@
-import { PrimaryButton } from '@/components/Buttons/PrimaryButton';
-import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { PrimaryButton } from '@/components/Buttons/PrimaryButton';
+import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
 
 const COLORS = {
   primary: '#34523B',
@@ -58,32 +52,16 @@ export default function AlterarSenha() {
         {/* <View style={{ gap: 24 }}> */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Senha</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="********"
-            secureTextEntry
-          />
+          <TextInput style={styles.input} placeholder="********" secureTextEntry />
         </View>
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Confirmar senha</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="********"
-            secureTextEntry
-          />
+          <TextInput style={styles.input} placeholder="********" secureTextEntry />
         </View>
         <View style={{ gap: 8 }}>
-
-          <PrimaryButton
-            title='Alterar senha'
-            onPress={handleResetarSenha}
-
-          />
+          <PrimaryButton title="Alterar senha" onPress={handleResetarSenha} />
           <Link href="/(login)" asChild>
-            <TertiaryButton
-              title='Voltar ao login'
-              onPress={() => { }}
-            />
+            <TertiaryButton title="Voltar ao login" onPress={() => {}} />
           </Link>
         </View>
       </View>
@@ -110,7 +88,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 60,
     paddingBottom: 20,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   backBtn: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   backText: { color: COLORS.primary, fontSize: 16 },
@@ -119,7 +97,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     fontWeight: 'bold',
-    marginRight: 60
+    marginRight: 60,
   },
   content: { flex: 1, paddingHorizontal: 20 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 20 },
@@ -132,7 +110,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     borderRadius: 8,
     paddingHorizontal: 15,
-    fontSize: 16
+    fontSize: 16,
   },
   btnEnviar: {
     backgroundColor: COLORS.primary,
@@ -140,7 +118,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 35
+    marginBottom: 35,
   },
   btnText: { color: '#FFF', fontWeight: 'bold', fontSize: 16 },
   subTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
@@ -150,7 +128,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0'
+    borderBottomColor: '#F0F0F0',
   },
   itemLead: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   avatar: {
@@ -159,7 +137,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#F5F5F5',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   itemName: { fontSize: 16, fontWeight: '500' },
   itemEmail: { fontSize: 13, color: COLORS.textLight },

@@ -19,7 +19,7 @@ export default {
     dark: '#e67f2d',
     base: '#eca25d',
     light: '#f2c695',
-    lighter: '#f9e4cc'
+    lighter: '#f9e4cc',
   },
   SECONDARY: {
     deep: '#283f2d',
@@ -27,7 +27,7 @@ export default {
     dark: '#365d3d',
     base: '#4A824C',
     light: '#9AC49C',
-    lighter: '#E0F0E2'
+    lighter: '#E0F0E2',
   },
   TERTIARY: {
     deep: '#f98d07',
@@ -35,7 +35,7 @@ export default {
     dark: '#ffc84a',
     base: '#ffde88',
     light: '#fff0c8',
-    lighter: '#fffaeb'
+    lighter: '#fffaeb',
   },
   INFO: {
     deeper: '#0042eb',
@@ -44,7 +44,7 @@ export default {
     dark: '#83c6ff',
     base: '#b5dbff',
     light: '#d6eaff',
-    lighter: '#edf6ff'
+    lighter: '#edf6ff',
   },
   SUCESS: {
     deeper: '#0C491B',
@@ -53,7 +53,7 @@ export default {
     dark: '#48e06e',
     base: '#baf8c9',
     light: '#dcfce3',
-    lighter: '#f0fdf2'
+    lighter: '#f0fdf2',
   },
   WARNING: {
     deeper: '#842918',
@@ -62,7 +62,7 @@ export default {
     dark: '#FF7E66',
     base: '#FFBFB3',
     light: '#FFDFD9',
-    lighter: '#FFEFEC'
+    lighter: '#FFEFEC',
   },
   ATTENTION: {
     deeper: '#734704',
@@ -71,7 +71,7 @@ export default {
     dark: '#FFDE88',
     base: '#FFE9B0',
     light: '#FFF4D7',
-    lighter: '#FFF9EB'
+    lighter: '#FFF9EB',
   },
   ERROR: {
     deeper: '#B31935',
@@ -80,7 +80,7 @@ export default {
     dark: '#FF889D',
     base: '#FFB0BE',
     light: '#FFD7DE',
-    lighter: '#FFEBEF'
+    lighter: '#FFEBEF',
   },
   NEUTRAL: {
     deeper: '#191919',
@@ -90,10 +90,6 @@ export default {
     base: '#D1D1D1',
     light: '#E7E7E7',
     light150: '#F5F5F5',
-    lighter: '#FDFDFD'
-  }
-
-
-}
-
-
+    lighter: '#FDFDFD',
+  },
+};

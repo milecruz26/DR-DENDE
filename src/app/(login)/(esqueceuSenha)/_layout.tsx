@@ -1,6 +1,5 @@
-
-import { Stack } from 'expo-router'
-import React from 'react'
+import { Stack } from 'expo-router';
+import React from 'react';
 
 export default function ResetarSenhaLayout() {
   return (
@@ -10,6 +9,5 @@ export default function ResetarSenhaLayout() {
       <Stack.Screen name="resetarSenha" options={{ headerShown: false }} />
       <Stack.Screen name="verificarCodigo" options={{ headerShown: false }} />
     </Stack>
-
-  )
+  );
 }

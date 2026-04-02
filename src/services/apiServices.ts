@@ -5,7 +5,7 @@ import api from './api'; // Sua instância do Axios configurada anteriormente
 // 1. TIPAGENS (Baseadas no PDF - Modelos de Dados)
 // ==========================================
 
-export type UserType = "COMMON" | "STAFF" | "ESTABLISHMENT";
+export type UserType = 'COMMON' | 'STAFF' | 'ESTABLISHMENT';
 
 export interface UserFullResponse {
   id: string;
@@ -30,9 +30,9 @@ export interface EntryCreator {
   picture: string;
   audio: string;
   entry_text: string;
-  category: "simples" | string;
+  category: 'simples' | string;
   estimated_time: string;
-  difficulty_level: "facil" | "moderado" | "dificil";
+  difficulty_level: 'facil' | 'moderado' | 'dificil';
 }
 
 export interface EventCreator {
@@ -58,28 +58,69 @@ export interface DishResponse {
 // Variável global para ligar/desligar o Mock facilmente
 const USE_MOCK = true;
 
-let MOCK_DB = {
+const MOCK_DB = {
   users: [
-    { id: 'u1', username: 'joao_comum', email: 'joao@teste.com', user_type: 'COMMON', address: null, role: null },
-    { id: 'u2', username: 'admin_staff', email: 'staff@teste.com', user_type: 'STAFF', address: null, role: null },
-    { id: 'u3', username: 'bar_do_ze', email: 'ze@teste.com', user_type: 'ESTABLISHMENT', address: 'Rua A', role: null },
+    {
+      id: 'u1',
+      username: 'joao_comum',
+      email: 'joao@teste.com',
+      user_type: 'COMMON',
+      address: null,
+      role: null,
+    },
+    {
+      id: 'u2',
+      username: 'admin_staff',
+      email: 'staff@teste.com',
+      user_type: 'STAFF',
+      address: null,
+      role: null,
+    },
+    {
+      id: 'u3',
+      username: 'bar_do_ze',
+      email: 'ze@teste.com',
+      user_type: 'ESTABLISHMENT',
+      address: 'Rua A',
+      role: null,
+    },
   ] as UserFullResponse[],
 
   entries: [
-    { id: 'ent1', name: 'Passarinha', picture: 'passarinha.png', audio: '', entry_text: 'A passarinha é...', category: 'simples', estimated_time: '30 min', difficulty_level: 'facil' },
+    {
+      id: 'ent1',
+      name: 'Passarinha',
+      picture: 'passarinha.png',
+      audio: '',
+      entry_text: 'A passarinha é...',
+      category: 'simples',
+      estimated_time: '30 min',
+      difficulty_level: 'facil',
+    },
   ] as EntryCreator[],
 
   events: [
-    { id: 'ev1', name: 'Feijoada de São Jorge', event_date: '2026-04-23', description: 'Tradicional feijoada', address: { city: 'Salvador', street: 'Rua Direita', neighborhood: 'Santo Antônio', zip_code: '40000-000' } }
+    {
+      id: 'ev1',
+      name: 'Feijoada de São Jorge',
+      event_date: '2026-04-23',
+      description: 'Tradicional feijoada',
+      address: {
+        city: 'Salvador',
+        street: 'Rua Direita',
+        neighborhood: 'Santo Antônio',
+        zip_code: '40000-000',
+      },
+    },
   ] as EventCreator[],
 
   dishes: [] as DishResponse[],
   liked_dishes: [] as string[], // IDs dos pratos
-  complaints: [] as any[]
+  complaints: [] as any[],
 };
 
 // Simulador de Delay da Rede
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // ==========================================
 // 3. FUNÇÕES DE SERVIÇO DA API
@@ -91,10 +132,10 @@ export const AuthService = {
     if (!USE_MOCK) return api.post('/login', credentials);
 
     await delay(800);
-    const user = MOCK_DB.users.find(u => u.username === credentials.username);
-    if (!user) throw new Error("401 Unauthorized - Usuário ou senha inválidos");
-    return { data: { access_token: `mock-jwt-token-for-${user.id}`, token_type: "bearer" } };
-  }
+    const user = MOCK_DB.users.find((u) => u.username === credentials.username);
+    if (!user) throw new Error('401 Unauthorized - Usuário ou senha inválidos');
+    return { data: { access_token: `mock-jwt-token-for-${user.id}`, token_type: 'bearer' } };
+  },
 };
 
 export const UserService = {
@@ -109,7 +150,13 @@ export const UserService = {
   createUser: async (userData: any) => {
     if (!USE_MOCK) return api.post('/users/common', userData);
     await delay(800);
-    const newUser: UserFullResponse = { id: Math.random().toString(), ...userData, user_type: "COMMON", address: null, role: null };
+    const newUser: UserFullResponse = {
+      id: Math.random().toString(),
+      ...userData,
+      user_type: 'COMMON',
+      address: null,
+      role: null,
+    };
     MOCK_DB.users.push(newUser);
     return { data: newUser };
   },
@@ -119,8 +166,8 @@ export const UserService = {
     if (!USE_MOCK) return api.post(`/dishes/like/${dishId}`);
     await delay(300);
     if (!MOCK_DB.liked_dishes.includes(dishId)) MOCK_DB.liked_dishes.push(dishId);
-    return { data: { message: "Prato adicionado aos favoritos" } };
-  }
+    return { data: { message: 'Prato adicionado aos favoritos' } };
+  },
 };
 
 export const StaffService = {
@@ -154,7 +201,7 @@ export const StaffService = {
     const newEvent = { ...eventData, id: Math.random().toString() };
     MOCK_DB.events.push(newEvent);
     return { data: { id: newEvent.id, name: newEvent.name, created_at: new Date().toISOString() } };
-  }
+  },
 };
 
 export const EstablishmentService = {
@@ -162,7 +209,14 @@ export const EstablishmentService = {
   createEstablishment: async (data: any) => {
     if (!USE_MOCK) return api.post('/establishments', data);
     await delay(800);
-    const newEst = { id: Math.random().toString(), username: data.username, email: data.email, address: data.address, user_type: 'ESTABLISHMENT' as UserType, role: null };
+    const newEst = {
+      id: Math.random().toString(),
+      username: data.username,
+      email: data.email,
+      address: data.address,
+      user_type: 'ESTABLISHMENT' as UserType,
+      role: null,
+    };
     MOCK_DB.users.push(newEst);
     return { data: newEst };
   },
@@ -172,5 +226,5 @@ export const EstablishmentService = {
     if (!USE_MOCK) return api.get('/establishments/dish');
     await delay(500);
     return { data: { dishes: MOCK_DB.dishes } };
-  }
+  },
 };

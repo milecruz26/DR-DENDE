@@ -1,12 +1,8 @@
-import Colors from '@/theme/Colors';
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import Colors from '@/theme/Colors';
 
-const { SECONDARY } = Colors
+const { SECONDARY } = Colors;
 
 export const InstructionStep = ({ number, text }: any) => (
   <View style={styles.stepContainer}>

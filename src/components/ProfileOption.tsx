@@ -1,41 +1,25 @@
-
 import React from 'react';
-import {
-  Image,
-  ImageSourcePropType,
-  Pressable,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { Image, type ImageSourcePropType, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import Colors from '../theme/Colors';
+
 const { SECONDARY, NEUTRAL } = Colors;
 interface ProfileOptionProps {
   title: string;
   description: string;
   iconSource: ImageSourcePropType; // Tipo correto para imagens vindas do require()
   onPress?: () => void;
-
 }
 
 export const ProfileOption = ({ title, description, iconSource, onPress }: ProfileOptionProps) => {
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.container,
-        pressed && styles.pressed
-      ]}
+      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
     >
       {/* Círculo do Ícone com Imagem Local */}
 
-      <Image
-        source={iconSource}
-        style={styles.iconImage}
-        resizeMode="contain"
-      />
-
+      <Image source={iconSource} style={styles.iconImage} resizeMode="contain" />
 
       {/* Textos Centrais */}
       <View style={styles.textContainer}>
@@ -49,7 +33,6 @@ export const ProfileOption = ({ title, description, iconSource, onPress }: Profi
         style={styles.arrowIcon}
       />
     </Pressable>
-
   );
 };
 
@@ -72,7 +55,6 @@ const styles = StyleSheet.create({
   iconImage: {
     width: 32,
     height: 32,
-
   },
   textContainer: {
     flex: 1,

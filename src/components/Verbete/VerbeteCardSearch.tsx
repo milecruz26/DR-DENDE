@@ -1,9 +1,10 @@
 // src/components/Verbete/VerbeteCardSearch.tsx
+
+import { useRouter } from 'expo-router';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { images } from '@/assets/images/pratos';
 import defaultDishImage from '@/assets/images/pratos/VATAPÁ.png';
-import Colors from "@/theme/Colors";
-import { useRouter } from 'expo-router';
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import Colors from '@/theme/Colors';
 
 export interface VerbeteCardProps {
   id: string;
@@ -16,10 +17,9 @@ export interface VerbeteCardProps {
   onToggleLike?: (id: string) => void;
   showBookmark?: boolean;
 }
-const { SECONDARY, TERTIARY } = Colors
+const { SECONDARY, TERTIARY } = Colors;
 
-
-SECONDARY.lighter
+SECONDARY.lighter;
 export const VerbeteCardSearch = ({
   id,
   title,
@@ -48,10 +48,16 @@ export const VerbeteCardSearch = ({
       style={[styles.verbeteCard, { backgroundColor, borderColor }]}
       onPress={() => router.push({ pathname: '/verbete', params: { id } })}
     >
-      <Image source={imageSource || defaultImage} style={styles.verbeteImage} resizeMode="contain" />
+      <Image
+        source={imageSource || defaultImage}
+        style={styles.verbeteImage}
+        resizeMode="contain"
+      />
       <View style={styles.verbeteInfo}>
         <Text style={styles.verbeteTitle}>{title}</Text>
-        <Text style={styles.verbeteDesc} numberOfLines={2}>{desc}</Text>
+        <Text style={styles.verbeteDesc} numberOfLines={2}>
+          {desc}
+        </Text>
       </View>
 
       <View style={{ alignItems: 'center' }}>
@@ -86,8 +92,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: 'center',
     height: 100,
-    borderWidth: 1
-
+    borderWidth: 1,
   },
   verbeteCardBgTertiary: {
     backgroundColor: TERTIARY.light,
@@ -110,7 +115,7 @@ const styles = StyleSheet.create({
     color: '#2C2C2C',
     marginBottom: 4,
     textTransform: 'uppercase',
-    fontFamily: "OfertaDoDia"
+    fontFamily: 'OfertaDoDia',
   },
   verbeteDesc: {
     fontSize: 12,

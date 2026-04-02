@@ -1,8 +1,9 @@
 // hooks/useDeepLink.ts
-import { api } from '@/services/apiTeste';
+
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
+import { api } from '@/services/apiTeste';
 
 export const useDeepLink = () => {
   useEffect(() => {

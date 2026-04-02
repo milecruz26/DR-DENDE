@@ -1,13 +1,13 @@
-import { authService } from "@/services/auth";
-import { complaintService } from "@/services/complaint";
-import { dishService } from "@/services/dish";
-import { entryService } from "@/services/entry";
-import { establishmentService } from "@/services/establishment";
-import { eventService } from "@/services/event";
-import { staffService } from "@/services/staff";
-import { userService } from "@/services/user";
-import { useQueryClient } from "@tanstack/react-query";
-import { useCallback } from "react";
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
+import type { authService } from '@/services/auth';
+import type { complaintService } from '@/services/complaint';
+import type { dishService } from '@/services/dish';
+import type { entryService } from '@/services/entry';
+import type { establishmentService } from '@/services/establishment';
+import type { eventService } from '@/services/event';
+import type { staffService } from '@/services/staff';
+import type { userService } from '@/services/user';
 
 type ServiceMap = typeof authService &
   typeof complaintService &

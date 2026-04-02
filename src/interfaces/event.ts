@@ -1,9 +1,9 @@
-import { Address } from './address';
+import type { Address } from './address';
 
 export interface Event {
   id: string | null;
   name: string;
-  event_date: string;            // formato ISO (YYYY-MM-DD)
+  event_date: string; // formato ISO (YYYY-MM-DD)
   description: string;
   address: Address;
   latitude?: number | null;

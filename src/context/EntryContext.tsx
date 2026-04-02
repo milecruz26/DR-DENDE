@@ -1,5 +1,6 @@
 // context/EntryContext.tsx
-import React, { createContext, useContext, useState } from 'react';
+import type React from 'react';
+import { createContext, useContext, useState } from 'react';
 
 type Ingredient = {
   name: string;
@@ -34,11 +35,7 @@ export const EntryProvider = ({ children }: { children: React.ReactNode }) => {
 
   const reset = () => setState({});
 
-  return (
-    <EntryContext.Provider value={{ data, setData, reset }}>
-      {children}
-    </EntryContext.Provider>
-  );
+  return <EntryContext.Provider value={{ data, setData, reset }}>{children}</EntryContext.Provider>;
 };
 
 export const useEntry = () => useContext(EntryContext);

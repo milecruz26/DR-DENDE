@@ -1,6 +1,3 @@
-import ImageUploadField from '@/components/ImageUploadField';
-import { InputField } from '@/components/InputField/InputField';
-import { useEstablishmentUser, useUpdateEstablishmentUser } from '@/hooks/useEstablishment';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
@@ -14,8 +11,11 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
+import ImageUploadField from '@/components/ImageUploadField';
+import { InputField } from '@/components/InputField/InputField';
+import { useEstablishmentUser, useUpdateEstablishmentUser } from '@/hooks/useEstablishment';
 
 const COLORS = {
   primary: '#34523B',
@@ -24,7 +24,7 @@ const COLORS = {
   border: '#DDD',
   white: '#FFF',
   placeholder: '#999',
-  error: '#C62828'
+  error: '#C62828',
 };
 
 export default function EditarEstabelecimento() {
@@ -83,20 +83,20 @@ export default function EditarEstabelecimento() {
       setHorarios(
         hours.length
           ? hours.map((h: any, index: number) => ({
-            id: String(index),
-            dia: formatDay(h.day),
-            abre: h.open,
-            fecha: h.close,
-          }))
+              id: String(index),
+              dia: formatDay(h.day),
+              abre: h.open,
+              fecha: h.close,
+            }))
           : [
-            { id: '1', dia: 'Dom', abre: '00:00', fecha: '00:00' },
-            { id: '2', dia: 'Seg', abre: '00:00', fecha: '00:00' },
-            { id: '3', dia: 'Ter', abre: '00:00', fecha: '00:00' },
-            { id: '4', dia: 'Qua', abre: '00:00', fecha: '00:00' },
-            { id: '5', dia: 'Qui', abre: '00:00', fecha: '00:00' },
-            { id: '6', dia: 'Sex', abre: '00:00', fecha: '00:00' },
-            { id: '7', dia: 'Sáb', abre: '00:00', fecha: '00:00' },
-          ]
+              { id: '1', dia: 'Dom', abre: '00:00', fecha: '00:00' },
+              { id: '2', dia: 'Seg', abre: '00:00', fecha: '00:00' },
+              { id: '3', dia: 'Ter', abre: '00:00', fecha: '00:00' },
+              { id: '4', dia: 'Qua', abre: '00:00', fecha: '00:00' },
+              { id: '5', dia: 'Qui', abre: '00:00', fecha: '00:00' },
+              { id: '6', dia: 'Sex', abre: '00:00', fecha: '00:00' },
+              { id: '7', dia: 'Sáb', abre: '00:00', fecha: '00:00' },
+            ],
       );
     }
   }, [establishment]);
@@ -182,13 +182,19 @@ export default function EditarEstabelecimento() {
       formData.append('coupon_percentage', form.porcentagemCupom);
       formData.append('coupon_uses_per_user', form.usosPorUsuario);
     }
-    formData.append('social', JSON.stringify({
-      instagram: form.instagram,
-      facebook: form.facebook,
-      youtube: form.youtube,
-      linkedin: form.linkedin,
-    }));
-    formData.append('opening_hours', JSON.stringify(horarios.map(h => ({ day: h.dia, open: h.abre, close: h.fecha }))));
+    formData.append(
+      'social',
+      JSON.stringify({
+        instagram: form.instagram,
+        facebook: form.facebook,
+        youtube: form.youtube,
+        linkedin: form.linkedin,
+      }),
+    );
+    formData.append(
+      'opening_hours',
+      JSON.stringify(horarios.map((h) => ({ day: h.dia, open: h.abre, close: h.fecha }))),
+    );
 
     // Adicionar imagens se houver
     if (form.logoImage && form.logoImage !== establishment?.logo_image) {
@@ -229,7 +235,6 @@ export default function EditarEstabelecimento() {
     );
   }
 
-
   const renderStep1 = () => (
     <View style={styles.formContainer}>
       <View style={styles.sectionHeader}>
@@ -237,19 +242,45 @@ export default function EditarEstabelecimento() {
         <Text style={styles.sectionTitle}>Detalhes</Text>
       </View>
 
-      <InputField label="Nome" value={form.nome} onChangeText={(item: string) => setForm({ ...form, nome: item })} required />
-      <InputField label="Email" value={form.email} onChangeText={(item: string) => setForm({ ...form, email: item })} required keyboardType="email-address" />
-      <InputField label="Número" value={form.telefone} onChangeText={(item: string) => setForm({ ...form, telefone: item })} required keyboardType="phone-pad" />
-      <InputField label="CNPJ" value={form.cnpj} onChangeText={(item: string) => setForm({ ...form, cnpj: item })} required />
+      <InputField
+        label="Nome"
+        value={form.nome}
+        onChangeText={(item: string) => setForm({ ...form, nome: item })}
+        required
+      />
+      <InputField
+        label="Email"
+        value={form.email}
+        onChangeText={(item: string) => setForm({ ...form, email: item })}
+        required
+        keyboardType="email-address"
+      />
+      <InputField
+        label="Número"
+        value={form.telefone}
+        onChangeText={(item: string) => setForm({ ...form, telefone: item })}
+        required
+        keyboardType="phone-pad"
+      />
+      <InputField
+        label="CNPJ"
+        value={form.cnpj}
+        onChangeText={(item: string) => setForm({ ...form, cnpj: item })}
+        required
+      />
 
-      <Text style={styles.label}><Text style={{ color: 'red' }}>*</Text> Foto do estabelecimento (capa)</Text>
+      <Text style={styles.label}>
+        <Text style={{ color: 'red' }}>*</Text> Foto do estabelecimento (capa)
+      </Text>
       <ImageUploadField
         imageUri={form.coverImage}
         onPickImage={() => pickImage('coverImage')}
         onRemoveImage={() => setForm({ ...form, coverImage: null })}
       />
 
-      <Text style={styles.label}><Text style={{ color: 'red' }}>*</Text> Marca do estabelecimento (logo)</Text>
+      <Text style={styles.label}>
+        <Text style={{ color: 'red' }}>*</Text> Marca do estabelecimento (logo)
+      </Text>
       <ImageUploadField
         imageUri={form.logoImage}
         onPickImage={() => pickImage('logoImage')}
@@ -258,11 +289,21 @@ export default function EditarEstabelecimento() {
 
       <View style={styles.row}>
         <View style={{ flex: 1 }}>
-          <InputField label="Valor mínimo" value={form.valorMin} onChangeText={(item: string) => setForm({ ...form, valorMin: item })} required />
+          <InputField
+            label="Valor mínimo"
+            value={form.valorMin}
+            onChangeText={(item: string) => setForm({ ...form, valorMin: item })}
+            required
+          />
         </View>
         <View style={{ width: 15 }} />
         <View style={{ flex: 1 }}>
-          <InputField label="Valor máximo" value={form.valorMax} onChangeText={(item: string) => setForm({ ...form, valorMax: item })} required />
+          <InputField
+            label="Valor máximo"
+            value={form.valorMax}
+            onChangeText={(item: string) => setForm({ ...form, valorMax: item })}
+            required
+          />
         </View>
       </View>
 
@@ -286,41 +327,40 @@ export default function EditarEstabelecimento() {
       <Text style={styles.subTitle}>Horário de funcionamento:</Text>
 
       <View>
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ width: 40, }} />
-          <View style={{ flexDirection: "row", width: "100%", gap: 25 }}>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ width: 40 }} />
+          <View style={{ flexDirection: 'row', width: '100%', gap: 25 }}>
             <Text style={styles.textHorario}>* Horário</Text>
             <Text style={styles.textHorario}>* Horário</Text>
           </View>
         </View>
 
-        {Array.isArray(horarios) && horarios.map((item, index) => (
-          <View key={item.id ?? index} style={styles.horarioRow}>
-            <View style={{ width: 40 }}>
-              <Text style={styles.diaText}>{item.dia}</Text>
+        {Array.isArray(horarios) &&
+          horarios.map((item, index) => (
+            <View key={item.id ?? index} style={styles.horarioRow}>
+              <View style={{ width: 40 }}>
+                <Text style={styles.diaText}>{item.dia}</Text>
+              </View>
+
+              <View style={styles.horarioInputs}>
+                <TouchableOpacity
+                  style={styles.timeInput}
+                  onPress={() => openTimePicker(index, 'abre')}
+                >
+                  <Text style={styles.timeText}>{item.abre}</Text>
+                </TouchableOpacity>
+
+                <Text style={styles.timeSeparator}>-</Text>
+
+                <TouchableOpacity
+                  style={styles.timeInput}
+                  onPress={() => openTimePicker(index, 'fecha')}
+                >
+                  <Text style={styles.timeText}>{item.fecha}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-
-
-            <View style={styles.horarioInputs}>
-              <TouchableOpacity
-                style={styles.timeInput}
-                onPress={() => openTimePicker(index, 'abre')}
-              >
-                <Text style={styles.timeText}>{item.abre}</Text>
-              </TouchableOpacity>
-
-              <Text style={styles.timeSeparator}>-</Text>
-
-              <TouchableOpacity
-                style={styles.timeInput}
-                onPress={() => openTimePicker(index, 'fecha')}
-              >
-                <Text style={styles.timeText}>{item.fecha}</Text>
-              </TouchableOpacity>
-            </View>
-
-          </View>
-        ))}
+          ))}
       </View>
 
       {showPicker && Platform.OS === 'ios' && (
@@ -345,12 +385,7 @@ export default function EditarEstabelecimento() {
         </View>
       )}
       {showPicker && Platform.OS === 'android' && (
-        <DateTimePicker
-          value={tempDate}
-          mode="time"
-          is24Hour
-          onChange={handleTimeChange}
-        />
+        <DateTimePicker value={tempDate} mode="time" is24Hour onChange={handleTimeChange} />
       )}
       <View style={styles.footerBtns}>
         <TouchableOpacity style={styles.btnSecondary} onPress={() => setStep(3)}>
@@ -361,7 +396,7 @@ export default function EditarEstabelecimento() {
         </TouchableOpacity>
       </View>
     </View>
-  )
+  );
 
   const renderStep3 = () => (
     <View style={styles.formContainer}>
@@ -371,7 +406,8 @@ export default function EditarEstabelecimento() {
       </View>
 
       <Text style={styles.label}>
-        <Text style={{ color: 'red' }}>*</Text> Habilitar cupom de desconto <Feather name="info" size={14} />
+        <Text style={{ color: 'red' }}>*</Text> Habilitar cupom de desconto{' '}
+        <Feather name="info" size={14} />
       </Text>
 
       <TouchableOpacity
@@ -386,10 +422,21 @@ export default function EditarEstabelecimento() {
 
       <View style={styles.row}>
         <View style={{ flex: 1 }}>
-          <InputField label="Porcentagem do Cupom" placeholder="%" value={form.porcentagemCupom} onChangeText={(item: string) => setForm({ ...form, porcentagemCupom: item })} required={form.habilitarCupom} />
+          <InputField
+            label="Porcentagem do Cupom"
+            placeholder="%"
+            value={form.porcentagemCupom}
+            onChangeText={(item: string) => setForm({ ...form, porcentagemCupom: item })}
+            required={form.habilitarCupom}
+          />
         </View>
         <View style={{ flex: 1 }}>
-          <InputField label="Usos por usuários" value={form.usosPorUsuario} onChangeText={(item: string) => setForm({ ...form, usosPorUsuario: item })} required={form.habilitarCupom} />
+          <InputField
+            label="Usos por usuários"
+            value={form.usosPorUsuario}
+            onChangeText={(item: string) => setForm({ ...form, usosPorUsuario: item })}
+            required={form.habilitarCupom}
+          />
         </View>
       </View>
 
@@ -398,19 +445,41 @@ export default function EditarEstabelecimento() {
         <Text style={styles.sectionTitle}>Redes sociais</Text>
       </View>
 
-      <InputField label="Instagram" value={form.instagram} onChangeText={(item: string) => setForm({ ...form, instagram: item })} />
-      <InputField label="Facebook" value={form.facebook} onChangeText={(item: string) => setForm({ ...form, facebook: item })} />
-      <InputField label="Youtube" value={form.youtube} onChangeText={(item: string) => setForm({ ...form, youtube: item })} />
-      <InputField label="Linkedin" value={form.linkedin} onChangeText={(item: string) => setForm({ ...form, linkedin: item })} />
+      <InputField
+        label="Instagram"
+        value={form.instagram}
+        onChangeText={(item: string) => setForm({ ...form, instagram: item })}
+      />
+      <InputField
+        label="Facebook"
+        value={form.facebook}
+        onChangeText={(item: string) => setForm({ ...form, facebook: item })}
+      />
+      <InputField
+        label="Youtube"
+        value={form.youtube}
+        onChangeText={(item: string) => setForm({ ...form, youtube: item })}
+      />
+      <InputField
+        label="Linkedin"
+        value={form.linkedin}
+        onChangeText={(item: string) => setForm({ ...form, linkedin: item })}
+      />
 
-      <TouchableOpacity style={[styles.btnPrimary, { width: '100%', marginTop: 20 }]} onPress={handleSave}>
+      <TouchableOpacity
+        style={[styles.btnPrimary, { width: '100%', marginTop: 20 }]}
+        onPress={handleSave}
+      >
         <Text style={styles.btnPrimaryText}>Salvar alterações</Text>
       </TouchableOpacity>
     </View>
   );
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
@@ -434,7 +503,6 @@ export default function EditarEstabelecimento() {
   );
 }
 
-
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.white },
   header: {
@@ -442,11 +510,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 60,
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   backBtn: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   backBtnText: { color: COLORS.primary, fontSize: 16 },
-  headerTitle: { flex: 1, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: COLORS.textDark, marginRight: 50 },
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+    marginRight: 50,
+  },
 
   scrollContent: { paddingHorizontal: 20, paddingBottom: 40 },
   formContainer: { marginTop: 10 },
@@ -476,7 +551,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 10,
     backgroundColor: '#F9F9F9',
-    marginBottom: 20
+    marginBottom: 20,
   },
   uploadText: { color: COLORS.textLight, fontSize: 14 },
 
@@ -485,9 +560,9 @@ const styles = StyleSheet.create({
   // Estilos específicos para o Step 2 (Horários)
   textHorario: {
     fontSize: 12,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     minWidth: 148,
-    marginBottom: 8
+    marginBottom: 8,
   },
   horarioRow: {
     flexDirection: 'row',
@@ -495,22 +570,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     // gap: 10,
     marginBottom: 15,
-    width: "auto",
-
+    width: 'auto',
   },
   diaText: {
     fontSize: 16,
     color: COLORS.textDark,
     fontWeight: '500',
     // flex: 1
-
   },
   horarioInputs: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    justifyContent: "center",
-    alignContent: "center",
+    justifyContent: 'center',
+    alignContent: 'center',
   },
   timeInput: {
     minWidth: 148,
@@ -521,9 +594,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     color: COLORS.textDark,
-    alignItems: "center",
-    justifyContent: "center",
-
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   timeSeparator: {
     fontSize: 16,
@@ -569,14 +641,43 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  checkboxContainer: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 20, marginTop: 5 },
-  checkbox: { width: 24, height: 24, borderRadius: 4, borderWidth: 2, borderColor: COLORS.primary, justifyContent: 'center', alignItems: 'center' },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 20,
+    marginTop: 5,
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: COLORS.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   checkboxActive: { backgroundColor: COLORS.primary },
   checkboxLabel: { fontSize: 16, color: COLORS.textDark },
 
   footerBtns: { flexDirection: 'row', gap: 15, marginTop: 20 },
-  btnPrimary: { flex: 1, height: 55, backgroundColor: COLORS.primary, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
+  btnPrimary: {
+    flex: 1,
+    height: 55,
+    backgroundColor: COLORS.primary,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   btnPrimaryText: { color: '#FFF', fontSize: 16, fontWeight: 'bold' },
-  btnSecondary: { flex: 1, height: 55, borderWidth: 1, borderColor: COLORS.border, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
+  btnSecondary: {
+    flex: 1,
+    height: 55,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   btnSecondaryText: { color: COLORS.textDark, fontSize: 16, fontWeight: '500' },
 });

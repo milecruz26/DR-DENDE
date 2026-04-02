@@ -4,7 +4,6 @@ export default function EstabelecimentosLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
-
     </Stack>
   );
 }

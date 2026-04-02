@@ -1,4 +1,4 @@
-import { Dish } from '../interfaces';
+import type { Dish } from '../interfaces';
 import { api } from './apiTeste';
 
 export const dishService = {

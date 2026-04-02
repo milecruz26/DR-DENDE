@@ -1,4 +1,8 @@
 // src/components/Restaurante/RestauranteCardSearch.tsx
+
+import { router } from 'expo-router';
+import { useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import megaphoneNeutral from '@/assets/images/icones/megaphone-line-neutral.png';
 import savedFilledWhite from '@/assets/images/icones/saved-filled-line-white.png';
 import savedWhite from '@/assets/images/icones/saved-line-white.png';
@@ -11,25 +15,21 @@ import logo1 from '@/assets/images/mock/logo-1.png';
 import logo2 from '@/assets/images/mock/logo-2.png';
 import logo3 from '@/assets/images/mock/logo-3.jpg';
 import { useAuth } from '@/context/AuthContext';
-import Colors from "@/theme/Colors";
-import { router } from "expo-router";
-import { useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import Colors from '@/theme/Colors';
 
 export interface RestaurantCardProps {
   item: {
     id: number;
-    username: string;       // nome do estabelecimento
+    username: string; // nome do estabelecimento
     cover_image?: string | null;
     logo_image?: string | null;
     coupon_enabled?: boolean;
-
-  },
-  onDeletePress?: () => void,
-  moreDetailsPress?: () => void,
+  };
+  onDeletePress?: () => void;
+  moreDetailsPress?: () => void;
 }
 
-const { NEUTRAL, primary } = Colors
+const { NEUTRAL, primary } = Colors;
 
 const coverMap: Record<string, any> = {
   '33333333-3333-3333-3333-333333333333': cover1,
@@ -46,11 +46,14 @@ const logoMap: Record<string, any> = {
 const defaultCover = 'Cover'; // ou alguma imagem padrão
 const defaultLogo = 'Logo';
 
-
-export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: RestaurantCardProps) => {
+export const RestaurantCardSearch = ({
+  item,
+  onDeletePress,
+  moreDetailsPress,
+}: RestaurantCardProps) => {
   const { user } = useAuth();
   const [isSaved, setIsSaved] = useState(false);
-  const [showMenu, setShowMenu] = useState(false)
+  const [showMenu, setShowMenu] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const toggleSave = () => {
     setIsSaved(!isSaved);
@@ -66,15 +69,17 @@ export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: 
   };
 
   const confirmDelete = () => {
-    console.log("Item excluído:", item.id);
+    console.log('Item excluído:', item.id);
     setShowDeleteModal(false);
     // Aqui você adiciona a lógica real de exclusão (chamada de API, atualização de estado global, etc)
   };
 
   return (
     <>
-
-      <Pressable style={[styles.restCard, { zIndex: showMenu ? 10 : 1 }]} onPress={moreDetailsPress}>
+      <Pressable
+        style={[styles.restCard, { zIndex: showMenu ? 10 : 1 }]}
+        onPress={moreDetailsPress}
+      >
         {/* Imagem de Fundo (Capa) */}
         <Image source={coverMap[item.id] || defaultCover} style={styles.restCover} />
 
@@ -85,7 +90,10 @@ export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: 
         <View style={styles.restActions}>
           {user?.user_type === 'common' && (
             <Pressable style={styles.iconBtn} onPress={toggleSave}>
-              <Image source={isSaved ? savedFilledWhite : savedWhite} style={{ width: 24, height: 24 }} />
+              <Image
+                source={isSaved ? savedFilledWhite : savedWhite}
+                style={{ width: 24, height: 24 }}
+              />
             </Pressable>
           )}
 
@@ -98,13 +106,14 @@ export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: 
             {/* 4. O Menu Flutuante */}
             {showMenu && (
               <View style={styles.dropdownMenu}>
-
-                {user?.user_type === "common" && (
-                  <Pressable onPress={() => {
-                    setShowMenu(false);
-                    // Navega para a tela de denúncia passando o ID do estabelecimento
-                    router.push(`/configuracoes/denunciar?establishment_id=${item.id}`);
-                  }}>
+                {user?.user_type === 'common' && (
+                  <Pressable
+                    onPress={() => {
+                      setShowMenu(false);
+                      // Navega para a tela de denúncia passando o ID do estabelecimento
+                      router.push(`/configuracoes/denunciar?establishment_id=${item.id}`);
+                    }}
+                  >
                     <View style={[styles.menuItem, styles.menuItemHighlight]}>
                       <Text style={styles.menuItemText}>Denunciar</Text>
                       <Image source={megaphoneNeutral} style={{ width: 16, height: 16 }} />
@@ -121,15 +130,10 @@ export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: 
                     </View>
                   </Pressable>
                 )}
-
-
-
               </View>
             )}
           </View>
-
         </View>
-
 
         {/* Conteúdo inferior */}
         <View style={styles.restContent}>
@@ -138,21 +142,17 @@ export const RestaurantCardSearch = ({ item, onDeletePress, moreDetailsPress }: 
           // style={styles.logoContainer}
           // style={styles.logoCircle}
           >
-
             {item.logo_image ? (
               <Image source={logoMap[item.id] || defaultLogo} style={styles.logoContainer} />
             ) : (
               <Text style={{ fontSize: 8, textAlign: 'center', fontWeight: 'bold' }}>LOGO</Text>
             )}
-
           </View>
           <Text style={styles.restName}>{item.username}</Text>
         </View>
       </Pressable>
-
     </>
-
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     color: '#666',
     // backgroundColor: 'purple',
     lineHeight: 24,
-    marginLeft: 5
+    marginLeft: 5,
   },
 
   dropdownMenu: {
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5, // Sombra para Android
     zIndex: 999,
-    padding: 8
+    padding: 8,
   },
   menuItem: {
     flexDirection: 'row',
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     backgroundColor: primary.light, // Substitua pelo hex exato do seu vermelho clarinho
 
     borderRadius: 6,
-    width: "100%",
+    width: '100%',
     // padding: 8
   },
   menuItemText: {
@@ -274,5 +274,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
   },
-
-})
+});

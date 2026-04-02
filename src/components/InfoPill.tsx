@@ -1,11 +1,8 @@
-import Colors from '@/theme/Colors';
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import Colors from '@/theme/Colors';
+
 const { TERTIARY } = Colors;
 
 export interface InfoPillProps {
@@ -34,7 +31,6 @@ export const InfoPill = ({ categoria, tempo, dificuldade }: InfoPillProps) => (
     </View>
   </View>
 );
-
 
 const styles = StyleSheet.create({
   infoPillContainer: {

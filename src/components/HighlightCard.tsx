@@ -1,36 +1,21 @@
+import { useRouter } from 'expo-router';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import badgeNewImage from '@/assets/images/icones/badge-new.png';
 import passarinhaImage from '@/assets/images/pratos/passarinha.png';
 import Colors from '@/theme/Colors';
-import { useRouter } from 'expo-router';
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
-
 
 const { primary } = Colors;
 
 export const HighlightCard = () => {
   const router = useRouter();
   return (
-
-    <TouchableOpacity
-      activeOpacity={0.8}
-      onPress={() => router.push('/verbete')}
-    >
+    <TouchableOpacity activeOpacity={0.8} onPress={() => router.push('/verbete')}>
       {/* <Link href="/verbete" asChild> */}
 
       <View style={styles.highlightCard}>
         {/* Imagem Placeholder - Substitua pela sua URL ou require */}
         <View style={styles.highlightImageContainer}>
-          <Image
-            source={passarinhaImage}
-            style={styles.highlightImage}
-            resizeMode="cover"
-          />
+          <Image source={passarinhaImage} style={styles.highlightImage} resizeMode="cover" />
           {/* Badge "Novo" simulado */}
           <View style={styles.badge}>
             <Image
@@ -49,7 +34,7 @@ export const HighlightCard = () => {
       </View>
       {/* </Link> */}
     </TouchableOpacity>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -78,7 +63,6 @@ const styles = StyleSheet.create({
     // padding: 10,
     borderRadius: 20, // Simulando o formato de explosão/starburst
     // transform: [{ rotate: '15deg' }],
-
   },
   badgeImg: {
     height: 83,

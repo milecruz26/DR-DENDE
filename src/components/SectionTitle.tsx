@@ -1,20 +1,18 @@
 import { useRouter } from 'expo-router';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export const SectionTitle = ({ title, showLink = false, onPress }: { title: string, showLink?: boolean, onPress?: () => {} }) => {
-  const router = useRouter()
+export const SectionTitle = ({
+  title,
+  showLink = false,
+  onPress,
+}: {
+  title: string;
+  showLink?: boolean;
+  onPress?: () => {};
+}) => {
+  const router = useRouter();
   return (
-
-    <Pressable
-      onPress={onPress}
-    >
-
+    <Pressable onPress={onPress}>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitleText}>{title}</Text>
         {showLink && (
@@ -24,7 +22,7 @@ export const SectionTitle = ({ title, showLink = false, onPress }: { title: stri
         )}
       </View>
     </Pressable>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -38,10 +36,10 @@ const styles = StyleSheet.create({
   sectionTitleText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#454545'
+    color: '#454545',
   },
   linkText: {
     color: '#365d3d',
     fontSize: 16,
   },
-})
+});

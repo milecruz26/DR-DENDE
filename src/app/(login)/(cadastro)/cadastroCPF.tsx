@@ -1,7 +1,3 @@
-import BgLogin from '@/components/BackgroundThema/BgLogin';
-import { PrimaryButton } from '@/components/Buttons/PrimaryButton';
-import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
-import { useCreateUser } from '@/hooks/useUsers';
 import { Ionicons } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, router } from 'expo-router';
@@ -9,25 +5,32 @@ import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { z } from 'zod';
+import BgLogin from '@/components/BackgroundThema/BgLogin';
+import { PrimaryButton } from '@/components/Buttons/PrimaryButton';
+import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
+import { useCreateUser } from '@/hooks/useUsers';
 import Colors from '../../../theme/Colors';
 
 const { NEUTRAL } = Colors;
 
-const cadastroCPFSchema = z.object({
-  username: z.string().min(1, 'Nome é obrigatório'),
-  email: z.string().min(1, 'E-mail é obrigatório').email('E-mail inválido'),
-  phone: z.string().optional(),
-  password: z.string()
-    .min(8, 'A senha deve ter no mínimo 8 caracteres.')
-    .regex(/[A-Z]/, 'A senha deve ter pelo menos 1 letra maiúscula.')
-    .regex(/[a-z]/, 'A senha deve ter pelo menos 1 letra minúscula.')
-    .regex(/[0-9]/, 'A senha deve ter pelo menos 1 número.')
-    .regex(/[!@#$%^&*(),.?":{}<>]/, 'A senha deve ter pelo menos 1 caractere especial.'),
-  confirmPassword: z.string().min(1, 'Confirmação de senha é obrigatória'),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'As senhas não coincidem.',
-  path: ['confirmPassword'],
-});
+const cadastroCPFSchema = z
+  .object({
+    username: z.string().min(1, 'Nome é obrigatório'),
+    email: z.string().min(1, 'E-mail é obrigatório').email('E-mail inválido'),
+    phone: z.string().optional(),
+    password: z
+      .string()
+      .min(8, 'A senha deve ter no mínimo 8 caracteres.')
+      .regex(/[A-Z]/, 'A senha deve ter pelo menos 1 letra maiúscula.')
+      .regex(/[a-z]/, 'A senha deve ter pelo menos 1 letra minúscula.')
+      .regex(/[0-9]/, 'A senha deve ter pelo menos 1 número.')
+      .regex(/[!@#$%^&*(),.?":{}<>]/, 'A senha deve ter pelo menos 1 caractere especial.'),
+    confirmPassword: z.string().min(1, 'Confirmação de senha é obrigatória'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'As senhas não coincidem.',
+    path: ['confirmPassword'],
+  });
 
 type CadastroCPFFormData = z.infer<typeof cadastroCPFSchema>;
 
@@ -37,21 +40,29 @@ export default function CadastroCPF() {
 
   const createUserMutation = useCreateUser();
 
-  const { control, handleSubmit, setError, formState: { errors } } = useForm<CadastroCPFFormData>({
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<CadastroCPFFormData>({
     resolver: zodResolver(cadastroCPFSchema),
     defaultValues: { username: '', email: '', phone: '', password: '', confirmPassword: '' },
   });
 
   const onSubmit = (data: CadastroCPFFormData) => {
     const { username, email, password } = data;
-    createUserMutation.mutate({ username, email, password }, {
-      onSuccess: () => {
-        router.push('/(login)/(cadastro)/emailEnviadoCadastro');
+    createUserMutation.mutate(
+      { username, email, password },
+      {
+        onSuccess: () => {
+          router.push('/(login)/(cadastro)/emailEnviadoCadastro');
+        },
+        onError: () => {
+          setError('root', { message: 'Erro ao criar conta. Tente novamente.' });
+        },
       },
-      onError: () => {
-        setError('root', { message: 'Erro ao criar conta. Tente novamente.' });
-      },
-    });
+    );
   };
 
   return (
@@ -182,9 +193,13 @@ export default function CadastroCPF() {
       {errors.root && <Text style={styles.errorText}>{errors.root.message}</Text>}
 
       <View style={{ gap: 8, marginTop: 10 }}>
-        <PrimaryButton title='Finalizar cadastro' onPress={handleSubmit(onSubmit)} isLoading={createUserMutation.isPending} />
+        <PrimaryButton
+          title="Finalizar cadastro"
+          onPress={handleSubmit(onSubmit)}
+          isLoading={createUserMutation.isPending}
+        />
         <Link href="/(login)/(cadastro)/perfil" asChild>
-          <TertiaryButton title='Voltar' onPress={() => { }} />
+          <TertiaryButton title="Voltar" onPress={() => {}} />
         </Link>
       </View>
       <View style={styles.dividerContainer}>
@@ -192,11 +207,7 @@ export default function CadastroCPF() {
         <Text style={styles.dividerText}>Ou</Text>
         <View style={styles.line} />
       </View>
-      <TouchableOpacity
-        style={styles.googleButton}
-        onPress={() => { }}
-        activeOpacity={0.7}
-      >
+      <TouchableOpacity style={styles.googleButton} onPress={() => {}} activeOpacity={0.7}>
         <Image
           source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png' }}
           style={styles.googleIcon}
@@ -212,14 +223,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFBE6',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   content: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
-    marginVertical: 24
+    marginVertical: 24,
   },
   card: {
     backgroundColor: NEUTRAL.lighter,
@@ -247,7 +258,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     color: NEUTRAL.deep,
-    fontSize: 12
+    fontSize: 12,
   },
   input: {
     borderWidth: 1,

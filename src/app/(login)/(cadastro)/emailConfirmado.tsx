@@ -1,32 +1,27 @@
-import BgLogin from "@/components/BackgroundThema/BgLogin";
-import { PrimaryButton } from "@/components/Buttons/PrimaryButton";
+import { Link } from 'expo-router';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import BgLogin from '@/components/BackgroundThema/BgLogin';
+import { PrimaryButton } from '@/components/Buttons/PrimaryButton';
 import Colors from '@/theme/Colors';
-import { Link } from "expo-router";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+
 const { NEUTRAL } = Colors;
 
 export default function EmailConfirmado() {
   return (
     <BgLogin logo={false} card>
       <Text style={styles.cardTitle}>Email confirmado!</Text>
-      <Text style={styles.cardSubTitle}>Obrigada pela colaboração! Faça o login para ter acesso ao app. </Text>
-
+      <Text style={styles.cardSubTitle}>
+        Obrigada pela colaboração! Faça o login para ter acesso ao app.{' '}
+      </Text>
 
       <View style={{ gap: 8 }}>
-
         <Link href="/(login)" asChild>
-          <PrimaryButton
-            title='Ir para o login'
-            onPress={() => { }}
-
-          />
+          <PrimaryButton title="Ir para o login" onPress={() => {}} />
         </Link>
       </View>
-
-
     </BgLogin>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -47,14 +42,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFBE6',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   content: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
-
   },
   logoSubtitle: {
     fontSize: 18,
@@ -94,7 +88,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     color: NEUTRAL.deep,
-    fontSize: 12
+    fontSize: 12,
   },
   input: {
     borderWidth: 1,
@@ -105,5 +99,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     width: '100%',
   },
-
 });

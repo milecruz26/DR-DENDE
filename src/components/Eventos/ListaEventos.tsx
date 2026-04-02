@@ -1,11 +1,12 @@
 // components/Eventos/ListaEventos.tsx
+
+import React, { useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import CustomDatePicker from '@/components/CustomDatePicker';
 import { DateSelector } from '@/components/DataSelector';
 import { EventItem } from '@/components/EventItem';
 import { useAllEvents } from '@/hooks/useStaff';
-import { Event } from '@/interfaces/event';
-import React, { useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import type { Event } from '@/interfaces/event';
 
 interface EventCalendarListProps {
   onSelectEvent?: (event: Event) => void;
@@ -34,10 +35,11 @@ export default function EventCalendarList({ onSelectEvent }: EventCalendarListPr
   };
 
   // Filtra eventos do dia selecionado
-  const eventosDoDia = eventos?.filter((evento) => {
-    const dataEvento = new Date(evento.event_date);
-    return dataEvento.toDateString() === selectedDate.toDateString();
-  }) ?? [];
+  const eventosDoDia =
+    eventos?.filter((evento) => {
+      const dataEvento = new Date(evento.event_date);
+      return dataEvento.toDateString() === selectedDate.toDateString();
+    }) ?? [];
 
   if (isLoading) {
     return (
@@ -89,11 +91,9 @@ export default function EventCalendarList({ onSelectEvent }: EventCalendarListPr
           setShowDatePicker(false);
         }}
       />
-
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   eventContainer: {

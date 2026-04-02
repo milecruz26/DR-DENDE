@@ -1,16 +1,17 @@
-import BgLogin from '@/components/BackgroundThema/BgLogin'
-import { PrimaryButton } from '@/components/Buttons/PrimaryButton'
-import { SecondaryButton } from '@/components/Buttons/SecondaryButton'
-import { TertiaryButton } from '@/components/Buttons/TertiaryButton'
-import LoginLoading from '@/components/LoginLoading'
+import { Ionicons } from '@expo/vector-icons';
+import { Link } from 'expo-router';
+import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import BgLogin from '@/components/BackgroundThema/BgLogin';
+import { PrimaryButton } from '@/components/Buttons/PrimaryButton';
+import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
+import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
+import LoginLoading from '@/components/LoginLoading';
 import { useAuth } from '@/context/AuthContext'; // <-- Importando o contexto
-import Colors from '@/theme/Colors'
-import { Ionicons } from '@expo/vector-icons'
-import { Link } from 'expo-router'
-import React, { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import Abertura from '../(protegida)/abertura'
+import Colors from '@/theme/Colors';
+import Abertura from '../(protegida)/abertura';
+
 const { NEUTRAL } = Colors;
 
 interface LoginFormData {
@@ -23,14 +24,21 @@ export default function Login() {
   const [showAbertura, setShowAbertura] = useState(false);
   const { signIn, isLoading } = useAuth();
 
-  const { control, handleSubmit, setError, formState: { errors } } = useForm<LoginFormData>({
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<LoginFormData>({
     defaultValues: { email: '', password: '' },
   });
 
   const onSubmit = (data: LoginFormData) => {
     signIn(data.email, data.password, {
       onSuccess: () => setShowAbertura(true),
-      onError: () => { setError('root', { message: 'E-mail ou senha incorretos' }) },
+      onError: () => {
+        setError('root', { message: 'E-mail ou senha incorretos' });
+      },
     });
   };
 
@@ -39,7 +47,7 @@ export default function Login() {
       <LoginLoading visible={isLoading} />
       <Abertura visible={showAbertura} />
       {!showAbertura && (
-        <BgLogin card >
+        <BgLogin card>
           <Text style={styles.cardTitle}>Fazer login</Text>
 
           <View style={styles.inputGroup}>
@@ -58,10 +66,11 @@ export default function Login() {
                     value={value}
                     onChangeText={onChange}
                   />
-                  {error
-                    ? <Text style={styles.errorText}>{error.message}</Text>
-                    : <Text style={styles.helperText}>ⓘ Insira o email cadastrado</Text>
-                  }
+                  {error ? (
+                    <Text style={styles.errorText}>{error.message}</Text>
+                  ) : (
+                    <Text style={styles.helperText}>ⓘ Insira o email cadastrado</Text>
+                  )}
                 </>
               )}
             />
@@ -88,7 +97,7 @@ export default function Login() {
                       onPress={() => setShowPassword(!showPassword)}
                     >
                       <Ionicons
-                        name={showPassword ? "eye-off-outline" : "eye-outline"}
+                        name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                         size={20}
                         color="#888"
                       />
@@ -102,14 +111,14 @@ export default function Login() {
           </View>
 
           <View style={{ gap: 8 }}>
-            <PrimaryButton title='Entrar' onPress={handleSubmit(onSubmit)} />
+            <PrimaryButton title="Entrar" onPress={handleSubmit(onSubmit)} />
 
             <Link href="/(login)/(cadastro)/perfil" asChild>
-              <SecondaryButton title='Criar conta' onPress={() => { }} />
+              <SecondaryButton title="Criar conta" onPress={() => {}} />
             </Link>
 
             <Link href="/(login)/(esqueceuSenha)/emailEsqueceuSenha" asChild>
-              <TertiaryButton title='Esqueci a senha' onPress={() => { }} />
+              <TertiaryButton title="Esqueci a senha" onPress={() => {}} />
             </Link>
           </View>
 
@@ -119,14 +128,17 @@ export default function Login() {
             <View style={styles.line} />
           </View>
 
-          <TouchableOpacity style={styles.googleButton} onPress={() => { }} activeOpacity={0.7}>
-            <Image source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png' }} style={styles.googleIcon} />
+          <TouchableOpacity style={styles.googleButton} onPress={() => {}} activeOpacity={0.7}>
+            <Image
+              source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png' }}
+              style={styles.googleIcon}
+            />
             <Text style={styles.googleText}>Faça login com Google</Text>
           </TouchableOpacity>
         </BgLogin>
       )}
     </>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -218,13 +230,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 10,
-    width: '100%'
+    width: '100%',
   },
   buttonEntrarText: {
     color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold',
-
   },
   buttonCriar: {
     borderWidth: 1,
@@ -233,7 +244,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 10,
-    width: '100%'
+    width: '100%',
   },
   buttonCriarText: {
     color: '#3A5A40',
@@ -286,7 +297,6 @@ const styles = StyleSheet.create({
     height: 60,
     resizeMode: 'contain',
     marginTop: 26,
-    marginBottom: 26
-
-  }
-})
+    marginBottom: 26,
+  },
+});

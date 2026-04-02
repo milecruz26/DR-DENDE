@@ -30,7 +30,8 @@ export default function ConfirmacaoDenuncia() {
         <Text style={styles.successTitle}>Denúncia registrada!</Text>
 
         <Text style={styles.description}>
-          Obrigado(a) por colaborar com a equipe Dr dendê a fazer deste ambiente o mais seguro para todos.
+          Obrigado(a) por colaborar com a equipe Dr dendê a fazer deste ambiente o mais seguro para
+          todos.
         </Text>
 
         <View style={styles.infoBox}>
@@ -39,10 +40,7 @@ export default function ConfirmacaoDenuncia() {
           </Text>
         </View>
 
-        <TouchableOpacity
-          style={styles.homeButton}
-          onPress={() => router.back()}
-        >
+        <TouchableOpacity style={styles.homeButton} onPress={() => router.back()}>
           <Text style={styles.homeButtonText}>Voltar para configurações</Text>
         </TouchableOpacity>
       </View>
@@ -61,7 +59,14 @@ const styles = StyleSheet.create({
   },
   backButton: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   backText: { color: COLORS.primary, fontSize: 16 },
-  headerTitle: { flex: 1, textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: COLORS.textDark, marginRight: 60 },
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+    marginRight: 60,
+  },
 
   content: { flex: 1, paddingHorizontal: 30, justifyContent: 'center', alignItems: 'center' },
 
@@ -72,7 +77,7 @@ const styles = StyleSheet.create({
     color: COLORS.textLight,
     textAlign: 'center',
     lineHeight: 20,
-    marginBottom: 30
+    marginBottom: 30,
   },
 
   infoBox: {
@@ -82,7 +87,7 @@ const styles = StyleSheet.create({
     padding: 20,
     width: '100%',
     marginBottom: 40,
-    backgroundColor: 'rgba(255,255,255,0.5)'
+    backgroundColor: 'rgba(255,255,255,0.5)',
   },
   infoText: { fontSize: 16, color: COLORS.textLight, textAlign: 'center', lineHeight: 22 },
 
@@ -92,7 +97,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 8,
     width: '100%',
-    alignItems: 'center'
+    alignItems: 'center',
   },
-  homeButtonText: { color: '#FFF', fontSize: 16, fontWeight: 'bold' }
+  homeButtonText: { color: '#FFF', fontSize: 16, fontWeight: 'bold' },
 });

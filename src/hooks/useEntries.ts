@@ -1,6 +1,7 @@
 // src/hooks/useEntries.ts
-import { entryService } from '@/services/entry';
+
 import { useQuery } from '@tanstack/react-query';
+import { entryService } from '@/services/entry';
 
 export const useAllEntries = () => {
   return useQuery({
@@ -26,7 +27,7 @@ export const useAllEntries = () => {
 export const useEntryById = (id: string) => {
   return useQuery({
     queryKey: ['entry', id],
-    queryFn: () => entryService.getEntryById(id).then(res => res.data),
+    queryFn: () => entryService.getEntryById(id).then((res) => res.data),
     enabled: !!id,
   });
 };

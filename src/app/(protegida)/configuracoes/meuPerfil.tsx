@@ -1,5 +1,3 @@
-import { useAuth } from '@/context/AuthContext';
-import { useUpdateUser } from '@/hooks/useUsers';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
@@ -15,10 +13,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useAuth } from '@/context/AuthContext';
+import { useUpdateUser } from '@/hooks/useUsers';
 
 const COLORS = {
   primary: '#34523B', // Verde escuro da marca
-  bg: '#FFFBE6',      // Fundo creme
+  bg: '#FFFBE6', // Fundo creme
   textDark: '#444',
   textLight: '#999',
   border: '#EEE',
@@ -51,7 +51,10 @@ export default function MeuPerfil() {
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-          Alert.alert('Desculpe', 'Precisamos de permissão para acessar a galeria para alterar a foto.');
+          Alert.alert(
+            'Desculpe',
+            'Precisamos de permissão para acessar a galeria para alterar a foto.',
+          );
         }
       }
     })();
@@ -59,7 +62,7 @@ export default function MeuPerfil() {
 
   // Função para escolher imagem
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [1, 1],
@@ -188,7 +191,10 @@ export default function MeuPerfil() {
           <Text style={styles.sectionTitle}>Senha</Text>
         </View>
 
-        <TouchableOpacity style={styles.outlineButton} onPress={() => router.push('/configuracoes/alterarSenha')}>
+        <TouchableOpacity
+          style={styles.outlineButton}
+          onPress={() => router.push('/configuracoes/alterarSenha')}
+        >
           <Text style={styles.outlineButtonText}>Alterar senha</Text>
         </TouchableOpacity>
 
@@ -232,7 +238,6 @@ export default function MeuPerfil() {
   );
 }
 
-
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: COLORS.bg },
 
@@ -248,12 +253,25 @@ const styles = StyleSheet.create({
   },
   backButton: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   backText: { color: COLORS.primary, fontSize: 16 },
-  headerTitle: { flex: 1, textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: COLORS.textDark, marginRight: 60 },
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+    marginRight: 60,
+  },
 
   scrollContent: { paddingHorizontal: 20, paddingBottom: 40 },
 
   // Sections
-  sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 30, marginBottom: 15 },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 30,
+    marginBottom: 15,
+  },
   sectionTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.textDark },
 
   // Avatar

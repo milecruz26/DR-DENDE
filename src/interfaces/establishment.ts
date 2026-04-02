@@ -1,4 +1,4 @@
-import { UserType } from './user';
+import type { UserType } from './user';
 
 export interface EstablishmentCreate {
   username: string;

@@ -1,14 +1,9 @@
-import { images } from '@/assets/images/pratos';
 import React from 'react';
-import {
-  Image,
-  ImageSourcePropType,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { Image, type ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import { images } from '@/assets/images/pratos';
 
 import Colors from '@/theme/Colors';
+
 const { primary } = Colors;
 
 interface IngredientItemProps {
@@ -19,14 +14,18 @@ interface IngredientItemProps {
 }
 
 const INGREDIENT_ICONS: Record<string, ImageSourcePropType> = {
-  'dende': require('../../assets/images/icons/dende.png'),
-  'manteiga': require('../../assets/images/icons/manteiga.png'),
-  'sal': require('../../assets/images/icons/sal.png'),
-  'pimentao': require('../../assets/images/icons/pimentao.png'),
+  dende: require('../../assets/images/icons/dende.png'),
+  manteiga: require('../../assets/images/icons/manteiga.png'),
+  sal: require('../../assets/images/icons/sal.png'),
+  pimentao: require('../../assets/images/icons/pimentao.png'),
 };
 
-export const IngredientItem = ({ name, iconFallback, color, ingredientPath }: IngredientItemProps) => {
-
+export const IngredientItem = ({
+  name,
+  iconFallback,
+  color,
+  ingredientPath,
+}: IngredientItemProps) => {
   const imageKey = ingredientPath.toLowerCase().replace(/\.png$/, '');
   const imageSource = images[imageKey];
   const defaultImage = require('@/assets/images/pratos/VATAPÁ.png');
@@ -34,7 +33,7 @@ export const IngredientItem = ({ name, iconFallback, color, ingredientPath }: In
     <View style={styles.ingredientContainer}>
       <View
         style={styles.ingredientCircle}
-      // style={[styles.ingredientCircle, { backgroundColor: color || '#E87C38' }]}
+        // style={[styles.ingredientCircle, { backgroundColor: color || '#E87C38' }]}
       >
         {imageSource ? (
           <Image
@@ -54,17 +53,14 @@ export const IngredientItem = ({ name, iconFallback, color, ingredientPath }: In
       </View>
       <Text style={styles.ingredientText}>{name}</Text>
     </View>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
-
   ingredientContainer: {
     alignItems: 'center',
     marginRight: 8,
     width: 80,
-
-
   },
   ingredientCircle: {
     width: 76,
@@ -75,13 +71,13 @@ const styles = StyleSheet.create({
     marginBottom: 9,
     borderWidth: 2,
     borderColor: '#F3F4F6',
-    backgroundColor: primary.dark
+    backgroundColor: primary.dark,
   },
   ingredientText: {
     fontSize: 14,
     color: '#4A5565',
     textAlign: 'center',
-    letterSpacing: 0.28
+    letterSpacing: 0.28,
     // lineHeight: 14,
   },
 });

@@ -1,8 +1,6 @@
-import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-
-
+import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 
 interface EventsInfoProps {
   description: string;
@@ -14,46 +12,26 @@ export default function EventsInfo({ ...props }: EventsInfoProps) {
   return (
     <View style={styles.scrollContent}>
       <View style={styles.containerInfo}>
-        <Text style={styles.highlightTitle}>
-          Sobre o evento
-        </Text>
-        <Text style={styles.textContent}>
-          {props.description}
-        </Text>
+        <Text style={styles.highlightTitle}>Sobre o evento</Text>
+        <Text style={styles.textContent}>{props.description}</Text>
       </View>
 
       <View style={styles.containerInfo}>
-        <Text style={styles.highlightTitle}>
-          Informações do evento
-        </Text>
-        <Text style={styles.textContent}>
-          {props.date}
-        </Text>
+        <Text style={styles.highlightTitle}>Informações do evento</Text>
+        <Text style={styles.textContent}>{props.date}</Text>
       </View>
 
       <View style={styles.containerInfo}>
-        <Text style={styles.highlightTitle}>
-          Localização
-        </Text>
-        <Image
-          source={require('../../../../assets/mock/map.png')}
-        />
-        <Text style={styles.textContent}>
-          {props.location}
-        </Text>
+        <Text style={styles.highlightTitle}>Localização</Text>
+        <Image source={require('../../../../assets/mock/map.png')} />
+        <Text style={styles.textContent}>{props.location}</Text>
       </View>
-      <SecondaryButton
-        onPress={() => { }}
-        title='Ver lista de eventos'
-        size='small'
-      />
-
+      <SecondaryButton onPress={() => {}} title="Ver lista de eventos" size="small" />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-
   scrollContent: {
     paddingHorizontal: 24,
     gap: 24,
@@ -67,9 +45,9 @@ const styles = StyleSheet.create({
   highlightTitle: {
     fontSize: 16,
     fontWeight: 700,
-    color: '#191919'
+    color: '#191919',
   },
   containerInfo: {
     gap: 16,
-  }
+  },
 });

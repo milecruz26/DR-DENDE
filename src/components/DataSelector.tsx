@@ -9,16 +9,32 @@ interface DateSelectorProps {
 }
 
 export const DateSelector = ({ currentDate, onDateChange, onOpenPicker }: DateSelectorProps) => {
-
   // Função para formatar a data (Ex: 25/Dez)
   if (!currentDate) {
-    return <View style={styles.dateSelectorRow}><Text>Carregando...</Text></View>;
+    return (
+      <View style={styles.dateSelectorRow}>
+        <Text>Carregando...</Text>
+      </View>
+    );
   }
 
   const formatDate = (date: Date) => {
     // Garante que é um objeto Date válido antes de formatar
-    if (!(date instanceof Date) || isNaN(date.getTime())) return "--/--";
-    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    if (!(date instanceof Date) || isNaN(date.getTime())) return '--/--';
+    const months = [
+      'Jan',
+      'Fev',
+      'Mar',
+      'Abr',
+      'Mai',
+      'Jun',
+      'Jul',
+      'Ago',
+      'Set',
+      'Out',
+      'Nov',
+      'Dez',
+    ];
     return `${date.getDate().toString().padStart(2, '0')}/${months[date.getMonth()]}`;
   };
 
@@ -36,10 +52,7 @@ export const DateSelector = ({ currentDate, onDateChange, onOpenPicker }: DateSe
   return (
     <View style={styles.dateSelectorRow}>
       {/* Seta Esquerda (Volta 1 dia) */}
-      <TouchableOpacity
-        style={styles.arrowButton}
-        onPress={() => onDateChange(yesterday)}
-      >
+      <TouchableOpacity style={styles.arrowButton} onPress={() => onDateChange(yesterday)}>
         <Feather name="chevron-left" size={24} color={'#2F4F2F'} />
       </TouchableOpacity>
 
@@ -49,10 +62,7 @@ export const DateSelector = ({ currentDate, onDateChange, onOpenPicker }: DateSe
       </TouchableOpacity>
 
       {/* Data Selecionada (Abre o Modal) */}
-      <TouchableOpacity
-        style={[styles.dateItem, styles.dateItemSelected]}
-        onPress={onOpenPicker}
-      >
+      <TouchableOpacity style={[styles.dateItem, styles.dateItemSelected]} onPress={onOpenPicker}>
         <Text style={[styles.dateText, styles.dateTextSelected]}>{formatDate(currentDate)}</Text>
       </TouchableOpacity>
 
@@ -62,10 +72,7 @@ export const DateSelector = ({ currentDate, onDateChange, onOpenPicker }: DateSe
       </TouchableOpacity>
 
       {/* Seta Direita (Avança 1 dia) */}
-      <TouchableOpacity
-        style={styles.arrowButton}
-        onPress={() => onDateChange(tomorrow)}
-      >
+      <TouchableOpacity style={styles.arrowButton} onPress={() => onDateChange(tomorrow)}>
         <Feather name="chevron-right" size={24} color={'#2F4F2F'} />
       </TouchableOpacity>
     </View>
@@ -101,6 +108,6 @@ const styles = StyleSheet.create({
   },
   dateTextSelected: {
     color: '#FFF',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
 });

@@ -1,5 +1,5 @@
-import { SecondaryButton } from "@/components/Buttons/SecondaryButton";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from 'react-native';
+import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 
 interface VerbetesExcludConfirmProps {
   id?: number;
@@ -8,16 +8,10 @@ interface VerbetesExcludConfirmProps {
 }
 
 export default function VerbetesExcludConfirm({ ...props }: VerbetesExcludConfirmProps) {
-
-
   return (
-    <View
-      style={styles.modalContent}
-    >
-
+    <View style={styles.modalContent}>
       {/* Corpo do Modal */}
       <View>
-
         <Text style={styles.modalWarningTitle}>Você tem certeza que deseja excluir?</Text>
         <Text style={styles.modalWarningText}>
           Ao excluir o verbete você não poderá recuperar o prato adicionado
@@ -26,25 +20,20 @@ export default function VerbetesExcludConfirm({ ...props }: VerbetesExcludConfir
 
       {/* Botões */}
       <View style={styles.modalButtonsContainer}>
-
         <SecondaryButton
           title="Cancelar"
           onPress={props.onCancel}
-        // size="small"
+          // size="small"
         />
-
 
         <SecondaryButton
           title="Excluir verbete"
           onPress={props.onConfirm}
-        // size="small"
+          // size="small"
         />
-
-
       </View>
-
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -114,4 +103,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-})
+});
