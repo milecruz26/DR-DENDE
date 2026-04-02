@@ -1,7 +1,13 @@
 import * as SecureStore from 'expo-secure-store';
-import { Complaint, ComplaintValidation, Dish, Event, User } from '../interfaces';
+import type { Complaint, ComplaintValidation, Dish, Event, User } from '../interfaces';
 import { api } from '../services/apiTeste';
-import { mockUsers as initialMockUsers, mockComplaints, mockDishes, mockEntries, mockEvents } from './mockData';
+import {
+  mockUsers as initialMockUsers,
+  mockComplaints,
+  mockDishes,
+  mockEntries,
+  mockEvents,
+} from './mockData';
 
 const USE_MOCKS = false;
 const MOCK_USERS_KEY = 'mock_users';
@@ -23,7 +29,7 @@ function getUserFromToken(config: any): User | null {
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
   if (token && token.startsWith('fake-token-')) {
     const userId = token.replace('fake-token-', '');
-    const user = mockUsers.find(u => u.id === userId);
+    const user = mockUsers.find((u) => u.id === userId);
     return user || null;
   }
   return null;
@@ -92,7 +98,7 @@ const saveLikedDishes = async () => {
 // Inicia o carregamento
 // loadPromise = resetMocks();
 loadPromise = loadMockData();
-console.log('MOCK USERS:', mockUsers)
+console.log('MOCK USERS:', mockUsers);
 
 // api.interceptors.request.use(async (config) => {
 //   if (!USE_MOCKS) return config;
@@ -140,7 +146,6 @@ console.log('MOCK USERS:', mockUsers)
 //   return config;
 // });
 
-
 if (USE_MOCKS) {
   api.interceptors.response.use(
     (response) => response,
@@ -157,10 +162,13 @@ if (USE_MOCKS) {
         const username = params.get('username');
         const password = params.get('password');
         console.log('Login - email informado:', username);
-        console.log('Lista de emails disponíveis:', mockUsers.map(u => u.email));
-        const user = mockUsers.find(u => u.email === username);
+        console.log(
+          'Lista de emails disponíveis:',
+          mockUsers.map((u) => u.email),
+        );
+        const user = mockUsers.find((u) => u.email === username);
         console.log('Usuário encontrado?', user ? user.email : 'NÃO');
-        console.log('password:', password)
+        console.log('password:', password);
         if (user && user.password === password) {
           const token = `fake-token-${user.id}`;
           return Promise.resolve({
@@ -168,8 +176,10 @@ if (USE_MOCKS) {
             status: 200,
           });
         }
-        console.log(user?.password)
-        return Promise.reject({ response: { status: 401, data: { detail: 'Invalid credentials' } } });
+        console.log(user?.password);
+        return Promise.reject({
+          response: { status: 401, data: { detail: 'Invalid credentials' } },
+        });
       }
 
       // Verifica autenticação para rotas protegidas
@@ -187,7 +197,7 @@ if (USE_MOCKS) {
       const userMatch = config.url?.match(/^\/staff\/user\/([^/]+)$/);
       if (userMatch && config.method === 'get') {
         const userId = userMatch[1];
-        const foundUser = mockUsers.find(u => u.id === userId);
+        const foundUser = mockUsers.find((u) => u.id === userId);
         if (foundUser) {
           return Promise.resolve({ data: foundUser, status: 200 });
         }
@@ -198,7 +208,9 @@ if (USE_MOCKS) {
       if (config.url === '/users/common' && config.method === 'put') {
         const user = getUserFromToken(config);
         if (!user) {
-          return Promise.reject({ response: { status: 401, data: { detail: 'Not authenticated' } } });
+          return Promise.reject({
+            response: { status: 401, data: { detail: 'Not authenticated' } },
+          });
         }
 
         let updated: any = {};
@@ -236,14 +248,14 @@ if (USE_MOCKS) {
         const userId = `user-${Date.now()}`;
         const token = `confirm-${userId}`;
         confirmationTokens[token] = userId;
-        const { email, username, user_type, password } = newUserData
+        const { email, username, user_type, password } = newUserData;
 
         console.log('AQUII', config.data);
         console.log('O TIPO AQUI:', typeof config.data);
-        console.log('tipo do newUserData:', typeof newUserData)
+        console.log('tipo do newUserData:', typeof newUserData);
 
-        console.log('novo usuario na linha 153', newUserData)
-        console.log('DADOS DO NEWUSERDATA', 'email:', email, 'usernarme:', username)
+        console.log('novo usuario na linha 153', newUserData);
+        console.log('DADOS DO NEWUSERDATA', 'email:', email, 'usernarme:', username);
         const newUser: User = {
           id: userId,
           username,
@@ -252,18 +264,17 @@ if (USE_MOCKS) {
           address: newUserData.address || null,
           role: newUserData.role || null,
           confirmed: false,
-          password // armazenamos a senha (não será retornada nas respostas)
+          password, // armazenamos a senha (não será retornada nas respostas)
         };
 
         mockUsers.push(newUser);
         await saveMockData();
-        console.log('novo usuario:', newUser)
+        console.log('novo usuario:', newUser);
 
         // Simula envio de e-mail
         console.log(`[MOCK] Usuário criado: ${newUser.email}`);
         console.log(`[MOCK] Token de confirmação: ${token}`);
         console.log(`[MOCK] Link: exp://.../--/confirm?token=${token}`);
-
 
         // console.log('Novo usuário adicionado:', newUser.email);
         // console.log('Total de usuários agora:', mockUsers.length);
@@ -282,7 +293,7 @@ if (USE_MOCKS) {
         if (!userId) {
           return Promise.reject({ response: { status: 400, data: { detail: 'Invalid token' } } });
         }
-        const user = mockUsers.find(u => u.id === userId);
+        const user = mockUsers.find((u) => u.id === userId);
         if (!user) {
           return Promise.reject({ response: { status: 404, data: { detail: 'User not found' } } });
         }
@@ -295,10 +306,10 @@ if (USE_MOCKS) {
 
       // GET /dishes/liked
       if (config.url === '/dishes/liked' && config.method === 'get') {
-        const user: User = getUserFromToken(config) as User
+        const user: User = getUserFromToken(config) as User;
         // if (!user) return reject(...);
         const likedIds = likedDishesMap[user.id] || [];
-        const likedDishes = mockEntries.filter(entry => likedIds.includes(entry.id));
+        const likedDishes = mockEntries.filter((entry) => likedIds.includes(entry.id));
         return Promise.resolve({ data: likedDishes, status: 200 });
       }
 
@@ -306,7 +317,7 @@ if (USE_MOCKS) {
       const likeMatch = config.url?.match(/^\/dishes\/like\/(.+)$/);
       if (likeMatch && config.method === 'post') {
         const dishId = likeMatch[1];
-        const user: User = getUserFromToken(config) as User
+        const user: User = getUserFromToken(config) as User;
         // if (!user) return reject(...);
         if (!likedDishesMap[user.id]) likedDishesMap[user.id] = [];
         if (!likedDishesMap[user.id].includes(dishId)) {
@@ -320,10 +331,10 @@ if (USE_MOCKS) {
       const dislikeMatch = config.url?.match(/^\/dishes\/dislike\/(.+)$/);
       if (dislikeMatch && config.method === 'delete') {
         const dishId = dislikeMatch[1];
-        const user: User = getUserFromToken(config) as User
+        const user: User = getUserFromToken(config) as User;
         // if (!user) return reject(...);
         if (likedDishesMap[user.id]) {
-          likedDishesMap[user.id] = likedDishesMap[user?.id].filter(id => id !== dishId);
+          likedDishesMap[user.id] = likedDishesMap[user?.id].filter((id) => id !== dishId);
           await saveLikedDishes();
         }
         return Promise.resolve({ status: 204, data: null });
@@ -331,7 +342,7 @@ if (USE_MOCKS) {
 
       // GET /complaints/me
       if (config.url === '/complaints/me' && config.method === 'get') {
-        const userComplaints = mockComplaints.filter(c => c.user_id === user?.id);
+        const userComplaints = mockComplaints.filter((c) => c.user_id === user?.id);
         return Promise.resolve({ data: userComplaints, status: 200 });
       }
 
@@ -349,14 +360,14 @@ if (USE_MOCKS) {
       const staffComplaintsMatch = config.url?.match(/^\/staff\/complaints\/(.+)$/);
       if (staffComplaintsMatch && config.method === 'get') {
         const userId = staffComplaintsMatch[1];
-        const complaints = mockComplaints.filter(c => c.user_id === userId);
+        const complaints = mockComplaints.filter((c) => c.user_id === userId);
         return Promise.resolve({ data: complaints, status: 200 });
       }
 
       // POST /staff/complaints/validate
       if (config.url === '/staff/complaints/validate' && config.method === 'post') {
         const validation = config.data as ComplaintValidation;
-        const complaint = mockComplaints.find(c => c.id === validation.complaint_id);
+        const complaint = mockComplaints.find((c) => c.id === validation.complaint_id);
         if (complaint) {
           complaint.validated = validation.validation;
           complaint.response = validation.complaint_response;
@@ -373,7 +384,7 @@ if (USE_MOCKS) {
       const entryMatch = config.url?.match(/^\/staff\/entry\/([^/]+)$/);
       if (entryMatch && config.method === 'get') {
         const entryId = entryMatch[1];
-        const entry = mockEntries.find(e => e.id === entryId);
+        const entry = mockEntries.find((e) => e.id === entryId);
         if (entry) return Promise.resolve({ data: entry, status: 200 });
         return Promise.reject({ response: { status: 404 } });
       }
@@ -386,7 +397,7 @@ if (USE_MOCKS) {
       // GET /events/{event_id}
       const eventMatch = config.url?.match(/^\/events\/([^/]+)$/);
       if (eventMatch && config.method === 'get') {
-        const event = mockEvents.find(e => e.id === eventMatch[1]);
+        const event = mockEvents.find((e) => e.id === eventMatch[1]);
         if (event) return Promise.resolve({ data: event, status: 200 });
         return Promise.reject({ response: { status: 404 } });
       }
@@ -415,12 +426,14 @@ if (USE_MOCKS) {
         if (user?.user_type === 'establishment') {
           return Promise.resolve({ data: user, status: 200 });
         }
-        return Promise.reject({ response: { status: 403, data: { detail: 'Not an establishment' } } });
+        return Promise.reject({
+          response: { status: 403, data: { detail: 'Not an establishment' } },
+        });
       }
 
       // GET /establishments/all – retorna todos os estabelecimentos
       if (config.url === '/establishments/all' && config.method === 'get') {
-        const establishments = mockUsers.filter(u => u.user_type === 'establishment');
+        const establishments = mockUsers.filter((u) => u.user_type === 'establishment');
         // Remove o campo password e outros dados sensíveis
         const sanitized = establishments.map(({ password, ...rest }) => rest);
         return Promise.resolve({ data: sanitized, status: 200 });
@@ -430,13 +443,13 @@ if (USE_MOCKS) {
       const establishmentDishesMatch = config.url?.match(/^\/establishments\/([^/]+)\/dishes$/);
       if (establishmentDishesMatch && config.method === 'get') {
         const establishmentId = establishmentDishesMatch[1];
-        const dishes = mockDishes.filter(d => d.establishment_id === establishmentId);
+        const dishes = mockDishes.filter((d) => d.establishment_id === establishmentId);
         return Promise.resolve({ data: dishes, status: 200 });
       }
 
       // GET /establishments/dish
       if (config.url === '/establishments/dish' && config.method === 'get') {
-        const dishes = mockDishes.filter(d => d.establishment_id === user?.id);
+        const dishes = mockDishes.filter((d) => d.establishment_id === user?.id);
         return Promise.resolve({ data: dishes, status: 200 });
       }
 
@@ -448,7 +461,9 @@ if (USE_MOCKS) {
           return Promise.reject({ response: { status: 403 } });
         }
 
-        let name = '', associated_entry = '', dish_image_path = '';
+        let name = '',
+          associated_entry = '',
+          dish_image_path = '';
         if (config.data instanceof FormData) {
           for (const [key, value] of (config.data as any)._parts) {
             if (key === 'name') name = value;
@@ -466,12 +481,19 @@ if (USE_MOCKS) {
 
         // Verifica se associated_entry é um ID (ex: 'passarinha') ou nome (ex: 'Passarinha')
         let entryId = associated_entry;
-        const entryExists = mockEntries.find(e => e.id === associated_entry);
+        const entryExists = mockEntries.find((e) => e.id === associated_entry);
         if (!entryExists) {
           // Tenta encontrar pelo nome (normalizado)
-          const normalized = associated_entry.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-          const foundEntry = mockEntries.find(e =>
-            e.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() === normalized
+          const normalized = associated_entry
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase();
+          const foundEntry = mockEntries.find(
+            (e) =>
+              e.name
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase() === normalized,
           );
           if (foundEntry) entryId = foundEntry.id;
         }
@@ -527,6 +549,6 @@ if (USE_MOCKS) {
 
       // Se não mapeado, rejeita
       return Promise.reject(error);
-    }
-  )
+    },
+  );
 }

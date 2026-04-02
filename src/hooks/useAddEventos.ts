@@ -99,7 +99,6 @@ export const useAdicionarEvento = () => {
       alert('Evento cadastrado com sucesso!');
 
       router.back(); // volta pra lista
-
     } catch (error: any) {
       console.log('❌ ERRO BACKEND:', error.response?.data);
       alert('Erro ao salvar o evento');
@@ -108,14 +107,29 @@ export const useAdicionarEvento = () => {
 
   return {
     states: {
-      nome, descricao, cep, rua, bairro, horario, dataSelecionada, showDatePicker, cidade,
-      showCityPicker
+      nome,
+      descricao,
+      cep,
+      rua,
+      bairro,
+      horario,
+      dataSelecionada,
+      showDatePicker,
+      cidade,
+      showCityPicker,
     },
     actions: {
-      setNome, setDescricao, setRua, setBairro,
-      setShowDatePicker, setDataSelecionada,
-      handleHorarioChange, handleCepChange, handleSalvarEvento, setCidade,
+      setNome,
+      setDescricao,
+      setRua,
+      setBairro,
+      setShowDatePicker,
+      setDataSelecionada,
+      handleHorarioChange,
+      handleCepChange,
+      handleSalvarEvento,
+      setCidade,
       setShowCityPicker,
-    }
+    },
   };
 };

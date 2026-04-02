@@ -1,28 +1,21 @@
-import { Dish, User } from '../interfaces';
+import type { Dish, User } from '../interfaces';
 import { api } from './apiTeste';
 
 // ── Establishment ──────────────────────────────────────
-const getEstablishmentUser = () =>
-  api.get<User>('/establishments');
+const getEstablishmentUser = () => api.get<User>('/establishments');
 
-const updateEstablishmentUser = (data: Partial<User>) =>
-  api.put<User>('/establishments', data);
+const updateEstablishmentUser = (data: Partial<User>) => api.put<User>('/establishments', data);
 
-const createEstablishmentUser = (data: User) =>
-  api.post<User>('/establishments', data);
+const createEstablishmentUser = (data: User) => api.post<User>('/establishments', data);
 
 // ── Dishes ─────────────────────────────────────────────
-const getSelfPostedDishes = () =>
-  api.get<Dish[]>('/establishments/dish');
+const getSelfPostedDishes = () => api.get<Dish[]>('/establishments/dish');
 
-const createDish = (data: Omit<Dish, 'id'>) =>
-  api.post<Dish>('/establishments/dish', data);
+const createDish = (data: Omit<Dish, 'id'>) => api.post<Dish>('/establishments/dish', data);
 
-const updateDish = (data: Dish) =>
-  api.put<Dish>(`/establishments/dish/${data.id}`, data);
+const updateDish = (data: Dish) => api.put<Dish>(`/establishments/dish/${data.id}`, data);
 
-const deleteDish = (dishId: string) =>
-  api.delete<void>(`/establishments/dish/${dishId}`);
+const deleteDish = (dishId: string) => api.delete<void>(`/establishments/dish/${dishId}`);
 
 // ── Export ──────────────────────────────────────────────
 export const establishmentService = {
@@ -43,7 +36,8 @@ export const establishmentService = {
   // GET /establishments/dish
   getSelfPostedDishes: () => api.get<Dish[]>('/establishments/dish'),
 
-  getEstablishmentDishes: (establishmentId: string) => api.get<Dish[]>(`/establishments/${establishmentId}/dishes`),
+  getEstablishmentDishes: (establishmentId: string) =>
+    api.get<Dish[]>(`/establishments/${establishmentId}/dishes`),
 
   // PUT /establishments/dish/{dish_id}
   updateDish: (data: Dish) => api.put<Dish>(`/establishments/dish/${data.id}`, data),

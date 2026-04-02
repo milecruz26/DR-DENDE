@@ -1,3 +1,8 @@
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import React, { useState } from 'react';
+import { StatusBar, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 import EventCalendarList from '@/components/Eventos/ListaEventos';
 import { Header } from '@/components/Header';
@@ -5,13 +10,8 @@ import EventsInfo from '@/components/Modal/Info/EventsInfo';
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { useAuth } from '@/context/AuthContext';
 import { useEventById } from '@/hooks/useEvents';
-import { Event } from '@/interfaces/event';
+import type { Event } from '@/interfaces/event';
 import { formatDateTime } from '@/utils/formatDateTime';
-import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
-import React, { useState } from 'react';
-import { StatusBar, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Eventos() {
   const { user } = useAuth();
@@ -24,30 +24,28 @@ export default function Eventos() {
         <StatusBar backgroundColor={'#FFFBE6'} />
         <Header />
         <View style={styles.scrollContent}>
-
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+          >
             <Text style={styles.textPage}>Eventos</Text>
 
             {user?.user_type === 'staff' && (
-
               <SecondaryButton
                 title="+ Criar Evento"
                 onPress={() => router.push('/(protegida)/configuracoes/adicionarEvento')}
-                size='small'
-              />)
-            }
+                size="small"
+              />
+            )}
           </View>
 
           {/* O COMPONENTE REUTILIZÁVEL AQUI */}
           <EventCalendarList onSelectEvent={(event) => setSelectedEventId(event?.id!)} />
         </View>
-
       </SafeAreaView>
       <ReadMoreModal
         visible={!!selectedEvent}
         onClose={() => setSelectedEventId(null)}
         title={selectedEvent?.name || ''}
-
       >
         {selectedEvent && (
           <EventsInfo
@@ -79,7 +77,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     letterSpacing: 0.36,
     color: '#454545',
-    marginVertical: 32
+    marginVertical: 32,
   },
   eventContainer: {
     borderWidth: 1,
@@ -88,7 +86,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 24,
     gap: 24,
-    marginTop: 24
+    marginTop: 24,
   },
   eventList: {
     gap: 8,
@@ -98,6 +96,6 @@ const styles = StyleSheet.create({
     color: '#888',
     fontStyle: 'italic',
     marginTop: 10,
-    marginBottom: 10
-  }
+    marginBottom: 10,
+  },
 });

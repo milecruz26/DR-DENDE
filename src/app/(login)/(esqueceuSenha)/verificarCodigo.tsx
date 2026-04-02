@@ -1,11 +1,12 @@
-import BgLogin from "@/components/BackgroundThema/BgLogin";
-import { PrimaryButton } from "@/components/Buttons/PrimaryButton";
-import { SecondaryButton } from "@/components/Buttons/SecondaryButton";
-import { TertiaryButton } from "@/components/Buttons/TertiaryButton";
+import { Link } from 'expo-router';
+import React from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+import BgLogin from '@/components/BackgroundThema/BgLogin';
+import { PrimaryButton } from '@/components/Buttons/PrimaryButton';
+import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
+import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
 import Colors from '@/theme/Colors';
-import { Link } from "expo-router";
-import React from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+
 const { NEUTRAL } = Colors;
 
 export default function VerificarCodigo() {
@@ -17,36 +18,21 @@ export default function VerificarCodigo() {
       {/* <View style={{ gap: 24 }}> */}
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Código de verificação</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="000000"
-          keyboardType="decimal-pad"
-        />
+        <TextInput style={styles.input} placeholder="000000" keyboardType="decimal-pad" />
       </View>
       <View style={{ gap: 8 }}>
-
         <Link href="/(login)/(esqueceuSenha)/resetarSenha" asChild>
-          <PrimaryButton
-            title='Verificar o código'
-            onPress={() => { }}
-
-          />
+          <PrimaryButton title="Verificar o código" onPress={() => {}} />
         </Link>
-        <SecondaryButton
-          title='Reenviar código'
-          onPress={() => { }}
-        />
+        <SecondaryButton title="Reenviar código" onPress={() => {}} />
         <Link href="/(login)" asChild>
-          <TertiaryButton
-            title='Voltar'
-            onPress={() => { }}
-          />
+          <TertiaryButton title="Voltar" onPress={() => {}} />
         </Link>
       </View>
 
       {/* </View> */}
     </BgLogin>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -54,14 +40,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFBE6',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   content: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
-
   },
   logoSubtitle: {
     fontSize: 18,
@@ -101,7 +86,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     color: NEUTRAL.deep,
-    fontSize: 12
+    fontSize: 12,
   },
   input: {
     borderWidth: 1,
@@ -112,5 +97,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     width: '100%',
   },
-
 });

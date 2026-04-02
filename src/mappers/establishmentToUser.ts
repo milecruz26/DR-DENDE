@@ -1,11 +1,11 @@
-import { User, EstablishmentResponse } from "@/interfaces";
+import type { EstablishmentResponse, User } from '@/interfaces';
 
 export function mapEstablishmentToUser(data: EstablishmentResponse): User {
   return {
     id: data.id,
     username: data.username,
     email: data.email,
-    user_type: "establishment",
+    user_type: 'establishment',
     address: data.address ?? null,
     role: null,
   };

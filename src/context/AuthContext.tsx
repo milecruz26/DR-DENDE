@@ -1,9 +1,10 @@
+import type React from 'react';
+import { createContext, useContext } from 'react';
 import { STORAGE_KEYS } from '@/constants/storageKeys';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useInvalidateQueries } from '@/hooks/useInvalidateQueries';
 import { useLogin } from '@/hooks/useLogin';
 import { storage } from '@/utils/storage';
-import React, { createContext, useContext } from 'react';
 
 interface SignInOptions {
   onSuccess?: () => void;
@@ -30,7 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       options?.onSuccess?.();
     } catch (error) {
       options?.onError?.(error);
-      console.log('ERROR NO SIGN AUTH CONTEXT:', error)
+      console.log('ERROR NO SIGN AUTH CONTEXT:', error);
     }
   };
 
@@ -38,7 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await storage.deleteItem(STORAGE_KEYS.TOKEN);
     await storage.deleteItem(STORAGE_KEYS.USER_TYPE);
     await storage.deleteItem(STORAGE_KEYS.STAFF_USER);
-    invalidate("getCurrentUser");
+    invalidate('getCurrentUser');
   };
 
   const value = {

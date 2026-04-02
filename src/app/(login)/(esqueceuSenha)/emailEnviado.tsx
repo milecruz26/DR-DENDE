@@ -1,11 +1,12 @@
-import BgLogin from "@/components/BackgroundThema/BgLogin";
-import { PrimaryButton } from "@/components/Buttons/PrimaryButton";
-import { SecondaryButton } from "@/components/Buttons/SecondaryButton";
-import { TertiaryButton } from "@/components/Buttons/TertiaryButton";
+import { Link } from 'expo-router';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import BgLogin from '@/components/BackgroundThema/BgLogin';
+import { PrimaryButton } from '@/components/Buttons/PrimaryButton';
+import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
+import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
 import Colors from '@/theme/Colors';
-import { Link } from "expo-router";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+
 const { NEUTRAL } = Colors;
 
 export default function EmailEnviado() {
@@ -15,33 +16,22 @@ export default function EmailEnviado() {
       <Text style={styles.cardSubTitle}>Enviamos um código de verificação para seu@email.com</Text>
 
       <View style={styles.containerText}>
-        <Text style={styles.textAviso}>Verifique sua caixa de entrada e spam. O código expira em 10 minutos.</Text>
+        <Text style={styles.textAviso}>
+          Verifique sua caixa de entrada e spam. O código expira em 10 minutos.
+        </Text>
       </View>
 
       <View style={{ gap: 8 }}>
-
         <Link href="/(login)/(esqueceuSenha)/verificarCodigo" asChild>
-          <PrimaryButton
-            title='Já recebi o código'
-            onPress={() => { }}
-
-          />
+          <PrimaryButton title="Já recebi o código" onPress={() => {}} />
         </Link>
-        <SecondaryButton
-          title='Reenviar código'
-          onPress={() => { }}
-        />
+        <SecondaryButton title="Reenviar código" onPress={() => {}} />
         <Link href="/(login)" asChild>
-          <TertiaryButton
-            title='Voltar'
-            onPress={() => { }}
-          />
+          <TertiaryButton title="Voltar" onPress={() => {}} />
         </Link>
       </View>
-
-
     </BgLogin>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -62,14 +52,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFBE6',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   content: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
-
   },
   logoSubtitle: {
     fontSize: 18,
@@ -109,7 +98,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     color: NEUTRAL.deep,
-    fontSize: 12
+    fontSize: 12,
   },
   input: {
     borderWidth: 1,
@@ -120,5 +109,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     width: '100%',
   },
-
 });

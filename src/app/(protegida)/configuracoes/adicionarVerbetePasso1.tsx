@@ -1,5 +1,3 @@
-import ImageUploadField from '@/components/ImageUploadField';
-import { useEntry } from '@/context/EntryContext';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
@@ -15,8 +13,11 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
+import ImageUploadField from '@/components/ImageUploadField';
+import { useEntry } from '@/context/EntryContext';
+
 const COLORS = {
   primary: '#34523B',
   white: '#FFFFFF',
@@ -26,7 +27,7 @@ const COLORS = {
   placeholder: '#888888',
   danger: '#D32F2F',
   uploadBg: '#FAFAFA',
-  recording: '#FF0000'
+  recording: '#FF0000',
 };
 
 const CATEGORIAS = ['Entrada', 'Acompanhamentos', 'Sobremesas', 'Vegetarianas', 'Prato Principal'];
@@ -49,7 +50,6 @@ export default function AdicionarVerbetePasso1() {
   const [isRecording, setIsRecording] = useState(false);
   // const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-
 
   // FUNÇÃO: Excluir Áudio
   async function handleDeleteAudio() {
@@ -81,10 +81,10 @@ export default function AdicionarVerbetePasso1() {
 
   const mapCategoria = (cat: string) => {
     const map = {
-      'Entrada': 'entradas',
-      'Acompanhamentos': 'acompanhamentos',
-      'Sobremesas': 'sobremesas',
-      'Vegetarianas': 'vegetarianas',
+      Entrada: 'entradas',
+      Acompanhamentos: 'acompanhamentos',
+      Sobremesas: 'sobremesas',
+      Vegetarianas: 'vegetarianas',
       'Prato Principal': 'prato_principal',
     };
 
@@ -105,7 +105,6 @@ export default function AdicionarVerbetePasso1() {
     router.push('/configuracoes/adicionarVerbetePasso2');
   };
 
-
   // Função para selecionar arquivo de áudio
   const handlePickAudio = async () => {
     try {
@@ -116,16 +115,19 @@ export default function AdicionarVerbetePasso1() {
 
       if (!result.canceled) {
         setAudioUri(result.assets[0].uri);
-        Alert.alert("Sucesso", "Arquivo de áudio selecionado!");
-        console.log("Áudio selecionado:", audioUri);
+        Alert.alert('Sucesso', 'Arquivo de áudio selecionado!');
+        console.log('Áudio selecionado:', audioUri);
       }
     } catch (err) {
-      Alert.alert("Erro", "Não foi possível carregar o arquivo.");
+      Alert.alert('Erro', 'Não foi possível carregar o arquivo.');
     }
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.root}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.root}
+    >
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
@@ -136,7 +138,6 @@ export default function AdicionarVerbetePasso1() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-
         {/* Seção: Detalhes */}
         <View style={styles.sectionHeader}>
           <Feather name="book-open" size={22} color={COLORS.textDark} />
@@ -144,12 +145,22 @@ export default function AdicionarVerbetePasso1() {
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}><Text style={styles.required}>*</Text> Nome</Text>
-          <TextInput style={styles.input} placeholder="Text" placeholderTextColor={COLORS.placeholder} value={nome} onChangeText={setNome} />
+          <Text style={styles.label}>
+            <Text style={styles.required}>*</Text> Nome
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Text"
+            placeholderTextColor={COLORS.placeholder}
+            value={nome}
+            onChangeText={setNome}
+          />
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}><Text style={styles.required}>*</Text> Foto representativa</Text>
+          <Text style={styles.label}>
+            <Text style={styles.required}>*</Text> Foto representativa
+          </Text>
           <ImageUploadField
             imageUri={imageUri}
             onPickImage={pickImage}
@@ -159,18 +170,23 @@ export default function AdicionarVerbetePasso1() {
 
         {/* Campo de Áudio Atualizado */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}><Text style={styles.required}>*</Text> Audio descrição do texto</Text>
+          <Text style={styles.label}>
+            <Text style={styles.required}>*</Text> Audio descrição do texto
+          </Text>
           <TouchableOpacity style={styles.uploadArea} onPress={handlePickAudio}>
-            <Feather name={audioUri ? "check-circle" : "upload"} size={20} color={audioUri ? COLORS.primary : COLORS.textLight} />
+            <Feather
+              name={audioUri ? 'check-circle' : 'upload'}
+              size={20}
+              color={audioUri ? COLORS.primary : COLORS.textLight}
+            />
             <Text style={[styles.uploadText, audioUri && { color: COLORS.primary }]}>
-              {audioUri ? "Áudio selecionado" : "Clique para selecionar um arquivo de áudio"}
+              {audioUri ? 'Áudio selecionado' : 'Clique para selecionar um arquivo de áudio'}
             </Text>
             {audioUri && (
-
               <TouchableOpacity style={styles.deleteAudioSmall} onPress={handleDeleteAudio}>
                 <Feather name="trash-2" size={20} color={COLORS.danger} />
-              </TouchableOpacity>)
-            }
+              </TouchableOpacity>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -266,7 +282,9 @@ export default function AdicionarVerbetePasso1() {
         </View> */}
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}><Text style={styles.required}>*</Text> Texto do verbete</Text>
+          <Text style={styles.label}>
+            <Text style={styles.required}>*</Text> Texto do verbete
+          </Text>
           <View style={styles.textAreaContainer}>
             <TextInput
               style={styles.textArea}
@@ -280,7 +298,12 @@ export default function AdicionarVerbetePasso1() {
             />
             <View style={styles.textAreaFooter}>
               <Text style={styles.charCount}>{textoVerbete.length}/120</Text>
-              <Feather name="menu" size={12} color={COLORS.placeholder} style={{ transform: [{ rotate: '45deg' }] }} />
+              <Feather
+                name="menu"
+                size={12}
+                color={COLORS.placeholder}
+                style={{ transform: [{ rotate: '45deg' }] }}
+              />
             </View>
           </View>
         </View>
@@ -293,9 +316,13 @@ export default function AdicionarVerbetePasso1() {
 
         {/* Campo Categoria com as opções solicitadas */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}><Text style={styles.required}>*</Text> Categoria</Text>
+          <Text style={styles.label}>
+            <Text style={styles.required}>*</Text> Categoria
+          </Text>
           <TouchableOpacity style={styles.selectInput} onPress={() => setShowCatModal(true)}>
-            <Text style={[styles.selectText, categoria !== 'Selecionar' && { color: COLORS.textDark }]}>
+            <Text
+              style={[styles.selectText, categoria !== 'Selecionar' && { color: COLORS.textDark }]}
+            >
               {categoria}
             </Text>
             <Feather name="chevron-down" size={20} color={COLORS.textLight} />
@@ -303,25 +330,31 @@ export default function AdicionarVerbetePasso1() {
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}><Text style={styles.required}>*</Text> Tempo estimado</Text>
-          <TextInput style={styles.input} placeholder="Ex: 1 hora" placeholderTextColor={COLORS.placeholder} value={tempo} onChangeText={setTempo} />
+          <Text style={styles.label}>
+            <Text style={styles.required}>*</Text> Tempo estimado
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Ex: 1 hora"
+            placeholderTextColor={COLORS.placeholder}
+            value={tempo}
+            onChangeText={setTempo}
+          />
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}><Text style={styles.required}>*</Text> Nível de dificuldade</Text>
+          <Text style={styles.label}>
+            <Text style={styles.required}>*</Text> Nível de dificuldade
+          </Text>
           <TouchableOpacity style={styles.selectInput}>
             <Text style={styles.selectText}>Selecionar</Text>
             <Feather name="chevron-down" size={20} color={COLORS.textLight} />
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          style={styles.btnPrimary}
-          onPress={handleNext}
-        >
+        <TouchableOpacity style={styles.btnPrimary} onPress={handleNext}>
           <Text style={styles.btnPrimaryText}>Prosseguir</Text>
         </TouchableOpacity>
-
       </ScrollView>
 
       {/* Modal de Seleção de Categoria */}
@@ -344,44 +377,122 @@ export default function AdicionarVerbetePasso1() {
           </View>
         </TouchableOpacity>
       </Modal>
-
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: COLORS.white },
-  header: { flexDirection: 'row', alignItems: 'center', paddingTop: 60, paddingBottom: 20, paddingHorizontal: 20 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 60,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+  },
   backBtn: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   backText: { color: COLORS.primary, fontSize: 16, fontWeight: '500' },
-  headerTitle: { flex: 1, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: COLORS.textDark, marginRight: 60 },
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+    marginRight: 60,
+  },
   scrollContent: { paddingHorizontal: 20, paddingBottom: 40 },
-  sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 20, marginTop: 10 },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 20,
+    marginTop: 10,
+  },
   sectionTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.textDark },
   inputGroup: { marginBottom: 18 },
   label: { fontSize: 14, fontWeight: 'bold', color: COLORS.textDark, marginBottom: 8 },
   required: { color: COLORS.danger },
-  input: { height: 55, borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, paddingHorizontal: 15, fontSize: 16, color: COLORS.textDark },
-  selectInput: { height: 55, borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, paddingHorizontal: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  input: {
+    height: 55,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: COLORS.textDark,
+  },
+  selectInput: {
+    height: 55,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   selectText: { fontSize: 16, color: COLORS.textLight },
-  uploadArea: { height: 55, borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, backgroundColor: COLORS.uploadBg, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
+  uploadArea: {
+    height: 55,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    backgroundColor: COLORS.uploadBg,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  },
   uploadText: { fontSize: 14, color: COLORS.textLight, paddingHorizontal: 10, textAlign: 'center' },
-  textAreaContainer: { borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, padding: 15, height: 120 },
+  textAreaContainer: {
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    padding: 15,
+    height: 120,
+  },
   textArea: { flex: 1, fontSize: 16, color: COLORS.textDark },
-  textAreaFooter: { flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', gap: 5, marginTop: 5 },
+  textAreaFooter: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: 5,
+    marginTop: 5,
+  },
   charCount: { fontSize: 12, color: COLORS.placeholder },
-  btnPrimary: { backgroundColor: COLORS.primary, height: 55, borderRadius: 8, justifyContent: 'center', alignItems: 'center', marginTop: 10, marginBottom: 20 },
+  btnPrimary: {
+    backgroundColor: COLORS.primary,
+    height: 55,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+  },
   btnPrimaryText: { color: COLORS.white, fontSize: 16, fontWeight: 'bold' },
 
   // Estilos do Modal de Categoria
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   modalContent: { width: '80%', backgroundColor: '#FFF', borderRadius: 12, padding: 20 },
   modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15, textAlign: 'center' },
   modalOption: { paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: '#EEE' },
   modalOptionText: { fontSize: 16, color: COLORS.textDark, textAlign: 'center' },
 
   audioContainer: { flexDirection: 'row', gap: 10, alignItems: 'center' },
-  deleteAudio: { width: 55, height: 55, borderRadius: 8, borderWidth: 1, borderColor: COLORS.danger, justifyContent: 'center', alignItems: 'center' },
+  deleteAudio: {
+    width: 55,
+    height: 55,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: COLORS.danger,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
   // NOVOS ESTILOS DO PLAYER
   playerContainer: {
@@ -392,7 +503,7 @@ const styles = StyleSheet.create({
     padding: 12,
     marginTop: 10,
     borderWidth: 1,
-    borderColor: '#EEE'
+    borderColor: '#EEE',
   },
   playButton: {
     width: 44,
@@ -400,22 +511,22 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     backgroundColor: COLORS.primary,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   playerInfo: {
     flex: 1,
-    marginLeft: 12
+    marginLeft: 12,
   },
   playerText: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: COLORS.textDark
+    color: COLORS.textDark,
   },
   playerSubtext: {
     fontSize: 12,
-    color: COLORS.textLight
+    color: COLORS.textLight,
   },
   deleteAudioSmall: {
-    padding: 8
-  }
+    padding: 8,
+  },
 });

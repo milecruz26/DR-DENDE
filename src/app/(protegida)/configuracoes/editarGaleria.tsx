@@ -1,14 +1,33 @@
-import ImageUploadField from '@/components/ImageUploadField';
-import { useCreateDish } from '@/hooks/useEstablishment';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { FlatList, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  FlatList,
+  Image,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import ImageUploadField from '@/components/ImageUploadField';
+import { useCreateDish } from '@/hooks/useEstablishment';
 
 // Keep COLORS same as step 1
-const COLORS = { primary: '#34523B', white: '#FFFFFF', textDark: '#333333', textLight: '#666666', border: '#CCCCCC', danger: '#D32F2F', uploadBg: '#FAFAFA', placeholder: '#888888', };
-
+const COLORS = {
+  primary: '#34523B',
+  white: '#FFFFFF',
+  textDark: '#333333',
+  textLight: '#666666',
+  border: '#CCCCCC',
+  danger: '#D32F2F',
+  uploadBg: '#FAFAFA',
+  placeholder: '#888888',
+};
 
 type MenuItem = {
   id: number;
@@ -51,14 +70,14 @@ const PRATOS_VERBETES: Verbete[] = [
   { id: 'boboDeCamarao', name: 'Bobó de Camarão' },
   { id: 'cuscuze', name: 'Cuscuz' },
   { id: 'fumeiro', name: 'Carne de Fumeiro' },
-  { id: 'malassado', name: 'Malassado' }
+  { id: 'malassado', name: 'Malassado' },
 ];
 export default function EditarGaleria() {
   const router = useRouter();
   const createDishMutation = useCreateDish();
   // Dynamic ingredient blocks state
   const [items, setItems] = useState<MenuItem[]>([
-    { id: 1, nome: '', ingrediente: null, imageUri: null }
+    { id: 1, nome: '', ingrediente: null, imageUri: null },
   ]);
   const [modalIndex, setModalIndex] = useState<number | null>(null);
   const [search, setSearch] = useState('');
@@ -68,7 +87,7 @@ export default function EditarGaleria() {
     // Filtrar apenas itens com nome, ingrediente e imagem preenchidos
     const validItems = items.filter(
       (item): item is Required<MenuItem> =>
-        !!item.nome.trim() && !!item.ingrediente && !!item.imageUri
+        !!item.nome.trim() && !!item.ingrediente && !!item.imageUri,
     ); // Agora TypeScript sabe que ingrediente e imageUri não são null
 
     if (validItems.length === 0) {
@@ -109,17 +128,10 @@ export default function EditarGaleria() {
   };
 
   const addItem = () => {
-    setItems((prev) => [
-      ...prev,
-      { id: Date.now(), nome: '', ingrediente: null, imageUri: null }
-    ]);
+    setItems((prev) => [...prev, { id: Date.now(), nome: '', ingrediente: null, imageUri: null }]);
   };
 
-  const updateItem = <K extends keyof MenuItem>(
-    index: number,
-    field: K,
-    value: MenuItem[K]
-  ) => {
+  const updateItem = <K extends keyof MenuItem>(index: number, field: K, value: MenuItem[K]) => {
     const updated = [...items];
     updated[index][field] = value;
     setItems(updated);
@@ -132,10 +144,13 @@ export default function EditarGaleria() {
   };
 
   const normalize = (str: string): string =>
-    str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
 
   const filteredPratosVerbetes = PRATOS_VERBETES.filter((item) =>
-    normalize(item.name).includes(normalize(search))
+    normalize(item.name).includes(normalize(search)),
   );
   const pickImage = async (index: number) => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -166,91 +181,84 @@ export default function EditarGaleria() {
           <Text style={styles.backText}>Voltar</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Editar galeria</Text>
-
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-
-
-        {
-          items.map((item, index) => {
-            const selectedVerbeteName =
-              PRATOS_VERBETES.find(v => v.id === item.ingrediente)?.name || 'Selecionar';
-            return (
-
-              <View key={item.id} style={styles.dynamicBlock}>
-
-                {/* HEADER */}
-                <View style={styles.blockHeader}>
-                  <View style={styles.blockTitleContainer}>
-                    <Image source={require('@/assets/images/icones/plate.png')} style={{ width: 24, height: 24 }} />
-                    <Text style={styles.blockTitle}>Prato da galeria</Text>
-                  </View>
-
-                  {items.length > 1 && (
-                    <TouchableOpacity onPress={() => removeItem(index)}>
-                      <Feather name="trash-2" size={18} color={COLORS.danger} />
-                    </TouchableOpacity>
-                  )}
+        {items.map((item, index) => {
+          const selectedVerbeteName =
+            PRATOS_VERBETES.find((v) => v.id === item.ingrediente)?.name || 'Selecionar';
+          return (
+            <View key={item.id} style={styles.dynamicBlock}>
+              {/* HEADER */}
+              <View style={styles.blockHeader}>
+                <View style={styles.blockTitleContainer}>
+                  <Image
+                    source={require('@/assets/images/icones/plate.png')}
+                    style={{ width: 24, height: 24 }}
+                  />
+                  <Text style={styles.blockTitle}>Prato da galeria</Text>
                 </View>
 
-                {/* INPUTS */}
-                <View style={styles.row}>
-                  <View style={styles.half}>
-                    <Text style={styles.label}>
-                      <Text style={styles.required}>*</Text> Nome do prato
-                    </Text>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Ex: Quiabada"
-                      value={item.nome}
-                      onChangeText={(text) => updateItem(index, 'nome', text)}
-                    />
-                  </View>
+                {items.length > 1 && (
+                  <TouchableOpacity onPress={() => removeItem(index)}>
+                    <Feather name="trash-2" size={18} color={COLORS.danger} />
+                  </TouchableOpacity>
+                )}
+              </View>
 
-                  <View style={styles.half}>
-                    <Text style={styles.label}>
-                      <Text style={styles.required}>*</Text> Prato do verbete
-                    </Text>
-                    <TouchableOpacity style={styles.selectInput} onPress={() => setModalIndex(index)}>
-                      <Text style={[styles.selectText, item.ingrediente && { color: COLORS.textDark }]}>
-                        {selectedVerbeteName}
-                      </Text>
-                      <Feather name="chevron-down" size={20} color={COLORS.textLight} />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-
-                {/* IMAGEM */}
-                <View style={styles.inputGroup}>
+              {/* INPUTS */}
+              <View style={styles.row}>
+                <View style={styles.half}>
                   <Text style={styles.label}>
-                    <Text style={styles.required}>*</Text> Foto representativa
+                    <Text style={styles.required}>*</Text> Nome do prato
                   </Text>
-
-                  <ImageUploadField
-                    imageUri={item.imageUri}
-                    onPickImage={() => pickImage(index)}
-                    onRemoveImage={() => removeImage(index)}
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Ex: Quiabada"
+                    value={item.nome}
+                    onChangeText={(text) => updateItem(index, 'nome', text)}
                   />
                 </View>
 
-                {/* ADD NOVO */}
-                <TouchableOpacity style={styles.addBtn} onPress={addItem}>
-                  <Feather name="plus" size={18} color={COLORS.primary} />
-                  <Text style={styles.addBtnText}>Adicionar novo</Text>
-                </TouchableOpacity>
-
-                {/* DIVIDER */}
-                {index !== items.length - 1 && (
-                  <View style={styles.divider} />
-                )}
-
+                <View style={styles.half}>
+                  <Text style={styles.label}>
+                    <Text style={styles.required}>*</Text> Prato do verbete
+                  </Text>
+                  <TouchableOpacity style={styles.selectInput} onPress={() => setModalIndex(index)}>
+                    <Text
+                      style={[styles.selectText, item.ingrediente && { color: COLORS.textDark }]}
+                    >
+                      {selectedVerbeteName}
+                    </Text>
+                    <Feather name="chevron-down" size={20} color={COLORS.textLight} />
+                  </TouchableOpacity>
+                </View>
               </View>
-            )
-          })
-        }
 
+              {/* IMAGEM */}
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>
+                  <Text style={styles.required}>*</Text> Foto representativa
+                </Text>
 
+                <ImageUploadField
+                  imageUri={item.imageUri}
+                  onPickImage={() => pickImage(index)}
+                  onRemoveImage={() => removeImage(index)}
+                />
+              </View>
+
+              {/* ADD NOVO */}
+              <TouchableOpacity style={styles.addBtn} onPress={addItem}>
+                <Feather name="plus" size={18} color={COLORS.primary} />
+                <Text style={styles.addBtnText}>Adicionar novo</Text>
+              </TouchableOpacity>
+
+              {/* DIVIDER */}
+              {index !== items.length - 1 && <View style={styles.divider} />}
+            </View>
+          );
+        })}
 
         {/* Footer buttons */}
         <View style={styles.footerButtons}>
@@ -261,13 +269,18 @@ export default function EditarGaleria() {
             <Text style={styles.btnSolidText}>{loading ? 'Salvando...' : 'Salvar alterações'}</Text>
           </TouchableOpacity>
         </View>
-
       </ScrollView>
 
       {/* Ingredient selection modal */}
       <Modal visible={modalIndex !== null} transparent animationType="fade">
         <View style={styles.modalOverlay}>
-          <Pressable style={StyleSheet.absoluteFill} onPress={() => { setModalIndex(null); setSearch(''); }} />
+          <Pressable
+            style={StyleSheet.absoluteFill}
+            onPress={() => {
+              setModalIndex(null);
+              setSearch('');
+            }}
+          />
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Selecione um Ingrediente</Text>
             <TextInput
@@ -306,35 +319,104 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   root: { flex: 1, backgroundColor: COLORS.white },
-  header: { flexDirection: 'row', alignItems: 'center', paddingTop: 60, paddingBottom: 20, paddingHorizontal: 20 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 60,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+  },
   backBtn: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   backText: { color: COLORS.primary, fontSize: 16, fontWeight: '500' },
-  headerTitle: { flex: 1, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: COLORS.textDark, marginRight: 60 },
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+    marginRight: 60,
+  },
 
   scrollContent: { paddingHorizontal: 20, paddingBottom: 40 },
 
-  sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 20, marginTop: 10 },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 20,
+    marginTop: 10,
+  },
   sectionTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.textDark },
 
   dynamicBlock: { marginBottom: 10 },
 
-  inputGroup: { marginVertical: 18, },
+  inputGroup: { marginVertical: 18 },
   label: { fontSize: 14, fontWeight: 'bold', color: COLORS.textDark, marginBottom: 8 },
   required: { color: COLORS.danger },
 
-  input: { height: 55, borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, paddingHorizontal: 15, fontSize: 16, color: COLORS.textDark, backgroundColor: COLORS.white },
+  input: {
+    height: 55,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: COLORS.textDark,
+    backgroundColor: COLORS.white,
+  },
 
-  selectInput: { height: 55, borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, paddingHorizontal: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: COLORS.white },
+  selectInput: {
+    height: 55,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: COLORS.white,
+  },
   selectText: { fontSize: 16, color: COLORS.textLight },
 
-  uploadArea: { height: 55, borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, backgroundColor: COLORS.uploadBg, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
+  uploadArea: {
+    height: 55,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    backgroundColor: COLORS.uploadBg,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  },
   uploadText: { fontSize: 14, color: COLORS.textLight },
 
-  deleteBtn: { width: 55, height: 55, borderWidth: 1, borderColor: COLORS.danger, borderRadius: 8, justifyContent: 'center', alignItems: 'center' },
+  deleteBtn: {
+    width: 55,
+    height: 55,
+    borderWidth: 1,
+    borderColor: COLORS.danger,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
-  textAreaContainer: { borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, backgroundColor: COLORS.white, padding: 15, height: 120 },
+  textAreaContainer: {
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    backgroundColor: COLORS.white,
+    padding: 15,
+    height: 120,
+  },
   textArea: { flex: 1, fontSize: 16, color: COLORS.textDark },
-  textAreaFooter: { flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', gap: 5, marginTop: 5 },
+  textAreaFooter: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: 5,
+    marginTop: 5,
+  },
   charCount: { fontSize: 12, color: COLORS.placeholder },
 
   addBtn: {
@@ -351,26 +433,76 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
-  btnPrimary: { backgroundColor: COLORS.primary, height: 55, borderRadius: 8, justifyContent: 'center', alignItems: 'center', marginTop: 10, marginBottom: 20 },
+  btnPrimary: {
+    backgroundColor: COLORS.primary,
+    height: 55,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+  },
   btnPrimaryText: { color: COLORS.white, fontSize: 16, fontWeight: 'bold' },
 
   footerButtons: { flexDirection: 'row', gap: 12, marginTop: 15, marginBottom: 20 },
-  btnOutline: { flex: 1, height: 55, borderWidth: 1, borderColor: COLORS.primary, borderRadius: 8, justifyContent: 'center', alignItems: 'center' },
+  btnOutline: {
+    flex: 1,
+    height: 55,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   btnOutlineText: { color: COLORS.primary, fontSize: 16, fontWeight: 'bold' },
-  btnSolid: { flex: 1, height: 55, backgroundColor: COLORS.primary, borderRadius: 8, justifyContent: 'center', alignItems: 'center' },
+  btnSolid: {
+    flex: 1,
+    height: 55,
+    backgroundColor: COLORS.primary,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   btnSolidText: { color: COLORS.white, fontSize: 16, fontWeight: 'bold' },
 
   // Ingredient modal styles
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
-  modalContent: { width: '85%', maxHeight: '70%', backgroundColor: '#FFF', borderRadius: 12, padding: 20 },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '85%',
+    maxHeight: '70%',
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    padding: 20,
+  },
   modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 12, textAlign: 'center' },
-  modalSearch: { height: 45, borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, paddingHorizontal: 12, fontSize: 14, marginBottom: 10 },
+  modalSearch: {
+    height: 45,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    fontSize: 14,
+    marginBottom: 10,
+  },
   modalList: { maxHeight: 350 },
   modalOption: { paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EEE' },
   modalOptionText: { fontSize: 16, color: COLORS.textDark, textAlign: 'center' },
   modalEmpty: { alignItems: 'center', paddingVertical: 20, gap: 12 },
   modalEmptyText: { textAlign: 'center', color: COLORS.placeholder, fontSize: 14 },
-  modalAddBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: COLORS.primary, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 8 },
+  modalAddBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
   modalAddBtnText: { color: COLORS.white, fontSize: 14, fontWeight: '500' },
   blockHeader: {
     flexDirection: 'row',

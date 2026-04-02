@@ -1,4 +1,4 @@
-import { UserType } from '../interfaces';
+import type { UserType } from '../interfaces';
 import { api } from './apiTeste';
 
 interface LoginCredentials {

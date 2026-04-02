@@ -17,7 +17,11 @@ interface ImageUploadFieldProps {
   onRemoveImage: () => void;
 }
 
-export default function ImageUploadField({ imageUri, onPickImage, onRemoveImage }: ImageUploadFieldProps) {
+export default function ImageUploadField({
+  imageUri,
+  onPickImage,
+  onRemoveImage,
+}: ImageUploadFieldProps) {
   return (
     <View style={styles.container}>
       <TouchableOpacity

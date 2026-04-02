@@ -14,9 +14,7 @@ export default function ConviteEnviado() {
         </View>
 
         <Text style={styles.title}>E-mail enviado</Text>
-        <Text style={styles.description}>
-          O e-mail foi enviado com sucesso para o convidado.
-        </Text>
+        <Text style={styles.description}>O e-mail foi enviado com sucesso para o convidado.</Text>
 
         <TouchableOpacity
           style={styles.btn}
@@ -39,7 +37,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#34523B',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 25
+    marginBottom: 25,
   },
   title: { fontSize: 22, fontWeight: 'bold', marginBottom: 10 },
   description: {
@@ -47,7 +45,7 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
     lineHeight: 22,
-    marginBottom: 40
+    marginBottom: 40,
   },
   btn: {
     backgroundColor: '#34523B',
@@ -55,7 +53,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 8,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
-  btnText: { color: '#FFF', fontWeight: 'bold', fontSize: 16 }
+  btnText: { color: '#FFF', fontWeight: 'bold', fontSize: 16 },
 });

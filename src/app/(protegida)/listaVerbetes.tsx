@@ -1,25 +1,19 @@
 // src/app/(protegida)/listaVerbetes.tsx
+
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { SecondaryButton } from '@/components/Buttons/SecondaryButton';
 import { Header } from '@/components/Header';
 import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';
 import { useAuth } from '@/context/AuthContext';
-import { useDislikeDish, useLikedDishes, useLikeDish } from '@/hooks/useDish';
+import { useDislikeDish, useLikeDish, useLikedDishes } from '@/hooks/useDish';
 import { useAllEntries } from '@/hooks/useEntries';
 import Colors from '@/theme/Colors';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import {
-  FlatList,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
-
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const COLORS = Colors;
-const { NEUTRAL, primary, SECONDARY } = COLORS
+const { NEUTRAL, primary, SECONDARY } = COLORS;
 
 type CategoryType = 'verbetes' | 'restaurantes';
 
@@ -28,9 +22,6 @@ type CategoryType = 'verbetes' | 'restaurantes';
 //   { id: 1, title: 'PASSARINHA', desc: 'A passarinha, apesar de como é chamada, nada tem a ver...', bg: '#E0F0E2', img: require('../../../assets/images/pratos/feijoada.png') },
 //   { id: 2, title: 'FEIJOADA', desc: 'A feijoada é um prato muito popular em todo o Brasil.', bg: '#FFC84A', img: require('../../../assets/images/pratos/passarinha.png') },
 // ];
-
-
-
 
 export default function ListaVerbertes() {
   const router = useRouter();
@@ -41,29 +32,35 @@ export default function ListaVerbertes() {
   const { mutate: dislike } = useDislikeDish();
   const [loading, setLoading] = useState(true);
 
-  const likedIds = likedDishes?.map(d => d.id) || [];
+  const likedIds = likedDishes?.map((d) => d.id) || [];
 
   const handleToggleLike = (id: string) => {
     if (likedIds.includes(id)) dislike(id);
     else like(id);
   };
 
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={'#FFFBE6'} />
 
       <View style={styles.contentContainer}>
-
         <Header />
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: 16,
+          }}
+        >
           <Text style={styles.pageTitle}>Verbetes</Text>
           {user?.user_type === 'staff' && (
             <SecondaryButton
               onPress={() => router.push('/configuracoes/adicionarVerbetePasso1')}
-              title='+ Criar Novo'
-              size='small'
-            />)}
+              title="+ Criar Novo"
+              size="small"
+            />
+          )}
         </View>
 
         <FlatList
@@ -86,10 +83,7 @@ export default function ListaVerbertes() {
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 80 }}
         />
 
-
         {/* </ScrollView> */}
-
-
       </View>
     </SafeAreaView>
   );
@@ -125,7 +119,6 @@ const styles = StyleSheet.create({
   // Chips
   horizontalScroll: {
     marginVertical: 24,
-
   },
 
   eventContainer: {
@@ -136,14 +129,11 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     // backgroundColor: 'blue',
     gap: 24,
-    marginTop: 24
-
+    marginTop: 24,
   },
 
   eventList: {
     gap: 8,
     // backgroundColor: '#FFF',
   },
-
-
 });

@@ -1,11 +1,11 @@
 // src/hooks/useComplaint.ts
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { complaintService } from "../services/complaint";
-import { useInvalidateQueries } from "./useInvalidateQueries";
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { complaintService } from '../services/complaint';
+import { useInvalidateQueries } from './useInvalidateQueries';
 
 export const useSelfComplaints = () => {
   return useQuery({
-    queryKey: ["selfComplaints"],
+    queryKey: ['selfComplaints'],
     queryFn: () => complaintService.getSelfComplaints().then((res) => res.data),
   });
 };
@@ -15,7 +15,7 @@ export const useCreateComplaint = () => {
   return useMutation({
     mutationFn: complaintService.createComplaint,
     onSuccess: () => {
-      invalidate("getSelfComplaints");
+      invalidate('getSelfComplaints');
     },
   });
 };

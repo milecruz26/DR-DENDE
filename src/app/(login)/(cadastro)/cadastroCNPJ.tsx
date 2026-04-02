@@ -1,19 +1,17 @@
+import { Link } from 'expo-router';
+import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-
 import BgLogin from '@/components/BackgroundThema/BgLogin';
 import { PrimaryButton } from '@/components/Buttons/PrimaryButton';
 import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
-
-import { Link } from 'expo-router';
-import React from 'react';
 import Colors from '../../../theme/Colors';
+
 const { NEUTRAL } = Colors;
 
 export default function CadastroCNPJ() {
   return (
     <BgLogin logo={false} card>
       <Text style={styles.cardTitle}>Cadastre-se</Text>
-
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Nome da empresa</Text>
@@ -22,7 +20,6 @@ export default function CadastroCNPJ() {
           placeholder="Ex: Restaurante"
           keyboardType="email-address"
         />
-
       </View>
 
       <View style={styles.inputGroup}>
@@ -35,31 +32,17 @@ export default function CadastroCNPJ() {
       </View>
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Localização</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Cidade, Estado"
-          keyboardType="email-address"
-        />
+        <TextInput style={styles.input} placeholder="Cidade, Estado" keyboardType="email-address" />
       </View>
 
-
       <View style={{ gap: 8 }}>
-
-        <PrimaryButton
-          title='Finalizar cadastro'
-          onPress={() => { }}
-
-        />
+        <PrimaryButton title="Finalizar cadastro" onPress={() => {}} />
         <Link href="/(login)/(cadastro)/perfil" asChild>
-          <TertiaryButton
-            title='Voltar'
-            onPress={() => { }}
-          />
+          <TertiaryButton title="Voltar" onPress={() => {}} />
         </Link>
       </View>
     </BgLogin>
-
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -67,7 +50,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFBE6',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   content: {
     flex: 1,
@@ -87,7 +70,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 5,
-
   },
   cardTitle: {
     fontSize: 18,
@@ -102,7 +84,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     color: NEUTRAL.deep,
-    fontSize: 12
+    fontSize: 12,
   },
   input: {
     borderWidth: 1,
@@ -113,5 +95,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     width: '100%',
   },
-
-})
+});

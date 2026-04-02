@@ -1,13 +1,12 @@
-import LoginLoading from '@/components/LoginLoading';
-import { MockTabBar } from '@/components/MockTabBar';
-import { useAuth } from '@/context/AuthContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Redirect, Slot } from 'expo-router';
 // import { storage } from '@/utils/storage';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
+import LoginLoading from '@/components/LoginLoading';
+import { MockTabBar } from '@/components/MockTabBar';
+import { useAuth } from '@/context/AuthContext';
 
 export default function ProtegidaLayout() {
   const insets = useSafeAreaInsets();
@@ -55,7 +54,6 @@ export default function ProtegidaLayout() {
           <MockTabBar />
         </View>
       </View>
-
     </>
   );
 }
@@ -71,6 +69,5 @@ const styles = StyleSheet.create({
   tabBarContainer: {
     //  backgroundColor: 'transparent',
     // zIndex: 999,
-
   },
 });

@@ -1,14 +1,9 @@
-import { Avatar } from '@/components/Avatar';
-import { useAuth } from '@/context/AuthContext';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Avatar } from '@/components/Avatar';
+import { useAuth } from '@/context/AuthContext';
 export const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const router = useRouter();
@@ -16,19 +11,18 @@ export const Header = () => {
 
   const handleNavigation = (route: string) => {
     setShowMenu(false);
-    // @ts-ignore - Ajuste conforme sua estrutura de rotas
+    // @ts-expect-error - Ajuste conforme sua estrutura de rotas
     router.push(route);
   };
 
-
   const handleLogout = async () => {
-    await signOut();          // Aguarda a remoção do token e invalidação da query
+    await signOut(); // Aguarda a remoção do token e invalidação da query
     router.replace('/(login)'); // Redireciona para a tela de login
   };
 
   return (
     <View style={styles.headerContainer}>
-      <View >
+      <View>
         <Pressable onPress={() => setShowMenu(!showMenu)} style={{ padding: 5 }}>
           <Avatar />
         </Pressable>
@@ -41,10 +35,7 @@ export const Header = () => {
               {/* Opção Favoritos - apenas para usuário comum */}
               {user?.user_type === 'common' && (
                 <>
-                  <Pressable
-                    style={styles.menuItem}
-                    onPress={() => handleNavigation('/favoritos')}
-                  >
+                  <Pressable style={styles.menuItem} onPress={() => handleNavigation('/favoritos')}>
                     <Text style={styles.menuItemText}>Favoritos</Text>
                     <Feather name="star" size={16} color="#666" />
                   </Pressable>
@@ -54,10 +45,7 @@ export const Header = () => {
               )}
 
               {/* Opção Configurações */}
-              <Pressable
-                style={styles.menuItem}
-                onPress={() => handleNavigation('/configuracoes')}
-              >
+              <Pressable style={styles.menuItem} onPress={() => handleNavigation('/configuracoes')}>
                 <Text style={styles.menuItemText}>Configurações</Text>
                 <Feather name="settings" size={16} color="#666" />
               </Pressable>
@@ -66,14 +54,10 @@ export const Header = () => {
 
               {/* Opção Sair */}
 
-              <Pressable
-                style={styles.menuItem}
-                onPress={handleLogout}
-              >
+              <Pressable style={styles.menuItem} onPress={handleLogout}>
                 <Text style={[styles.menuItemText, { color: '#C0392B' }]}>Sair</Text>
                 <Feather name="external-link" size={16} color="#C0392B" />
               </Pressable>
-
             </View>
           </>
         )}
@@ -85,7 +69,7 @@ export const Header = () => {
         <Ionicons name="chevron-down" size={20} color="#666" />
       </View>
     </View>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -147,4 +131,4 @@ const styles = StyleSheet.create({
     color: '#666',
     fontSize: 14,
   },
-})
+});

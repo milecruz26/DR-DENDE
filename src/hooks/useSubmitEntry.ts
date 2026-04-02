@@ -1,5 +1,5 @@
-import { useEntry } from '@/context/EntryContext';
 import { useRouter } from 'expo-router';
+import { useEntry } from '@/context/EntryContext';
 import { useCreateEntry } from './useStaff';
 
 export const useSubmitEntry = () => {
@@ -17,7 +17,7 @@ export const useSubmitEntry = () => {
     };
 
     const filteredPayload = Object.fromEntries(
-      Object.entries(payload).filter(([, value]) => value !== undefined)
+      Object.entries(payload).filter(([, value]) => value !== undefined),
     ) as unknown as Parameters<typeof mutation.mutate>[0];
 
     console.log('📦 Payload enviado para /staff/entry:');

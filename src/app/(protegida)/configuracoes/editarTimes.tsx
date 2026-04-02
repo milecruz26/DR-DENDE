@@ -1,14 +1,7 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const COLORS = {
   primary: '#34523B',
@@ -36,7 +29,7 @@ export default function EditarTime() {
   const [convidados, setConvidados] = useState<Convidado[]>(DADOS_INICIAIS);
 
   const handleExcluir = (id: string) => {
-    setConvidados(prev => prev.filter(c => c.id !== id));
+    setConvidados((prev) => prev.filter((c) => c.id !== id));
   };
 
   return (
@@ -114,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 60,
     paddingBottom: 20,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   backBtn: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   backText: { color: COLORS.primary, fontSize: 16 },
@@ -123,7 +116,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     fontWeight: 'bold',
-    marginRight: 60
+    marginRight: 60,
   },
   content: { flex: 1, paddingHorizontal: 20 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 20 },
@@ -136,7 +129,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     borderRadius: 8,
     paddingHorizontal: 15,
-    fontSize: 16
+    fontSize: 16,
   },
   btnEnviar: {
     backgroundColor: COLORS.primary,
@@ -144,7 +137,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 35
+    marginBottom: 35,
   },
   btnText: { color: '#FFF', fontWeight: 'bold', fontSize: 16 },
   subTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
@@ -154,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0'
+    borderBottomColor: '#F0F0F0',
   },
   itemLead: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   avatar: {
@@ -163,7 +156,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#F5F5F5',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   itemName: { fontSize: 16, fontWeight: '500' },
   itemEmail: { fontSize: 13, color: COLORS.textLight },

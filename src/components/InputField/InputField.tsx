@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 const COLORS = {
   primary: '#34523B',
@@ -7,7 +7,7 @@ const COLORS = {
   border: '#DDD',
   white: '#FFF',
   placeholder: '#999',
-  error: '#C62828'
+  error: '#C62828',
 };
 
 export const InputField = ({ label, required, ...props }: any) => (
@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 15,
     fontSize: 16,
-    color: COLORS.textLight
+    color: COLORS.textLight,
   },
-
-})
+});

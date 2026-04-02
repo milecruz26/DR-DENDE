@@ -7,7 +7,7 @@ const FOOD_IMAGES = [
   require('../../../assets/images/icons/coco.png'),
   require('../../../assets/images/icons/dende.png'),
   require('../../../assets/images/icons/leite-coco.png'),
-]
+];
 
 import React from 'react';
 import { Image, StyleSheet, useWindowDimensions, View } from 'react-native';
@@ -21,7 +21,7 @@ export const BannerStrip = () => {
   const numberOfItems = Math.ceil(screenWidth / ITEM_SIZE) + 1;
 
   const getBackgroundColor = (index: number) => {
-    // No código, o índice começa em 0. 
+    // No código, o índice começa em 0.
     // Na sua lista, Imagem 1 (índice 0) é transparente, Imagem 2 (índice 1) tem cor.
 
     // Se o índice for PAR (0, 2, 4...), fundo transparente
@@ -51,10 +51,7 @@ export const BannerStrip = () => {
       {Array.from({ length: numberOfItems }).map((_, index) => (
         <View
           key={index}
-          style={[
-            styles.itemWrapper,
-            { backgroundColor: getBackgroundColor(index) }
-          ]}
+          style={[styles.itemWrapper, { backgroundColor: getBackgroundColor(index) }]}
         >
           <Image
             source={FOOD_IMAGES[index % FOOD_IMAGES.length]}
@@ -73,7 +70,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: ITEM_SIZE,
     overflow: 'hidden', // Garante que o que sobrar da última imagem não quebre o layout
-
   },
   itemWrapper: {
     width: ITEM_SIZE,

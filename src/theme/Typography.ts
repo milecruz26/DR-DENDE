@@ -1,6 +1,6 @@
-type FontSizeKeys = 'xl' | 'lg' | 'md' | 'sl' | 'xs' | 'xxs'
-type FontWeightKeys = 'regular' | 'medium' | 'semiBold' | 'bold' | 'extraBold'
-type LineHeightKeys = 'xl' | 'lg' | 'md' | 'sl' | 'xs' | 'xxs'
+type FontSizeKeys = 'xl' | 'lg' | 'md' | 'sl' | 'xs' | 'xxs';
+type FontWeightKeys = 'regular' | 'medium' | 'semiBold' | 'bold' | 'extraBold';
+type LineHeightKeys = 'xl' | 'lg' | 'md' | 'sl' | 'xs' | 'xxs';
 
 export const FONT_SIZE: Record<FontSizeKeys, number> = {
   xl: 24,
@@ -9,7 +9,7 @@ export const FONT_SIZE: Record<FontSizeKeys, number> = {
   sl: 14,
   xs: 12,
   xxs: 10,
-}
+};
 
 export const FONT_WEIGHT: Record<FontWeightKeys, string> = {
   regular: '400',
@@ -17,7 +17,7 @@ export const FONT_WEIGHT: Record<FontWeightKeys, string> = {
   semiBold: '600',
   bold: '700',
   extraBold: '800',
-}
+};
 
 export const LINE_HEIGHT: Record<LineHeightKeys, number> = {
   xl: 32,
@@ -26,4 +26,4 @@ export const LINE_HEIGHT: Record<LineHeightKeys, number> = {
   sl: 16,
   xs: 16,
   xxs: 12,
-}
+};

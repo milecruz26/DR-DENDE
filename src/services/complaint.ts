@@ -1,5 +1,5 @@
 // src/services/complaint.ts
-import { Complaint } from '../interfaces';
+import type { Complaint } from '../interfaces';
 import { api } from './apiTeste';
 
 type CreateComplaintDTO = {
@@ -11,6 +11,5 @@ type CreateComplaintDTO = {
 export const complaintService = {
   getSelfComplaints: () => api.get<Complaint[]>('/complaints/me'),
 
-  createComplaint: (data: CreateComplaintDTO) =>
-    api.post('/complaints', data),
+  createComplaint: (data: CreateComplaintDTO) => api.post('/complaints', data),
 };

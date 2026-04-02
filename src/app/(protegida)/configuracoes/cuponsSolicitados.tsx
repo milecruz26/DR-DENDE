@@ -1,14 +1,7 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const COLORS = {
   primary: '#34523B',
@@ -17,7 +10,7 @@ const COLORS = {
   textLight: '#666',
   border: '#DDD',
   disabled: '#A0A0A0',
-  disabledBg: '#F5F5F5'
+  disabledBg: '#F5F5F5',
 };
 
 // Interface tipando os dados do cliente e o status do cupom
@@ -41,9 +34,7 @@ export default function CuponsSolicitados() {
   // Função para marcar o cupom como utilizado
   const handleUtilizar = (id: string) => {
     setCupons((estadoAnterior) =>
-      estadoAnterior.map((cupom) =>
-        cupom.id === id ? { ...cupom, utilizado: true } : cupom
-      )
+      estadoAnterior.map((cupom) => (cupom.id === id ? { ...cupom, utilizado: true } : cupom)),
     );
   };
 
@@ -57,15 +48,12 @@ export default function CuponsSolicitados() {
       <TouchableOpacity
         style={[
           styles.btnUtilizar,
-          item.utilizado && styles.btnUtilizado // Aplica estilo visual de desativado se for true
+          item.utilizado && styles.btnUtilizado, // Aplica estilo visual de desativado se for true
         ]}
         onPress={() => handleUtilizar(item.id)}
         disabled={item.utilizado} // Bloqueia novos cliques
       >
-        <Text style={[
-          styles.btnUtilizarText,
-          item.utilizado && styles.btnUtilizadoText
-        ]}>
+        <Text style={[styles.btnUtilizarText, item.utilizado && styles.btnUtilizadoText]}>
           {item.utilizado ? 'Utilizado' : 'Utilizar'}
         </Text>
       </TouchableOpacity>
@@ -73,8 +61,8 @@ export default function CuponsSolicitados() {
   );
 
   // Filtra os dados caso o usuário digite algo na barra de pesquisa
-  const dadosFiltrados = cupons.filter(c =>
-    c.nomeCliente.toLowerCase().includes(searchText.toLowerCase())
+  const dadosFiltrados = cupons.filter((c) =>
+    c.nomeCliente.toLowerCase().includes(searchText.toLowerCase()),
   );
 
   return (
@@ -116,24 +104,24 @@ export default function CuponsSolicitados() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.bg
+    backgroundColor: COLORS.bg,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 50,
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   backBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5
+    gap: 5,
   },
   backBtnText: {
     color: COLORS.primary,
     fontSize: 16,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   headerTitle: {
     flex: 1,
@@ -141,14 +129,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: COLORS.textDark,
-    marginRight: 60
+    marginRight: 60,
   },
 
   searchContainer: {
     flexDirection: 'row',
     paddingHorizontal: 20,
     gap: 10,
-    marginBottom: 20
+    marginBottom: 20,
   },
   searchInput: {
     flex: 1,
@@ -158,7 +146,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 15,
     backgroundColor: '#FFF',
-    fontSize: 16
+    fontSize: 16,
   },
   searchIconBtn: {
     width: 50,
@@ -166,12 +154,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     borderRadius: 8,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
 
   listContent: {
     paddingHorizontal: 20,
-    paddingBottom: 100 // Espaço para não ficar colado na BottomTab se existir
+    paddingBottom: 100, // Espaço para não ficar colado na BottomTab se existir
   },
   listItem: {
     flexDirection: 'row',
@@ -183,12 +171,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    flex: 1
+    flex: 1,
   },
   listItemText: {
     fontSize: 16,
     color: COLORS.textDark,
-    fontWeight: '400'
+    fontWeight: '400',
   },
 
   btnUtilizar: {
@@ -198,12 +186,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     minWidth: 90,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   btnUtilizarText: {
     color: COLORS.primary,
     fontWeight: '500',
-    fontSize: 14
+    fontSize: 14,
   },
 
   // Estilos para quando o botão estiver desativado (utilizado)
@@ -213,5 +201,5 @@ const styles = StyleSheet.create({
   },
   btnUtilizadoText: {
     color: COLORS.disabled,
-  }
+  },
 });

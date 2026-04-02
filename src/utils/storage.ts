@@ -10,13 +10,19 @@ export const storage = {
   },
 
   setItem: async (key: string, value: string): Promise<void> => {
-    if (isWeb) { localStorage.setItem(key, value); return; }
+    if (isWeb) {
+      localStorage.setItem(key, value);
+      return;
+    }
     const SecureStore = await import('expo-secure-store');
     return SecureStore.setItemAsync(key, value);
   },
 
   deleteItem: async (key: string): Promise<void> => {
-    if (isWeb) { localStorage.removeItem(key); return; }
+    if (isWeb) {
+      localStorage.removeItem(key);
+      return;
+    }
     const SecureStore = await import('expo-secure-store');
     return SecureStore.deleteItemAsync(key);
   },

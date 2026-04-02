@@ -1,14 +1,14 @@
-import { Complaint, Dish, Entry, Event, User } from '../interfaces';
+import type { Complaint, Dish, Entry, Event, User } from '../interfaces';
 
 const coverMap = {
   '33333333-3333-3333-3333-333333333333': '@/assets/images/mock/capa-1.png',
   '44444444-4444-4444-4444-444444444444': '@/assets/images/mock/capa-2.jpg',
-  '55555555-5555-5555-5555-555555555555': '@/assets/images/mock/capa-3.jpg'
+  '55555555-5555-5555-5555-555555555555': '@/assets/images/mock/capa-3.jpg',
 };
 const logoMap = {
   '33333333-3333-3333-3333-333333333333': '@/assets/images/mock/logo-1.png',
   '44444444-4444-4444-4444-444444444444': '@/assets/images/mock/logo-2.jpg',
-  '55555555-5555-5555-5555-555555555555': '@/assets/images/mock/logo-3.jpg'
+  '55555555-5555-5555-5555-555555555555': '@/assets/images/mock/logo-3.jpg',
 };
 
 export const mockUsers: User[] = [
@@ -34,7 +34,6 @@ export const mockUsers: User[] = [
     password: '123',
     avatar: undefined,
     phone: '(71) 88888-2222',
-
   },
   // ESTABELECIMENTOS
   {
@@ -174,7 +173,13 @@ export const mockEntries: Entry[] = [
     category: 'entradas',
     estimated_time: '15 min',
     difficulty_level: 'facil',
-    ingredients: [{ name: 'linguica' }, { name: 'sal' }, { name: 'coco' }, { name: 'pimentão' }, { name: 'ovo' }],
+    ingredients: [
+      { name: 'linguica' },
+      { name: 'sal' },
+      { name: 'coco' },
+      { name: 'pimentão' },
+      { name: 'ovo' },
+    ],
   },
   {
     id: 'cozido',
@@ -185,7 +190,13 @@ export const mockEntries: Entry[] = [
     category: 'pratos principais',
     estimated_time: '30 min',
     difficulty_level: 'médio',
-    ingredients: [{ name: 'pão' }, { name: 'manteiga' }, { name: 'mandioca' }, { name: 'milho-branco' }, { name: 'frango' }],
+    ingredients: [
+      { name: 'pão' },
+      { name: 'manteiga' },
+      { name: 'mandioca' },
+      { name: 'milho-branco' },
+      { name: 'frango' },
+    ],
   },
   {
     id: 'cuscuz',
@@ -196,7 +207,13 @@ export const mockEntries: Entry[] = [
     category: 'pratos principais',
     estimated_time: '30 min',
     difficulty_level: 'médio',
-    ingredients: [{ name: 'aipim' }, { name: 'sal' }, { name: 'bucho' }, { name: 'milho-branco' }, { name: 'açúcar' }],
+    ingredients: [
+      { name: 'aipim' },
+      { name: 'sal' },
+      { name: 'bucho' },
+      { name: 'milho-branco' },
+      { name: 'açúcar' },
+    ],
   },
   {
     id: 'acarajé',
@@ -207,7 +224,13 @@ export const mockEntries: Entry[] = [
     category: 'pratos principais',
     estimated_time: '30 min',
     difficulty_level: 'médio',
-    ingredients: [{ name: 'azeite-dendê' }, { name: 'cebolinha' }, { name: 'carne' }, { name: 'coentro' }, { name: 'frango' }],
+    ingredients: [
+      { name: 'azeite-dendê' },
+      { name: 'cebolinha' },
+      { name: 'carne' },
+      { name: 'coentro' },
+      { name: 'frango' },
+    ],
   },
 ];
 
@@ -217,38 +240,35 @@ export const mockEvents: Event[] = [
     name: 'Festival Gastronômico',
     event_date: '2026-03-26',
     description: 'Degustação de pratos típicos',
-    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100',
   },
   {
     id: 'event-2',
     name: 'Workshop de Culinária',
     event_date: '2026-03-25',
     description: 'Aprenda a cozinhar pratos italianos',
-    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
-
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100',
   },
   {
     id: 'event-3',
     name: 'Teste culinário',
     event_date: '2026-03-24',
     description: 'Aprenda a cozinhar pratos italianos',
-    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100',
   },
   {
     id: 'event-4',
     name: 'Bota pra quebrar',
     event_date: '2026-03-23',
     description: 'Aprenda a cozinhar pratos italianos',
-    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
-
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100',
   },
   {
     id: 'event-5',
     name: 'Ebaa',
     event_date: '2026-03-23',
     description: 'Aprenda a cozinhar pratos italianos',
-    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100'
-
+    address: 'São Paulo Av. Paulista, 1000 Bela Vista01310-100',
   },
 ];
 

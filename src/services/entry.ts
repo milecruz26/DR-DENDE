@@ -1,5 +1,5 @@
 // src/services/entry.ts
-import { Entry } from '@/interfaces';
+import type { Entry } from '@/interfaces';
 import { api } from './apiTeste';
 
 export const entryService = {
@@ -8,8 +8,8 @@ export const entryService = {
     api.get('/staff/entry/all', {
       params: {
         offset: 0,
-        limit: 100
-      }
+        limit: 100,
+      },
     }),
 
   // GET /staff/entry/{entry_id}

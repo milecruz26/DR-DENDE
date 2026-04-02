@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 
 const { height } = Dimensions.get('window');
@@ -16,7 +16,7 @@ interface EstabelecimentoModalProps {
   visible: boolean;
   onClose: () => void;
   // Aqui você pode passar os dados do estabelecimento selecionado futuramente
-  // estabelecimento: EstabelecimentoType; 
+  // estabelecimento: EstabelecimentoType;
 }
 
 export default function EstabelecimentoModal({ visible, onClose }: EstabelecimentoModalProps) {
@@ -34,27 +34,30 @@ export default function EstabelecimentoModal({ visible, onClose }: Estabelecimen
   ];
 
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={visible}
-      onRequestClose={onClose}
-    >
+    <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
         <View style={styles.bottomSheet}>
-
           {/* Header */}
           <View style={styles.header}>
-            <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity
+              onPress={onClose}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
               <Feather name="chevron-left" size={24} color="#666" />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Estabelecimento ipsum</Text>
-            <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <TouchableOpacity
+              onPress={onClose}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
               <Feather name="x" size={24} color="#666" />
             </TouchableOpacity>
           </View>
 
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 40 }}
+          >
             {/* Imagem de Capa e Avatar */}
             <View style={styles.heroContainer}>
               <View style={styles.heroImagePlaceholder} />
@@ -70,15 +73,23 @@ export default function EstabelecimentoModal({ visible, onClose }: Estabelecimen
                 onPress={() => setActiveTab('info')}
               >
                 <Feather name="map-pin" size={16} color={activeTab === 'info' ? '#FFF' : '#666'} />
-                <Text style={[styles.tabText, activeTab === 'info' && styles.tabTextActive]}>Informações</Text>
+                <Text style={[styles.tabText, activeTab === 'info' && styles.tabTextActive]}>
+                  Informações
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={[styles.tabButton, activeTab === 'pratos' && styles.tabButtonActive]}
                 onPress={() => setActiveTab('pratos')}
               >
-                <Feather name="book-open" size={16} color={activeTab === 'pratos' ? '#FFF' : '#666'} />
-                <Text style={[styles.tabText, activeTab === 'pratos' && styles.tabTextActive]}>Pratos da casa</Text>
+                <Feather
+                  name="book-open"
+                  size={16}
+                  color={activeTab === 'pratos' ? '#FFF' : '#666'}
+                />
+                <Text style={[styles.tabText, activeTab === 'pratos' && styles.tabTextActive]}>
+                  Pratos da casa
+                </Text>
               </TouchableOpacity>
             </View>
 
@@ -86,7 +97,15 @@ export default function EstabelecimentoModal({ visible, onClose }: Estabelecimen
             {activeTab === 'info' && (
               <View style={styles.contentContainer}>
                 <Text style={styles.sectionTitle}>Horário de funcionamento:</Text>
-                {['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'].map((dia) => (
+                {[
+                  'Segunda-feira',
+                  'Terça-feira',
+                  'Quarta-feira',
+                  'Quinta-feira',
+                  'Sexta-feira',
+                  'Sábado',
+                  'Domingo',
+                ].map((dia) => (
                   <View key={dia} style={styles.row}>
                     <Text style={styles.textLight}>{dia}:</Text>
                     <Text style={styles.textDark}>08h00 – 18h00</Text>
@@ -105,7 +124,9 @@ export default function EstabelecimentoModal({ visible, onClose }: Estabelecimen
                 <Text style={[styles.sectionTitle, { marginTop: 20 }]}>Valores</Text>
                 <View style={styles.row}>
                   <Text style={styles.textLight}>Preço médio:</Text>
-                  <Text style={[styles.textDark, { textDecorationLine: 'underline' }]}>R$ 50,00 - 120,00</Text>
+                  <Text style={[styles.textDark, { textDecorationLine: 'underline' }]}>
+                    R$ 50,00 - 120,00
+                  </Text>
                 </View>
 
                 {/* Cupom */}
@@ -120,7 +141,8 @@ export default function EstabelecimentoModal({ visible, onClose }: Estabelecimen
                     </View>
                   </View>
                   <Text style={styles.cupomDisclaimer}>
-                    Você pode solicitar o desconto apenas uma vez e mostrar a solicitação no estabelecimento com seu nome.
+                    Você pode solicitar o desconto apenas uma vez e mostrar a solicitação no
+                    estabelecimento com seu nome.
                   </Text>
                 </View>
 
@@ -144,14 +166,23 @@ export default function EstabelecimentoModal({ visible, onClose }: Estabelecimen
             {activeTab === 'pratos' && (
               <View style={styles.contentContainer}>
                 {/* Filtros */}
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filtersScroll}>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  style={styles.filtersScroll}
+                >
                   {categorias.map((cat) => (
                     <TouchableOpacity
                       key={cat}
                       style={styles.filterChip}
                       onPress={() => setActiveCategory(cat)}
                     >
-                      <View style={[styles.dot, activeCategory === cat ? styles.dotActive : styles.dotInactive]} />
+                      <View
+                        style={[
+                          styles.dot,
+                          activeCategory === cat ? styles.dotActive : styles.dotInactive,
+                        ]}
+                      />
                       <Text style={styles.filterText}>{cat}</Text>
                     </TouchableOpacity>
                   ))}
@@ -167,16 +198,27 @@ export default function EstabelecimentoModal({ visible, onClose }: Estabelecimen
                         </View>
                         <Text style={styles.pratoTitle}>{prato.nome}</Text>
                       </View>
-                      <TouchableOpacity style={[styles.btnVerbete, prato.hasVerbete ? styles.btnVerbeteActive : styles.btnVerbeteInactive]}>
+                      <TouchableOpacity
+                        style={[
+                          styles.btnVerbete,
+                          prato.hasVerbete ? styles.btnVerbeteActive : styles.btnVerbeteInactive,
+                        ]}
+                      >
                         <Feather name="book" size={14} color={prato.hasVerbete ? '#FFF' : '#CCC'} />
-                        <Text style={[styles.btnVerbeteText, !prato.hasVerbete && styles.btnVerbeteTextInactive]}>Ver verbete</Text>
+                        <Text
+                          style={[
+                            styles.btnVerbeteText,
+                            !prato.hasVerbete && styles.btnVerbeteTextInactive,
+                          ]}
+                        >
+                          Ver verbete
+                        </Text>
                       </TouchableOpacity>
                     </View>
                   ))}
                 </View>
               </View>
             )}
-
           </ScrollView>
         </View>
       </View>
@@ -446,5 +488,5 @@ const styles = StyleSheet.create({
   },
   btnVerbeteTextInactive: {
     color: '#D4C4A8',
-  }
+  },
 });

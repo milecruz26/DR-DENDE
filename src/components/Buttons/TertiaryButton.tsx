@@ -4,7 +4,7 @@ import {
   Pressable,
   StyleSheet, // Substituído para suportar o estado de pressionado
   Text,
-  TextStyle
+  type TextStyle,
 } from 'react-native';
 import Colors from '../../theme/Colors';
 import { FONT_SIZE } from '../../theme/Typography';
@@ -18,7 +18,6 @@ interface CustomButtonProps {
   disabled?: boolean;
   isLoading?: boolean;
   onFocus?: () => void;
-
 }
 const { SECONDARY, NEUTRAL } = Colors;
 export const TertiaryButton = ({
@@ -28,10 +27,7 @@ export const TertiaryButton = ({
   size = 'medium',
   disabled = false,
   isLoading = false,
-
-
 }: CustomButtonProps) => {
-
   const isButtonDisabled = disabled || isLoading;
 
   return (
@@ -45,20 +41,22 @@ export const TertiaryButton = ({
         styles[size],
         // Aplica a cor de "hover" (#1F3121 / deep) e borda apenas quando pressionado
         pressed && !isButtonDisabled && styles.isPressed,
-        isButtonDisabled && styles.disabled
+        isButtonDisabled && styles.disabled,
       ]}
     >
       {isLoading ? (
         <ActivityIndicator color={NEUTRAL.lighter} />
       ) : (
-
-        <Text style={[
-          styles.textBase,
-          styles[`text${size.charAt(0).toUpperCase() + size.slice(1)}` as keyof typeof styles] as TextStyle
-        ]}>
+        <Text
+          style={[
+            styles.textBase,
+            styles[
+              `text${size.charAt(0).toUpperCase() + size.slice(1)}` as keyof typeof styles
+            ] as TextStyle,
+          ]}
+        >
           {title}
         </Text>
-
       )}
     </Pressable>
   );
@@ -66,12 +64,12 @@ export const TertiaryButton = ({
 
 const styles = StyleSheet.create({
   base: {
-    backgroundColor: "#fff0",
+    backgroundColor: '#fff0',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
     borderRadius: 8,
-    borderColor: "#fff0",
+    borderColor: '#fff0',
   },
   // Colunas de Tamanho
   small: {
@@ -91,7 +89,7 @@ const styles = StyleSheet.create({
   },
   // Estado Pressionado (Equivalente ao seu isHover)
   isPressed: {
-    backgroundColor: "#fff0",
+    backgroundColor: '#fff0',
 
     borderRadius: 8,
     boxShadow: '0px 0px 0px 2px #FDFDFD, 0px 0px 0px 4px #19233E',
@@ -102,7 +100,7 @@ const styles = StyleSheet.create({
     borderColor: NEUTRAL.base,
     borderWidth: 1,
     borderStyle: 'solid',
-    borderRadius: 8
+    borderRadius: 8,
   },
   textBase: {
     color: SECONDARY.dark,

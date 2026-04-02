@@ -1,12 +1,13 @@
-import BgLogin from "@/components/BackgroundThema/BgLogin";
-import { PrimaryButton } from "@/components/Buttons/PrimaryButton";
-import { TertiaryButton } from "@/components/Buttons/TertiaryButton";
-import LoginLoading from "@/components/LoginLoading";
+import { Link, router } from 'expo-router';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+import BgLogin from '@/components/BackgroundThema/BgLogin';
+import { PrimaryButton } from '@/components/Buttons/PrimaryButton';
+import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
+import LoginLoading from '@/components/LoginLoading';
 import { validarSenha } from '@/utils/validators';
-import { Link, router } from "expo-router";
-import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
 import Colors from '../../../theme/Colors';
+
 const { NEUTRAL } = Colors;
 
 export default function ResetarSenha() {
@@ -28,7 +29,7 @@ export default function ResetarSenha() {
     }
 
     if (senha !== confirmarSenha) {
-      setErroConfirmacao("As senhas não coincidem.");
+      setErroConfirmacao('As senhas não coincidem.');
       return;
     }
 
@@ -36,8 +37,8 @@ export default function ResetarSenha() {
 
     try {
       // Aqui entraria a chamada da API real
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      alert("Senha alterada com sucesso!");
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      alert('Senha alterada com sucesso!');
       router.replace('/(login)'); // Volta para o login
     } catch (error) {
       console.log(error);
@@ -51,7 +52,9 @@ export default function ResetarSenha() {
       <LoginLoading visible={loading} />
       <BgLogin logo={false} card>
         <Text style={styles.cardTitle}>Altere a sua senha</Text>
-        <Text style={styles.cardSubTitle}>Insira e confirme a sua nova senha para realizar a alteração.</Text>
+        <Text style={styles.cardSubTitle}>
+          Insira e confirme a sua nova senha para realizar a alteração.
+        </Text>
 
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Senha</Text>
@@ -84,32 +87,28 @@ export default function ResetarSenha() {
         </View>
 
         <View style={{ gap: 8, marginTop: 10 }}>
-          <PrimaryButton
-            title='Alterar senha'
-            onPress={handleResetarSenha}
-          />
+          <PrimaryButton title="Alterar senha" onPress={handleResetarSenha} />
           <Link href="/(login)" asChild>
-            <TertiaryButton title='Voltar ao login' onPress={() => { }} />
+            <TertiaryButton title="Voltar ao login" onPress={() => {}} />
           </Link>
         </View>
       </BgLogin>
     </>
-  )
-};
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFBE6',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   content: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
-
   },
   logoSubtitle: {
     fontSize: 18,
@@ -157,7 +156,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     color: NEUTRAL.deep,
-    fontSize: 12
+    fontSize: 12,
   },
   input: {
     borderWidth: 1,
@@ -168,5 +167,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     width: '100%',
   },
-
 });

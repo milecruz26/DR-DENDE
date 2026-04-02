@@ -1,13 +1,6 @@
 import { Link, usePathname } from 'expo-router';
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  View
-} from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-
 
 export const MockTabBar = () => {
   const pathname = usePathname();
@@ -19,7 +12,6 @@ export const MockTabBar = () => {
   const isHome = pathname === '/' || pathname === '/index';
 
   return (
-
     <View
       style={[
         styles.tabBar,
@@ -27,22 +19,30 @@ export const MockTabBar = () => {
           paddingBottom: Math.max(insets.bottom, 12),
           height: 48 + Math.max(insets.bottom, 12), // 👈 IMPORTANTE
         },
-      ]}>
+      ]}
+    >
       <Link href="/(protegida)" asChild>
         <Pressable>
           <Image
-            source={isHome
-              ? require('../../assets/images/icones/home-line-orange.png')
-              : require('../../assets/images/icones/home-line-white.png')}
-            style={{ height: 24, width: 24 }} />
+            source={
+              isHome
+                ? require('../../assets/images/icones/home-line-orange.png')
+                : require('../../assets/images/icones/home-line-white.png')
+            }
+            style={{ height: 24, width: 24 }}
+          />
         </Pressable>
       </Link>
       <Link href="/(protegida)/listaVerbetes" asChild>
         <Pressable>
-          <Image source={
-            isVerbete ? require('../../assets/images/icones/book-line-orage.png') :
-              require('../../assets/images/icones/book-line-white.png')
-          } style={{ height: 24, width: 24 }} />
+          <Image
+            source={
+              isVerbete
+                ? require('../../assets/images/icones/book-line-orage.png')
+                : require('../../assets/images/icones/book-line-white.png')
+            }
+            style={{ height: 24, width: 24 }}
+          />
         </Pressable>
       </Link>
 
@@ -50,29 +50,44 @@ export const MockTabBar = () => {
         <Link href="/(protegida)/busca" asChild>
           <Pressable style={styles.searchButton}>
             <Image
-              source={isSearch
-                ? require('../../assets/images/icones/search-line-orage.png') // Opcional, se quiser a lupa laranja
-                : require('../../assets/images/icones/search-line-white.png')}
-              style={{ height: 24, width: 24 }} />
+              source={
+                isSearch
+                  ? require('../../assets/images/icones/search-line-orage.png') // Opcional, se quiser a lupa laranja
+                  : require('../../assets/images/icones/search-line-white.png')
+              }
+              style={{ height: 24, width: 24 }}
+            />
             {/* <Feather name="search" size={32} color="#FFF" /> */}
           </Pressable>
         </Link>
       </View>
       <Link href="/(protegida)/eventos" asChild>
         <Pressable>
-          <Image source={
-            isEvents ? require('../../assets/images/icones/calendar-line-orage.png') : require('../../assets/images/icones/calendar-line-white.png')} style={{ height: 24, width: 24 }} />
+          <Image
+            source={
+              isEvents
+                ? require('../../assets/images/icones/calendar-line-orage.png')
+                : require('../../assets/images/icones/calendar-line-white.png')
+            }
+            style={{ height: 24, width: 24 }}
+          />
         </Pressable>
       </Link>
-
 
       <Link href="/(protegida)/estabelecimentos" asChild>
         <Pressable>
-          <Image source={isDinner ? require('../../assets/images/icones/dinner-line-orage.png') : require('../../assets/images/icones/dinner-line-white.png')} style={{ height: 24, width: 24 }} />
+          <Image
+            source={
+              isDinner
+                ? require('../../assets/images/icones/dinner-line-orage.png')
+                : require('../../assets/images/icones/dinner-line-white.png')
+            }
+            style={{ height: 24, width: 24 }}
+          />
         </Pressable>
       </Link>
     </View>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -106,6 +121,5 @@ const styles = StyleSheet.create({
     padding: 16,
     justifyContent: 'center',
     alignItems: 'center',
-
   },
 });

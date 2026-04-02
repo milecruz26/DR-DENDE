@@ -1,6 +1,5 @@
 // src/app/(protegida)/configuracoes/denunciar.tsx
-import { useAuth } from '@/context/AuthContext';
-import { useCreateComplaint } from '@/hooks/useComplaint';
+
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -12,8 +11,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
+import { useAuth } from '@/context/AuthContext';
+import { useCreateComplaint } from '@/hooks/useComplaint';
 
 const COLORS = {
   primary: '#34523B',
@@ -64,7 +65,6 @@ export default function Denunciar() {
     }
   };
 
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -99,7 +99,9 @@ export default function Denunciar() {
               onChangeText={setDescription}
             />
             <View style={styles.counterRow}>
-              <Text style={styles.counterText}>{description.length}/{maxLength}</Text>
+              <Text style={styles.counterText}>
+                {description.length}/{maxLength}
+              </Text>
               <MaterialCommunityIcons name="pencil-outline" size={16} color={COLORS.textLight} />
             </View>
           </View>
@@ -107,10 +109,7 @@ export default function Denunciar() {
 
         {/* Botões de Ação */}
         <View style={styles.buttonRow}>
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={() => router.back()}
-          >
+          <TouchableOpacity style={styles.cancelButton} onPress={() => router.back()}>
             <Text style={styles.cancelButtonText}>Cancelar</Text>
           </TouchableOpacity>
 
@@ -158,7 +157,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     gap: 5,
-    marginTop: 5
+    marginTop: 5,
   },
   counterText: { fontSize: 12, color: COLORS.textLight },
 
@@ -169,7 +168,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary,
     borderRadius: 8,
     paddingVertical: 14,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   cancelButtonText: { color: COLORS.primary, fontWeight: 'bold', fontSize: 16 },
 
@@ -178,7 +177,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.danger,
     borderRadius: 8,
     paddingVertical: 14,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   submitButtonText: { color: '#FFF', fontWeight: 'bold', fontSize: 16 },
 });

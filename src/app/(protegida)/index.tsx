@@ -1,4 +1,10 @@
 // src/app/(protegida)/index.tsx
+
+import { LinearGradient } from 'expo-linear-gradient';
+import { Link, useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Pressable, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { CategoryChip } from '@/components/CategoryChip';
 import EventCalendarList from '@/components/Eventos/ListaEventos';
 import { Header } from '@/components/Header';
@@ -8,27 +14,15 @@ import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
 import { SectionTitle } from '@/components/SectionTitle';
 import { VerbeteCard } from '@/components/VerbeteCard';
 import { useAuth } from '@/context/AuthContext';
-import { useDislikeDish, useLikedDishes, useLikeDish } from '@/hooks/useDish';
+import { useDislikeDish, useLikeDish, useLikedDishes } from '@/hooks/useDish';
 import { useAllEntries } from '@/hooks/useEntries';
 import { useEventById } from '@/hooks/useEvents';
-import { Entry } from '@/interfaces';
+import type { Entry } from '@/interfaces';
 import { formatDateTime } from '@/utils/formatDateTime';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Link, useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  View
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
 
 export default function HomeScreen() {
   const { user } = useAuth();
-  const { data: verbetes, } = useAllEntries();
+  const { data: verbetes } = useAllEntries();
   const { data: likedDishes } = useLikedDishes();
   const { mutate: like } = useLikeDish();
   const { mutate: dislike } = useDislikeDish();
@@ -37,7 +31,7 @@ export default function HomeScreen() {
   // const [verbetes, setVerbetes] = useState<Verbete[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const likedIds = likedDishes?.map(d => d.id) || [];
+  const likedIds = likedDishes?.map((d) => d.id) || [];
 
   const handleToggleLike = (id: string) => {
     if (likedIds.includes(id)) {
@@ -56,17 +50,16 @@ export default function HomeScreen() {
       style={styles.container}
     >
       <SafeAreaView style={styles.container}>
-        <StatusBar
-          backgroundColor={'#FFFBE6'}
-          barStyle={'dark-content'}
-        />
+        <StatusBar backgroundColor={'#FFFBE6'} barStyle={'dark-content'} />
 
         <View style={styles.contentContainer}>
           {/* Header Fixo */}
           <Header />
 
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
+          >
             {/* Seção Destaques */}
             <SectionTitle title="Destaques" />
             <Link href="/verbete" asChild>
@@ -74,7 +67,11 @@ export default function HomeScreen() {
             </Link>
 
             {/* Categorias (Scroll Horizontal) */}
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.horizontalScroll}
+            >
               <CategoryChip label="Comida com dendê" />
               <CategoryChip label="Tira-gosto" />
               <CategoryChip label="Afro-indígena" />
@@ -86,8 +83,11 @@ export default function HomeScreen() {
             <SectionTitle title="Verbetes" showLink />
             {/* </Pressable> */}
 
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
-
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.horizontalScroll}
+            >
               {verbetes?.map((verbete: Entry) => (
                 <VerbeteCard
                   key={verbete.id}
@@ -118,19 +118,14 @@ export default function HomeScreen() {
             </ScrollView>
             {/* Seção Eventos */}
             <Pressable onPress={() => router.replace('/(protegida)/eventos')}>
-
               <SectionTitle title="Eventos" showLink />
             </Pressable>
             <EventCalendarList onSelectEvent={(event) => setSelectedEventId(event?.id!)} />
 
             {/* Espaço extra para não ficar atrás da TabBar */}
             <View style={{ height: 100 }} />
-
           </ScrollView>
-
-
         </View>
-
       </SafeAreaView>
       <ReadMoreModal
         visible={!!selectedEventId}
@@ -171,7 +166,6 @@ const styles = StyleSheet.create({
   // Chips
   horizontalScroll: {
     marginVertical: 24,
-
   },
 
   eventContainer: {
@@ -182,13 +176,11 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     // backgroundColor: 'blue',
     gap: 24,
-    marginTop: 24
-
+    marginTop: 24,
   },
 
   eventList: {
     gap: 8,
     // backgroundColor: '#FFF',
   },
-
 });

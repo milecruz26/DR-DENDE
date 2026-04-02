@@ -1,14 +1,13 @@
-import { STORAGE_KEYS } from "@/constants/storageKeys";
-import { storage } from "@/utils/storage";
-import axios from "axios";
+import axios from 'axios';
+import { STORAGE_KEYS } from '@/constants/storageKeys';
+import { storage } from '@/utils/storage';
 
-const BASE_URL =
-  process.env.EXPO_PUBLIC_API_BASE_URL || "http://localhost:8367";
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:8367';
 
 export const api = axios.create({
   baseURL: BASE_URL,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -39,5 +38,5 @@ api.interceptors.response.use(
     console.log('DATA:', error.response?.data);
 
     return Promise.reject(error);
-  }
+  },
 );

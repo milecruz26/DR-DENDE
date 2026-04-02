@@ -1,14 +1,7 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const COLORS = {
   primary: '#34523B',
@@ -31,7 +24,7 @@ export default function DetalhesEstabelecimento() {
     // Volta para a lista enviando o ID para ser removido lá
     router.navigate({
       pathname: '/configuracoes/moderarEstabelecimentos',
-      params: { idAprovado: id }
+      params: { idAprovado: id },
     });
   };
 
@@ -60,7 +53,11 @@ export default function DetalhesEstabelecimento() {
             <Text style={styles.tabTextActive}>Informações</Text>
           </View>
           <View style={styles.tab}>
-            <MaterialCommunityIcons name="silverware-fork-knife" size={18} color={COLORS.textLight} />
+            <MaterialCommunityIcons
+              name="silverware-fork-knife"
+              size={18}
+              color={COLORS.textLight}
+            />
             <Text style={styles.tabText}>Pratos da casa</Text>
           </View>
         </View>
@@ -68,7 +65,15 @@ export default function DetalhesEstabelecimento() {
         {/* Horários */}
         <Text style={styles.sectionTitle}>Horário de funcionamento:</Text>
         <View style={styles.scheduleBox}>
-          {['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'].map(dia => (
+          {[
+            'Segunda-feira',
+            'Terça-feira',
+            'Quarta-feira',
+            'Quinta-feira',
+            'Sexta-feira',
+            'Sábado',
+            'Domingo',
+          ].map((dia) => (
             <View key={dia} style={styles.scheduleRow}>
               <Text style={styles.scheduleDay}>{dia}:</Text>
               <Text style={styles.scheduleTime}>08h00 – 18h00</Text>
@@ -78,7 +83,9 @@ export default function DetalhesEstabelecimento() {
 
         {/* Valores */}
         <Text style={styles.sectionTitle}>Valores</Text>
-        <Text style={styles.priceText}>Preço médio: <Text style={styles.priceValue}>R$ 50,00 - 120,00</Text></Text>
+        <Text style={styles.priceText}>
+          Preço médio: <Text style={styles.priceValue}>R$ 50,00 - 120,00</Text>
+        </Text>
 
         {/* Cupom de Desconto */}
         <View style={styles.couponCard}>
@@ -90,7 +97,8 @@ export default function DetalhesEstabelecimento() {
             </View>
           </View>
           <Text style={styles.couponDesc}>
-            Você pode solicitar o desconto apenas uma vez e mostrar a solicitação no estabelecimento com seu nome.
+            Você pode solicitar o desconto apenas uma vez e mostrar a solicitação no estabelecimento
+            com seu nome.
           </Text>
         </View>
 
@@ -108,7 +116,7 @@ export default function DetalhesEstabelecimento() {
 
         {/* Redes Sociais */}
         <View style={styles.socialRow}>
-          {['instagram', 'youtube', 'linkedin', 'facebook'].map(icon => (
+          {['instagram', 'youtube', 'linkedin', 'facebook'].map((icon) => (
             <View key={icon} style={styles.socialIcon}>
               <Feather name={icon as any} size={18} color="#FFF" />
             </View>
@@ -132,22 +140,50 @@ export default function DetalhesEstabelecimento() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: COLORS.bg },
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 50, paddingBottom: 15 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    paddingBottom: 15,
+  },
   backBtn: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   backBtnText: { color: COLORS.primary, fontSize: 16 },
-  headerTitle: { flex: 1, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: COLORS.textDark, marginRight: 60 },
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+    marginRight: 60,
+  },
 
   scrollContent: { paddingHorizontal: 20, paddingBottom: 100 },
 
   coverImage: { width: '100%', height: 180, borderRadius: 16, marginBottom: 20 },
 
   tabsRow: { flexDirection: 'row', gap: 10, marginBottom: 25 },
-  tab: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 12, borderRadius: 25, backgroundColor: '#EEE' },
+  tab: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    borderRadius: 25,
+    backgroundColor: '#EEE',
+  },
   tabActive: { backgroundColor: '#E67E22' },
   tabText: { fontSize: 14, color: COLORS.textLight, fontWeight: 'bold' },
   tabTextActive: { fontSize: 14, color: '#FFF', fontWeight: 'bold' },
 
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.textDark, marginBottom: 15, marginTop: 10 },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.textDark,
+    marginBottom: 15,
+    marginTop: 10,
+  },
 
   scheduleBox: { marginBottom: 20 },
   scheduleRow: { flexDirection: 'row', marginBottom: 8 },
@@ -163,12 +199,25 @@ const styles = StyleSheet.create({
   couponCode: { fontSize: 22, fontWeight: 'bold', color: COLORS.textDark },
   couponDesc: { fontSize: 13, color: COLORS.textLight, lineHeight: 18 },
 
-  mapPlaceholder: { width: '100%', height: 150, borderRadius: 12, overflow: 'hidden', marginBottom: 15 },
+  mapPlaceholder: {
+    width: '100%',
+    height: 150,
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginBottom: 15,
+  },
   mapImage: { width: '100%', height: '100%' },
   addressText: { fontSize: 14, color: COLORS.textDark, lineHeight: 20, marginBottom: 20 },
 
   socialRow: { flexDirection: 'row', gap: 10, marginBottom: 20 },
-  socialIcon: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.primary, justifyContent: 'center', alignItems: 'center' },
+  socialIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: COLORS.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
   footerRow: {
     flexDirection: 'row',
@@ -177,10 +226,23 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.bg,
     borderTopWidth: 1,
     borderTopColor: '#EEE',
-    gap: 15
+    gap: 15,
   },
-  btnOutline: { flex: 1, borderWidth: 1, borderColor: COLORS.danger, borderRadius: 8, paddingVertical: 14, alignItems: 'center' },
+  btnOutline: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: COLORS.danger,
+    borderRadius: 8,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
   btnOutlineText: { color: COLORS.danger, fontWeight: 'bold', fontSize: 14 },
-  btnSolid: { flex: 1, backgroundColor: COLORS.primary, borderRadius: 8, paddingVertical: 14, alignItems: 'center' },
+  btnSolid: {
+    flex: 1,
+    backgroundColor: COLORS.primary,
+    borderRadius: 8,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
   btnSolidText: { color: '#FFF', fontWeight: 'bold', fontSize: 14 },
 });

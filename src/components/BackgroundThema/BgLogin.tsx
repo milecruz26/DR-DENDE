@@ -4,16 +4,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { BannerStrip } from '../BannerStrip/BannerStrip';
 import LogoCulinaria from '../Logo/Logo-culinaria';
 
-
 interface BgLoginProps {
   children?: React.ReactNode;
   logo?: boolean;
-  card?: boolean,
-  hearder?: boolean
+  card?: boolean;
+  hearder?: boolean;
 }
 
 export default function BgLogin({ children, logo, card, hearder }: BgLoginProps) {
-
   return (
     <LinearGradient
       colors={['#FFF0C8', '#FFF']}
@@ -24,25 +22,25 @@ export default function BgLogin({ children, logo, card, hearder }: BgLoginProps)
       <SafeAreaView style={styles.container}>
         {/* <RadialBackground> */}
         <BannerStrip />
-        <ScrollView >
+        <ScrollView>
           <View style={styles.content}>
             {/* <StatusBar style="auto" /> */}
-            {hearder ??
+            {hearder ?? (
               <View style={styles.logoContainer}>
                 <Image source={require('../../../assets/images/logos/pnab-logo.png')} />
                 <LogoCulinaria />
               </View>
-
-            }
-
+            )}
 
             {/* <V style={styles.card}> */}
 
-            {
-              card ? <View style={styles.card}>{children}</View> : children
-            }
-            {logo ?? <Image source={require('../../../assets/images/logos/apoio-financeiro-logo.png')} style={styles.logoApoioFinanceiro} />
-            }
+            {card ? <View style={styles.card}>{children}</View> : children}
+            {logo ?? (
+              <Image
+                source={require('../../../assets/images/logos/apoio-financeiro-logo.png')}
+                style={styles.logoApoioFinanceiro}
+              />
+            )}
           </View>
         </ScrollView>
         <BannerStrip />
@@ -116,13 +114,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 10,
-    width: '100%'
+    width: '100%',
   },
   buttonEntrarText: {
     color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold',
-
   },
   buttonCriar: {
     borderWidth: 1,
@@ -131,7 +128,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 10,
-    width: '100%'
+    width: '100%',
   },
   buttonCriarText: {
     color: '#3A5A40',
@@ -184,7 +181,6 @@ const styles = StyleSheet.create({
     height: 60,
     resizeMode: 'contain',
     marginTop: 26,
-    marginBottom: 26
-
-  }
+    marginBottom: 26,
+  },
 });

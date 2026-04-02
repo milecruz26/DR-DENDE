@@ -1,10 +1,11 @@
 // src/components/VerbeteCard.tsx
+
+import { useRouter } from 'expo-router';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import savedFilledWhite from '@/assets/images/icones/saved-filled-line-white.png';
 import savedWhite from '@/assets/images/icones/saved-line-white.png';
 import { images } from '@/assets/images/pratos';
 import defaultDishImage from '@/assets/images/pratos/VATAPÁ.png';
-import { useRouter } from 'expo-router';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 interface VerbeteCardProps {
   id: string;
@@ -16,7 +17,15 @@ interface VerbeteCardProps {
   showBookmark?: boolean;
 }
 
-export const VerbeteCard = ({ id, title, description, imagem, isLiked = false, onToggleLike, showBookmark = true }: VerbeteCardProps) => {
+export const VerbeteCard = ({
+  id,
+  title,
+  description,
+  imagem,
+  isLiked = false,
+  onToggleLike,
+  showBookmark = true,
+}: VerbeteCardProps) => {
   const router = useRouter();
   const imageKey = imagem?.toLowerCase?.().replace(/\.png$/, '');
   const imageSource = images[imageKey];
@@ -55,7 +64,6 @@ export const VerbeteCard = ({ id, title, description, imagem, isLiked = false, o
     </Pressable>
   );
 };
-
 
 const styles = StyleSheet.create({
   verbeteCard: {

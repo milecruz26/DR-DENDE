@@ -9,7 +9,7 @@ export interface User {
   role: string | null;
   confirmed?: boolean;
   password?: string; // apenas para mock
-  avatar?: string;   // URL da foto de perfil
+  avatar?: string; // URL da foto de perfil
 
   // Campos específicos para estabelecimento
   phone?: string;

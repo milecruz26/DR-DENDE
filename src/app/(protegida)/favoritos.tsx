@@ -1,3 +1,6 @@
+import React, { useState } from 'react';
+import { FlatList, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from '@/components/Header';
 import { EstabelecimentoDetalhes } from '@/components/Modal/EstabelecimentoDetalhes';
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
@@ -6,21 +9,8 @@ import { VerbeteCardSearch } from '@/components/Verbete/VerbeteCardSearch';
 import { useDislikeDish, useLikedDishes } from '@/hooks/useDish';
 import { useAllEntries } from '@/hooks/useEntries';
 import Colors from '@/theme/Colors';
-import React, { useState } from 'react';
-import {
-  FlatList,
-  Image,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-
-
-const { NEUTRAL, primary, SECONDARY } = Colors
+const { NEUTRAL, primary, SECONDARY } = Colors;
 
 // Tipagem dos dados mockados
 interface Favorito {
@@ -68,18 +58,19 @@ const MOCK_RESTAURANTES = [
     id: 1,
     name: 'Estabelecimento lorem ipsum',
     image: require('../../../assets/images/mock/capa-1.png'),
-    logo: require('../../../assets/images/mock/logo-1.png')
+    logo: require('../../../assets/images/mock/logo-1.png'),
   },
   {
     id: 2,
     name: 'Bom Baiano',
     image: require('../../../assets/images/mock/capa-2.jpg'),
-    logo: require('../../../assets/images/mock/logo-2.png')
+    logo: require('../../../assets/images/mock/logo-2.png'),
   },
   {
-    id: 3, name: 'Restaurante da Orla',
+    id: 3,
+    name: 'Restaurante da Orla',
     image: require('../../../assets/images/mock/capa-3.jpg'),
-    logo: require('../../../assets/images/mock/logo-3.jpg')
+    logo: require('../../../assets/images/mock/logo-3.jpg'),
   },
 ];
 
@@ -89,16 +80,14 @@ export default function Favoritos() {
   const [abaAtiva, setAbaAtiva] = useState<'verbetes' | 'restaurantes'>('verbetes');
   const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState(null);
   const [activeTab, setActiveTab] = useState<CategoryType>('verbetes');
-  const { data: verbetes, } = useAllEntries();
+  const { data: verbetes } = useAllEntries();
 
-  const { data: likedDishes, } = useLikedDishes();
+  const { data: likedDishes } = useLikedDishes();
   const { mutate: dislike } = useDislikeDish();
 
   const handleToggleLike = (id: string) => {
     dislike(id); // apenas desfavoritar
   };
-
-
 
   const abrirDetalhes = (item: any) => {
     setEstabelecimentoSelecionado(item);
@@ -111,27 +100,28 @@ export default function Favoritos() {
 
       <Header />
 
-
       {/* Título */}
       <Text style={styles.pageTitle}>Meus favoritos</Text>
 
-
       <View style={styles.bottomSheet}>
-
         {/* Toggle Principal (Verbetes / Restaurantes) */}
         <View style={styles.tabContainer}>
           <TouchableOpacity
             style={[styles.tabButton, activeTab === 'verbetes' && styles.tabActive]}
             onPress={() => setActiveTab('verbetes')}
           >
-
-
             <Image
-              source={activeTab === 'verbetes' ?
-                require('../../../assets/images/icones/book-line-white.png') : require('../../../assets/images/icones/book-line-neutral.png')}
-              style={{ width: 24, height: 24, marginRight: 8 }} />
+              source={
+                activeTab === 'verbetes'
+                  ? require('../../../assets/images/icones/book-line-white.png')
+                  : require('../../../assets/images/icones/book-line-neutral.png')
+              }
+              style={{ width: 24, height: 24, marginRight: 8 }}
+            />
 
-            <Text style={[styles.tabText, activeTab === 'verbetes' && styles.tabTextActive]}>Verbetes</Text>
+            <Text style={[styles.tabText, activeTab === 'verbetes' && styles.tabTextActive]}>
+              Verbetes
+            </Text>
           </TouchableOpacity>
 
           <View style={styles.divider} />
@@ -141,15 +131,19 @@ export default function Favoritos() {
             onPress={() => setActiveTab('restaurantes')}
           >
             <Image
-              source={activeTab === 'restaurantes' ?
-                require('../../../assets/images/icones/dinner-line-white.png') : require('../../../assets/images/icones/dinner-line-neutral.png')}
-              style={{ width: 24, height: 24, marginRight: 8 }} />
+              source={
+                activeTab === 'restaurantes'
+                  ? require('../../../assets/images/icones/dinner-line-white.png')
+                  : require('../../../assets/images/icones/dinner-line-neutral.png')
+              }
+              style={{ width: 24, height: 24, marginRight: 8 }}
+            />
 
-            <Text style={[styles.tabText, activeTab === 'restaurantes' && styles.tabTextActive]}>Restaurantes</Text>
+            <Text style={[styles.tabText, activeTab === 'restaurantes' && styles.tabTextActive]}>
+              Restaurantes
+            </Text>
           </TouchableOpacity>
         </View>
-
-
 
         {/* Lista de Conteúdo */}
         <FlatList
@@ -158,9 +152,11 @@ export default function Favoritos() {
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item, index }) => ( // <-- Pegamos o index aqui
-            activeTab === 'verbetes'
-              ? <VerbeteCardSearch
+          renderItem={(
+            { item, index }, // <-- Pegamos o index aqui
+          ) =>
+            activeTab === 'verbetes' ? (
+              <VerbeteCardSearch
                 img={item.picture}
                 id={item.id}
                 title={item.name}
@@ -170,13 +166,16 @@ export default function Favoritos() {
                 isLiked={true}
                 onToggleLike={handleToggleLike}
               />
-              : <RestaurantCardSearch
-                item={item as any} moreDetailsPress={() => abrirDetalhes(item)} />
-          )}
+            ) : (
+              <RestaurantCardSearch
+                item={item as any}
+                moreDetailsPress={() => abrirDetalhes(item)}
+              />
+            )
+          }
           // Espaço extra embaixo para o menu não cobrir o último item
           ListFooterComponent={<View style={{ height: 100 }} />}
         />
-
       </View>
       <ReadMoreModal
         visible={modalVisivel}
@@ -244,8 +243,6 @@ export default function Favoritos() {
    
         <View style={{ height: 100 }} />
       </ScrollView> */}
-
-
     </SafeAreaView>
   );
 }

@@ -1,5 +1,5 @@
 import { Feather } from '@expo/vector-icons';
-import React, { ReactNode, useEffect, useRef } from 'react';
+import React, { type ReactNode, useEffect, useRef } from 'react';
 import {
   Animated,
   Dimensions,
@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -19,16 +19,21 @@ interface ReadMoreModalProps {
   visible: boolean;
   onClose: () => void;
   children: ReactNode;
-  title?: string
+  title?: string;
   type?: ModalType;
 }
 
-export function ReadMoreModal({ visible, onClose, title, children, type = 'full' }: ReadMoreModalProps) {
-
+export function ReadMoreModal({
+  visible,
+  onClose,
+  title,
+  children,
+  type = 'full',
+}: ReadMoreModalProps) {
   const heightMap = {
-    small: SCREEN_HEIGHT * 0.45,  // 35% da tela (Ideal para confirmação)
-    medium: SCREEN_HEIGHT * 0.60, // 60% da tela
-    full: SCREEN_HEIGHT * 0.82,   // 92% da tela (Seu padrão atual)
+    small: SCREEN_HEIGHT * 0.45, // 35% da tela (Ideal para confirmação)
+    medium: SCREEN_HEIGHT * 0.6, // 60% da tela
+    full: SCREEN_HEIGHT * 0.82, // 92% da tela (Seu padrão atual)
   };
   const currentHeight = heightMap[type];
 
@@ -43,7 +48,11 @@ export function ReadMoreModal({ visible, onClose, title, children, type = 'full'
       ]).start();
     } else {
       Animated.parallel([
-        Animated.timing(slideAnim, { toValue: SCREEN_HEIGHT, duration: 250, useNativeDriver: true }),
+        Animated.timing(slideAnim, {
+          toValue: SCREEN_HEIGHT,
+          duration: 250,
+          useNativeDriver: true,
+        }),
         Animated.timing(opacityAnim, { toValue: 0, duration: 250, useNativeDriver: true }),
       ]).start();
     }
@@ -53,35 +62,38 @@ export function ReadMoreModal({ visible, onClose, title, children, type = 'full'
 
   return (
     <View style={styles.root} pointerEvents={visible ? 'auto' : 'none'}>
-
-
       <Animated.View style={[styles.overlay, { opacity: opacityAnim }]}>
         <Pressable style={{ flex: 1 }} onPress={onClose} />
       </Animated.View>
-
 
       <Animated.View
         style={[
           styles.modalContainer,
           {
             height: currentHeight,
-            transform: [{ translateY: slideAnim }]
-          }
+            transform: [{ translateY: slideAnim }],
+          },
         ]}
       >
         <View style={styles.header}>
-          {type === "small" ?
+          {type === 'small' ? (
             <></>
-            :
-            <TouchableOpacity onPress={onClose} hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
+          ) : (
+            <TouchableOpacity
+              onPress={onClose}
+              hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+            >
               <Feather name="chevron-left" size={24} color="#555" />
             </TouchableOpacity>
-          }
+          )}
 
           {/* Dados dinâmicos vindo da prop 'data' */}
-          <Text style={styles.headerTitle}>{title || "Sobre o prato"}</Text>
+          <Text style={styles.headerTitle}>{title || 'Sobre o prato'}</Text>
 
-          <TouchableOpacity onPress={onClose} hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
+          <TouchableOpacity
+            onPress={onClose}
+            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+          >
             <Feather name="x" size={24} color="#555" />
           </TouchableOpacity>
         </View>
@@ -96,7 +108,6 @@ export function ReadMoreModal({ visible, onClose, title, children, type = 'full'
           <View style={{ height: 20 }} />
         </ScrollView>
       </Animated.View>
-
     </View>
   );
 }
@@ -119,7 +130,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 24,
     paddingTop: 20,
     elevation: 5,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -141,7 +152,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 1,
-    gap: 24
+    gap: 24,
   },
   textContent: {
     fontSize: 16,
@@ -152,9 +163,9 @@ const styles = StyleSheet.create({
   highlightTitle: {
     fontSize: 16,
     fontWeight: 700,
-    color: '#191919'
+    color: '#191919',
   },
   containerInfo: {
     gap: 16,
-  }
+  },
 });

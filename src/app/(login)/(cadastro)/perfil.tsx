@@ -1,24 +1,24 @@
-import BgLogin from "@/components/BackgroundThema/BgLogin";
+import { Link } from 'expo-router';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import BgLogin from '@/components/BackgroundThema/BgLogin';
 import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
-import { ProfileOption } from "@/components/ProfileOption";
-import { Link } from "expo-router";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ProfileOption } from '@/components/ProfileOption';
 
 export default function Perfil() {
   return (
     <BgLogin card>
       <Text style={styles.cardTitle}>Qual é o seu perfil?</Text>
-      <Text style={styles.cardSubTitle}>Escolha a opção que melhor descreve você para personalizar sua experiência</Text>
+      <Text style={styles.cardSubTitle}>
+        Escolha a opção que melhor descreve você para personalizar sua experiência
+      </Text>
 
       <View style={{ gap: 24 }}>
-
         <Link href="/cadastroCPF" asChild>
           <ProfileOption
             title="Pessoa Física"
             description="Para uso pessoal"
             iconSource={require('../../../../assets/images/icons/pessoa-fisica.png')}
-
           />
         </Link>
         <Link href="/cadastroCNPJ" asChild>
@@ -26,15 +26,14 @@ export default function Perfil() {
             title="Estabelecimento"
             description="Para empresas e negócios"
             iconSource={require('../../../../assets/images/icons/estabelecimento.png')}
-
           />
         </Link>
         <Link href="/(login)" asChild>
-          <TertiaryButton title='Cancelar e Voltar' onPress={() => { }} />
+          <TertiaryButton title="Cancelar e Voltar" onPress={() => {}} />
         </Link>
       </View>
     </BgLogin>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -42,14 +41,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFBE6',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   content: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
-
   },
   logoSubtitle: {
     fontSize: 18,
@@ -87,5 +85,4 @@ const styles = StyleSheet.create({
     color: '#888',
     marginTop: 5,
   },
-
 });

@@ -1,11 +1,11 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { staffService } from "../services/staff";
-import { useInvalidateQueries } from "./useInvalidateQueries";
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { staffService } from '../services/staff';
+import { useInvalidateQueries } from './useInvalidateQueries';
 
 // Exemplo para eventos
 export const useAllEvents = () => {
   return useQuery({
-    queryKey: ["events"],
+    queryKey: ['events'],
     queryFn: () => staffService.getAllEvents().then((res) => res.data),
     staleTime: 1000 * 60 * 10, // 5 minutos sem refetch
     refetchOnMount: false,
@@ -21,16 +21,12 @@ export const useCreateEvent = () => {
     mutationFn: staffService.createEvent,
 
     onSuccess: (data) => {
-      console.log("✅ EVENTO CRIADO:", data);
-      invalidate("getAllEvents");
+      console.log('✅ EVENTO CRIADO:', data);
+      invalidate('getAllEvents');
     },
 
     onError: (error: any) => {
-      console.log(
-        "❌ ERRO AO CRIAR EVENTO:",
-        error.response?.data,
-        error.response?.status,
-      );
+      console.log('❌ ERRO AO CRIAR EVENTO:', error.response?.data, error.response?.status);
     },
   });
 };
@@ -42,7 +38,7 @@ export const useCreateEntry = () => {
     mutationFn: staffService.createEntry,
 
     onSuccess: () => {
-      invalidate("getAllEntries");
+      invalidate('getAllEntries');
     },
   });
 };
@@ -54,7 +50,7 @@ export const useUpdateEntry = () => {
     mutationFn: staffService.updateEntry,
 
     onSuccess: () => {
-      invalidate("getAllEntries");
+      invalidate('getAllEntries');
     },
   });
 };
@@ -66,7 +62,7 @@ export const useDeleteEntry = () => {
     mutationFn: staffService.deleteEntry,
 
     onSuccess: () => {
-      invalidate("getAllEntries");
+      invalidate('getAllEntries');
     },
   });
 };
@@ -74,7 +70,7 @@ export const useDeleteEntry = () => {
 export const useAllComplaints = () => {
   return useQuery({
     queryKey: ['complaints'],
-    queryFn: () => staffService.getAllComplaints().then(res => res.data),
+    queryFn: () => staffService.getAllComplaints().then((res) => res.data),
   });
 };
 
@@ -91,11 +87,7 @@ export const useDeleteComplaint = () => {
     },
 
     onError: (error: any) => {
-      console.log(
-        '❌ ERRO AO DELETAR DENÚNCIA:',
-        error.response?.data,
-        error.response?.status
-      );
+      console.log('❌ ERRO AO DELETAR DENÚNCIA:', error.response?.data, error.response?.status);
     },
   });
 };

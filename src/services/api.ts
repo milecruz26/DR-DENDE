@@ -2,13 +2,13 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 const api = axios.create({
-  // Se for testar com o celular físico e o backend no PC, 
+  // Se for testar com o celular físico e o backend no PC,
   // use o IP da sua máquina (ex: 192.168.1.5) em vez de localhost.
   baseURL: 'https://sua-api-pnab.com.br/api',
   timeout: 10000, // 10 segundos de limite para a resposta
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
   },
 });
 
@@ -28,7 +28,7 @@ api.interceptors.request.use(
   (error) => {
     // Caso ocorra erro antes mesmo de enviar a requisição
     return Promise.reject(error);
-  }
+  },
 );
 
 // --- INTERCEPTOR DE RESPOSTA (Bônus) ---
@@ -38,10 +38,10 @@ api.interceptors.response.use(
     // Se o servidor retornar 401 (Não autorizado), o token expirou
     if (error.response && error.response.status === 401) {
       // Aqui você poderia deslogar o usuário automaticamente
-      console.log("Token expirado, redirecionando para login...");
+      console.log('Token expirado, redirecionando para login...');
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

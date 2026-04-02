@@ -1,13 +1,12 @@
 import React from 'react';
-import Colors from '../../theme/Colors';
-
 import {
   ActivityIndicator,
   Pressable,
   StyleSheet, // Substituído para suportar o estado de pressionado
   Text,
-  TextStyle
+  type TextStyle,
 } from 'react-native';
+import Colors from '../../theme/Colors';
 import { FONT_SIZE } from '../../theme/Typography';
 
 type ButtonSize = 'small' | 'medium' | 'large';
@@ -27,9 +26,8 @@ export const PrimaryButton = ({
   onFocus,
   size = 'medium',
   disabled = false,
-  isLoading = false
+  isLoading = false,
 }: CustomButtonProps) => {
-
   const isButtonDisabled = disabled || isLoading;
 
   return (
@@ -43,16 +41,20 @@ export const PrimaryButton = ({
         styles[size],
         // Aplica a cor de "hover" (#1F3121 / deep) e borda apenas quando pressionado
         pressed && !isButtonDisabled && styles.isPressed,
-        isButtonDisabled && styles.disabled
+        isButtonDisabled && styles.disabled,
       ]}
     >
       {isLoading ? (
         <ActivityIndicator color={NEUTRAL.lighter} />
       ) : (
-        <Text style={[
-          styles.textBase,
-          styles[`text${size.charAt(0).toUpperCase() + size.slice(1)}` as keyof typeof styles] as TextStyle
-        ]}>
+        <Text
+          style={[
+            styles.textBase,
+            styles[
+              `text${size.charAt(0).toUpperCase() + size.slice(1)}` as keyof typeof styles
+            ] as TextStyle,
+          ]}
+        >
           {title}
         </Text>
       )}
@@ -67,28 +69,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    borderWidth: 2,           // Adicionado para evitar que o botão "pule" ao ganhar borda
+    borderWidth: 2, // Adicionado para evitar que o botão "pule" ao ganhar borda
     borderColor: 'transparent', // Borda invisível por padrão
-    boxShadow: '0px 0px 0px 1px rgba(16, 24, 40, 0.18) inset, 0 -2px 0 0 rgba(16, 24, 40, 0.05) inset, 0 1px 2px 0 rgba(16, 24, 40, 0.05)'
+    boxShadow:
+      '0px 0px 0px 1px rgba(16, 24, 40, 0.18) inset, 0 -2px 0 0 rgba(16, 24, 40, 0.05) inset, 0 1px 2px 0 rgba(16, 24, 40, 0.05)',
   },
   // Colunas de Tamanho
   small: {
     paddingVertical: 8,
     paddingHorizontal: 8,
     minWidth: 100,
-
   },
   medium: {
     paddingVertical: 12,
     paddingHorizontal: 16,
     minWidth: 150,
-
   },
   large: {
     paddingVertical: 16,
     paddingHorizontal: 24,
     width: '100%',
-
   },
   // Estado Pressionado (Equivalente ao seu isHover)
   isPressed: {
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     borderColor: NEUTRAL.base,
     borderWidth: 1,
     borderStyle: 'solid',
-    borderRadius: 8
+    borderRadius: 8,
   },
   textBase: {
     color: NEUTRAL.lighter,
