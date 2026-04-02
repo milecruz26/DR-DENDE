@@ -1,3 +1,4 @@
+// src/components/Restaurante/RestauranteCardSearch.tsx
 import megaphoneNeutral from '@/assets/images/icones/megaphone-line-neutral.png';
 import savedFilledWhite from '@/assets/images/icones/saved-filled-line-white.png';
 import savedWhite from '@/assets/images/icones/saved-line-white.png';

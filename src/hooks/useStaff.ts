@@ -71,3 +71,32 @@ export const useDeleteEntry = () => {
     },
   });
 };
+
+export const useAllComplaints = () => {
+  return useQuery({
+    queryKey: ['complaints'],
+    queryFn: () => staffService.getAllComplaints().then(res => res.data),
+  });
+};
+
+// Deletar denúncia
+export const useDeleteComplaint = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: staffService.deleteComplaint,
+
+    onSuccess: () => {
+      // Atualiza lista de denúncias
+      queryClient.invalidateQueries({ queryKey: ['complaints'] });
+    },
+
+    onError: (error: any) => {
+      console.log(
+        '❌ ERRO AO DELETAR DENÚNCIA:',
+        error.response?.data,
+        error.response?.status
+      );
+    },
+  });
+};
