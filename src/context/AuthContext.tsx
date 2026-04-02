@@ -1,8 +1,8 @@
 import { STORAGE_KEYS } from '@/constants/storageKeys';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useInvalidateQueries } from '@/hooks/useInvalidateQueries';
 import { useLogin } from '@/hooks/useLogin';
 import { storage } from '@/utils/storage';
-import { useQueryClient } from '@tanstack/react-query';
 import React, { createContext, useContext } from 'react';
 
 interface SignInOptions {
@@ -21,10 +21,9 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const queryClient = useQueryClient();
   const { data: user, isLoading: isLoadingUser } = useCurrentUser();
   const { mutateAsync: loginMutation, isPending: isLoggingIn } = useLogin();
-
+  const invalidate = useInvalidateQueries();
   const signIn = async (email: string, password: string, options?: SignInOptions) => {
     try {
       await loginMutation({ email, password });
@@ -39,8 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await storage.deleteItem(STORAGE_KEYS.TOKEN);
     await storage.deleteItem(STORAGE_KEYS.USER_TYPE);
     await storage.deleteItem(STORAGE_KEYS.STAFF_USER);
-    await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-    queryClient.removeQueries({ queryKey: ['currentUser'] });
+    invalidate("getCurrentUser");
   };
 
   const value = {

@@ -1,5 +1,16 @@
 import { UserType } from './user';
 
+export interface EstablishmentCreate {
+  username: string;
+  email: string;
+  password: string;
+  business_name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  phone?: string | null;
+}
+
 export interface EstablishmentResponse {
   id: string;
   business_name: string;

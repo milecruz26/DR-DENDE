@@ -2,151 +2,187 @@ import BgLogin from '@/components/BackgroundThema/BgLogin';
 import { PrimaryButton } from '@/components/Buttons/PrimaryButton';
 import { TertiaryButton } from '@/components/Buttons/TertiaryButton';
 import { useCreateUser } from '@/hooks/useUsers';
-import { validarSenha } from '@/utils/validators';
 import { Ionicons } from '@expo/vector-icons';
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, router } from 'expo-router';
 import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { z } from 'zod';
 import Colors from '../../../theme/Colors';
+
 const { NEUTRAL } = Colors;
 
-export default function CadastroCPF() {
-  // Estados para os inputs
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
-  // Estados para controlar a visibilidade
-  const [mostrarSenha, setMostrarSenha] = useState(false);
-  const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
+const cadastroCPFSchema = z.object({
+  username: z.string().min(1, 'Nome é obrigatório'),
+  email: z.string().min(1, 'E-mail é obrigatório').email('E-mail inválido'),
+  phone: z.string().optional(),
+  password: z.string()
+    .min(8, 'A senha deve ter no mínimo 8 caracteres.')
+    .regex(/[A-Z]/, 'A senha deve ter pelo menos 1 letra maiúscula.')
+    .regex(/[a-z]/, 'A senha deve ter pelo menos 1 letra minúscula.')
+    .regex(/[0-9]/, 'A senha deve ter pelo menos 1 número.')
+    .regex(/[!@#$%^&*(),.?":{}<>]/, 'A senha deve ter pelo menos 1 caractere especial.'),
+  confirmPassword: z.string().min(1, 'Confirmação de senha é obrigatória'),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'As senhas não coincidem.',
+  path: ['confirmPassword'],
+});
 
-  // Estados para os erros
-  const [erroSenha, setErroSenha] = useState<string | null>(null);
-  const [erroConfirmacao, setErroConfirmacao] = useState<string | null>(null);
+type CadastroCPFFormData = z.infer<typeof cadastroCPFSchema>;
+
+export default function CadastroCPF() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const createUserMutation = useCreateUser();
 
+  const { control, handleSubmit, setError, formState: { errors } } = useForm<CadastroCPFFormData>({
+    resolver: zodResolver(cadastroCPFSchema),
+    defaultValues: { username: '', email: '', phone: '', password: '', confirmPassword: '' },
+  });
 
-  const handleCadastro = async () => {
-    setErroSenha(null);
-    setErroConfirmacao(null);
-
-    const erroValidacao = validarSenha(password);
-    if (erroValidacao) {
-      setErroSenha(erroValidacao);
-      return;
-    }
-    if (password !== confirmarSenha) {
-      setErroConfirmacao("As senhas não coincidem.");
-      return;
-    }
-    // console.log('Dados para cadastro no form de cadastro:', { name, email, telefone, password });
-    try {
-      await createUserMutation.mutateAsync({
-        username: name,
-        email: email,
-        password: password,
-        user_type: 'common',
-        address: null,
-        role: null,
-      });
-      router.push("/(login)/(cadastro)/emailEnviadoCadastro");
-    } catch (error) {
-      console.error(error);
-      alert('Erro ao criar conta. Tente novamente.');
-    }
+  const onSubmit = (data: CadastroCPFFormData) => {
+    const { username, email, password } = data;
+    createUserMutation.mutate({ username, email, password }, {
+      onSuccess: () => {
+        router.push('/(login)/(cadastro)/emailEnviadoCadastro');
+      },
+      onError: () => {
+        setError('root', { message: 'Erro ao criar conta. Tente novamente.' });
+      },
+    });
   };
+
   return (
     <BgLogin logo={false} card>
       <Text style={styles.cardTitle}>Cadastre-se</Text>
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Nome completo</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ex: Larissa Duarte"
-          value={name}
-          onChangeText={setName}
+        <Controller
+          control={control}
+          name="username"
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <>
+              <TextInput
+                style={[styles.input, error && styles.inputError]}
+                placeholder="Ex: Larissa Duarte"
+                value={value}
+                onChangeText={onChange}
+              />
+              {error && <Text style={styles.errorText}>{error.message}</Text>}
+            </>
+          )}
         />
       </View>
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ex: seunome@gmail.com"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          value={email}
-          onChangeText={setEmail}
+        <Controller
+          control={control}
+          name="email"
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <>
+              <TextInput
+                style={[styles.input, error && styles.inputError]}
+                placeholder="Ex: seunome@gmail.com"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={value}
+                onChangeText={onChange}
+              />
+              {error && <Text style={styles.errorText}>{error.message}</Text>}
+            </>
+          )}
         />
       </View>
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Telefone</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="(71) 99999-9999"
-          keyboardType="numeric"
-          value={telefone}
-          onChangeText={setTelefone}
+        <Controller
+          control={control}
+          name="phone"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              style={styles.input}
+              placeholder="(71) 99999-9999"
+              keyboardType="numeric"
+              value={value}
+              onChangeText={onChange}
+            />
+          )}
         />
       </View>
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Senha</Text>
-        <View style={styles.passwordContainer}>
-          <TextInput
-            style={[styles.inputPassword, erroSenha && styles.inputError]}
-            placeholder="********"
-            secureTextEntry={!mostrarSenha} // Inverte com base no estado
-            value={password}
-            onChangeText={setPassword}
-          />
-          <TouchableOpacity
-            style={styles.eyeIcon}
-            onPress={() => setMostrarSenha(!mostrarSenha)}
-          >
-            <Ionicons
-              name={mostrarSenha ? "eye-off-outline" : "eye-outline"}
-              size={20}
-              color="#888"
-            />
-          </TouchableOpacity>
-        </View>
-        {erroSenha && <Text style={styles.errorText}>{erroSenha}</Text>}
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <>
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={[styles.inputPassword, error && styles.inputError]}
+                  placeholder="********"
+                  secureTextEntry={!showPassword}
+                  value={value}
+                  onChangeText={onChange}
+                />
+                <TouchableOpacity
+                  style={styles.eyeIcon}
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  <Ionicons
+                    name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                    size={20}
+                    color="#888"
+                  />
+                </TouchableOpacity>
+              </View>
+              {error && <Text style={styles.errorText}>{error.message}</Text>}
+            </>
+          )}
+        />
       </View>
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Confirmar Senha</Text>
-        <View style={styles.passwordContainer}>
-          <TextInput
-            style={[styles.inputPassword, erroConfirmacao && styles.inputError]}
-            placeholder="********"
-            secureTextEntry={!mostrarConfirmarSenha}
-            value={confirmarSenha}
-            onChangeText={setConfirmarSenha}
-          />
-          <TouchableOpacity
-            style={styles.eyeIcon}
-            onPress={() => setMostrarConfirmarSenha(!mostrarConfirmarSenha)}
-          >
-            <Ionicons
-              name={mostrarConfirmarSenha ? "eye-off-outline" : "eye-outline"}
-              size={20}
-              color="#888"
-            />
-          </TouchableOpacity>
-        </View>
-        {erroConfirmacao && <Text style={styles.errorText}>{erroConfirmacao}</Text>}
-      </View>
-      <View style={{ gap: 8, marginTop: 10 }}>
-        <PrimaryButton
-          title='Finalizar cadastro'
-          onPress={handleCadastro}
+        <Controller
+          control={control}
+          name="confirmPassword"
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <>
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={[styles.inputPassword, error && styles.inputError]}
+                  placeholder="********"
+                  secureTextEntry={!showConfirmPassword}
+                  value={value}
+                  onChangeText={onChange}
+                />
+                <TouchableOpacity
+                  style={styles.eyeIcon}
+                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  <Ionicons
+                    name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
+                    size={20}
+                    color="#888"
+                  />
+                </TouchableOpacity>
+              </View>
+              {error && <Text style={styles.errorText}>{error.message}</Text>}
+            </>
+          )}
         />
+      </View>
+
+      {errors.root && <Text style={styles.errorText}>{errors.root.message}</Text>}
+
+      <View style={{ gap: 8, marginTop: 10 }}>
+        <PrimaryButton title='Finalizar cadastro' onPress={handleSubmit(onSubmit)} isLoading={createUserMutation.isPending} />
         <Link href="/(login)/(cadastro)/perfil" asChild>
           <TertiaryButton title='Voltar' onPress={() => { }} />
         </Link>
@@ -168,8 +204,7 @@ export default function CadastroCPF() {
         <Text style={styles.googleText}>Faça login com Google</Text>
       </TouchableOpacity>
     </BgLogin>
-
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -198,7 +233,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 5,
-
   },
   cardTitle: {
     fontSize: 18,
@@ -237,7 +271,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputPassword: {
-    flex: 1, // Ocupa todo o espaço menos o do ícone
+    flex: 1,
     padding: 12,
     fontSize: 16,
     color: NEUTRAL.dark,
@@ -284,5 +318,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-
-})
+});

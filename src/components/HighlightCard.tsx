@@ -1,3 +1,6 @@
+import badgeNewImage from '@/assets/images/icones/badge-new.png';
+import passarinhaImage from '@/assets/images/pratos/passarinha.png';
+import Colors from '@/theme/Colors';
 import { useRouter } from 'expo-router';
 import {
   Image,
@@ -7,8 +10,9 @@ import {
   View
 } from 'react-native';
 
-import Colors from '@/theme/Colors';
+
 const { primary } = Colors;
+
 export const HighlightCard = () => {
   const router = useRouter();
   return (
@@ -23,14 +27,14 @@ export const HighlightCard = () => {
         {/* Imagem Placeholder - Substitua pela sua URL ou require */}
         <View style={styles.highlightImageContainer}>
           <Image
-            source={require('@/assets/images/pratos/PASSARINHA.png')} // Imagem transparente do prato
+            source={passarinhaImage}
             style={styles.highlightImage}
             resizeMode="cover"
           />
           {/* Badge "Novo" simulado */}
           <View style={styles.badge}>
             <Image
-              source={require('../../assets/images/icones/badge-new.png')} // Imagem transparente do badge "Novo"
+              source={badgeNewImage} // Imagem transparente do badge "Novo"
               style={styles.badgeImg}
             />
           </View>
