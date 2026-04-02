@@ -1,8 +1,9 @@
 export interface Complaint {
-  id: string;                    // UUID
+  id: string;
   user_id?: string;
-  text?: string;
   establishment_id?: string;
+  title?: string;
+  complaint_text?: string;
   response?: string;
   validated?: boolean;
 }

@@ -1,3 +1,4 @@
+// src/services/event.ts
 import { Event } from '../interfaces';
 import { api } from './apiTeste';
 

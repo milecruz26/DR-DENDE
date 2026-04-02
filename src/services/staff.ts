@@ -1,3 +1,4 @@
+// src/services/staff.ts
 import { Complaint, ComplaintValidation, Entry, Event, EventCreate, User } from '../interfaces';
 import { api } from './apiTeste';
 
@@ -9,6 +10,15 @@ const deleteUser = (userId: string) =>
   api.delete<void>(`/staff/user/${userId}`);
 
 // ── Complaints ─────────────────────────────────────────
+
+// TEMPORÁRIO até backend ter rota global
+const getAllComplaints = async () => {
+  // 🚨 MOCK enquanto backend não tem rota
+  return {
+    data: [] as Complaint[]
+  };
+};
+//
 const getComplaintsByUser = (userId: string) =>
   api.get<Complaint[]>(`/staff/complaints/${userId}`);
 
@@ -52,6 +62,7 @@ export const staffService = {
   createStaffUser,
   deleteUser,
   getComplaintsByUser,
+  getAllComplaints,
   validateComplaint,
   deleteComplaint,
   getEntry,

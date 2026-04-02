@@ -1,3 +1,4 @@
+// src/hooks/useEvents.ts
 import { useQuery } from '@tanstack/react-query';
 import { eventService } from '../services/event';
 
@@ -19,7 +20,16 @@ export const useNearbyEvents = (lat: number, lon: number, radius = 10.0) => {
 export const useEventById = (eventId: string) => {
   return useQuery({
     queryKey: ['events', eventId],
-    queryFn: () => eventService.getEventById(eventId).then(res => res.data),
+    queryFn: async () => {
+      try {
+        const res = await eventService.getEventById(eventId);
+        console.log('📡 EVENTO DETALHADO:', res.data);
+        return res.data;
+      } catch (error: any) {
+        console.log('❌ ERRO AO BUSCAR EVENTO:', error.response?.data);
+        throw error;
+      }
+    },
     enabled: !!eventId,
   });
 };

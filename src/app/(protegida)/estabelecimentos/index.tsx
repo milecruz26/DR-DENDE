@@ -1,3 +1,4 @@
+// src/app/(protegida)/estabelecimentos/index.tsx
 import { Header } from "@/components/Header";
 import { EstabelecimentoDetalhes } from "@/components/Modal/EstabelecimentoDetalhes";
 import VerbetesExcludConfirm from "@/components/Modal/ExcludConfirm/VerbetesExcludConfirm";

@@ -1,3 +1,4 @@
+// src/app/(protegida)/configuracoes/denunciar.tsx
 import { useAuth } from '@/context/AuthContext';
 import { useCreateComplaint } from '@/hooks/useComplaint';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -31,28 +32,36 @@ export default function Denunciar() {
   const maxLength = 120;
   const createComplaint = useCreateComplaint();
   const { establishment_id } = useLocalSearchParams<{ establishment_id: string }>();
+  const [title, setTitle] = useState('');
 
   const handleSubmit = async () => {
+    if (!title.trim()) {
+      alert('Informe o título da denúncia');
+      return;
+    }
+
     if (!description.trim()) {
       alert('Descreva o motivo da denúncia');
       return;
     }
+
     if (!establishment_id) {
       alert('Estabelecimento não identificado');
       return;
     }
+
     try {
       await createComplaint.mutateAsync({
-        text: description,
         establishment_id,
-        user_id: user?.id,
+        title,
+        complaint_text: description,
       });
+
       router.replace('/configuracoes/confirmacaoDenuncia');
     } catch (error) {
       alert('Erro ao registrar denúncia');
-      console.log(error)
+      console.log(error);
     }
-
   };
 
 

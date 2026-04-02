@@ -1,4 +1,6 @@
+// src/app/(protegida)/configuracoes/moderarDenuncias.tsx
 import { ReadMoreModal } from '@/components/Modal/ModalVerbete';
+import { useDeleteComplaint } from '@/hooks/useStaff';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -51,6 +53,7 @@ export default function ModerarDenuncias() {
   const router = useRouter();
   const [denuncias, setDenuncias] = useState<Denuncia[]>(DATA_INICIAL);
   const [searchText, setSearchText] = useState('');
+  const { mutateAsync: deleteComplaint } = useDeleteComplaint();
 
   // Estados para os Modais
   const [selectedDenuncia, setSelectedDenuncia] = useState<Denuncia | null>(null);
@@ -67,10 +70,21 @@ export default function ModerarDenuncias() {
     setConfirmVisible(true);
   };
 
-  const handleConfirmDelete = () => {
-    if (selectedDenuncia) {
-      setDenuncias(prev => prev.filter(d => d.id !== selectedDenuncia.id));
+  const handleConfirmDelete = async () => {
+    if (!selectedDenuncia) return;
+
+    try {
+      await deleteComplaint(selectedDenuncia.id);
+
+      // remove da lista local (melhora UX imediata)
+      setDenuncias(prev =>
+        prev.filter(d => d.id !== selectedDenuncia.id)
+      );
+
+    } catch (error) {
+      console.log('Erro ao deletar denúncia:', error);
     }
+
     setConfirmVisible(false);
     setSelectedDenuncia(null);
   };
