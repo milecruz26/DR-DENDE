@@ -1,10 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { dishService } from '../services/dish';
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { dishService } from "../services/dish";
+import { useInvalidateQueries } from "./useInvalidateQueries";
 
 export const useLikedDishes = () => {
   return useQuery({
-    queryKey: ['likedDishes'],
-    queryFn: () => dishService.getLikedDishes().then(res => res.data),
+    queryKey: ["likedDishes"],
+    queryFn: () => dishService.getLikedDishes().then((res) => res.data),
     staleTime: 1000 * 60 * 5, // 5 minutos sem refetch
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -13,21 +14,21 @@ export const useLikedDishes = () => {
 };
 
 export const useLikeDish = () => {
-  const queryClient = useQueryClient();
+  const invalidate = useInvalidateQueries();
   return useMutation({
     mutationFn: (dishId: string) => dishService.likeDish(dishId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['likedDishes'] });
+      invalidate("getLikedDishes");
     },
   });
 };
 
 export const useDislikeDish = () => {
-  const queryClient = useQueryClient();
+  const invalidate = useInvalidateQueries();
   return useMutation({
     mutationFn: (dishId: string) => dishService.dislikeDish(dishId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['likedDishes'] });
+      invalidate("getLikedDishes");
     },
   });
 };
